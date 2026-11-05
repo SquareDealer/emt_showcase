@@ -207,7 +207,7 @@ const DC_CHECK_AT = { x: 1048, y: 672 };
 const DC_INPUT_ASIDE = { x: 900, y: 708 };
 const DC_TYPE_AT = { x: DISC_TYPE.x + 30, y: DISC_TYPE.y + DISC_TYPE.h / 2 };
 /** Idle in the gap between the parts panel (to 1079) and the summary (from 1096), clear of every row
- *  and of the caption (which ends at the summary's left edge, above 565). */
+ *  and of the caption (which ends at the summary's left edge, centred on y 548). */
 const DC_REST = { x: 1087, y: 770 };
 /** The Estimate scene's summary shot (zoom 1.62 → 1.35, view 1185×741), moved so that its right and
  *  bottom edges sit 10 px inside the window (1440×900; no rounded corner, no background): x 245–1430

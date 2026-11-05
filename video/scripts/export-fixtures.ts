@@ -333,6 +333,8 @@ async function main(): Promise<void> {
     const seqBefore = await readSequences(db);
     const { freeSlot } = heroSchedule(demoNow);
     let copyId: string | null = null;
+    // The first error wins: cleanup failures are reported but never mask what broke the export.
+    const errors: unknown[] = [];
     try {
       const copy = await call<WorkOrder>(owner, 'POST', `/work-orders/${HERO.diagnosticsOrderId}/duplicate`, {});
       copyId = copy.id;
@@ -367,6 +369,12 @@ async function main(): Promise<void> {
         template_id: HERO.templates.timingChain,
         part_template_ids: picked.map((p) => p.part_template_id),
       });
+      // What «Подогнать под часы работ» sends (ScheduleFields.laborMinutes: Σ hours × 60, rounded), so
+      // wo-hero.1…4 carry no fit hint. The booking (wo-hero.0) keeps its 120-min slot.
+      const applied = await get<WorkOrder>(path);
+      const fitMin = Math.round((applied.labor_lines ?? []).reduce((a, l) => a + (l.hours ?? 0), 0) * 60);
+      if (fitMin <= 0) throw new Error(`labor minutes after apply-template: ${fitMin}`);
+      await call(owner, 'PATCH', path, { scheduled_duration_min: fitMin });
       const w1 = await snap(1);
       const got = (w1.part_lines ?? []).map((p) => p.part_template_id).sort();
       const want = picked.map((p) => p.part_template_id).sort();
@@ -383,21 +391,49 @@ async function main(): Promise<void> {
       await call(owner, 'PATCH', `${path}/status`, { status: 'in_progress' });
       await snap(4);
 
+      // One order, one number: «Заказ наряд №» prints what the estimate's doc_number will be (close
+      // below draws it from work_order_doc_number_seq). order-pdf draws from its own sequence, so
+      // point that one at the same value; `finally` gives both back.
+      const docSeq = seqBefore.work_order_doc_number_seq;
+      const docNext = Number(docSeq.v) + (docSeq.called ? 1 : 0);
+      await db.query(`SELECT setval('work_order_order_number_seq', $1::bigint, false)`, [docNext]);
       pdfToPng(await pdf(owner, `${path}/order-pdf`), join(DOCS, 'order-pdf.png'));
 
       // The estimate of the SAME order (the Docs scene fans it out behind the order PDF): close the
       // copy (freezes the total, draws doc_number from work_order_doc_number_seq — given back below),
-      // pin the API-clock closed_at to DEMO_NOW, render, and let `finally` delete the copy.
+      // pin the API-clock closed_at to the end of the booked slot («Дата конца работ» and the
+      // document date read 19-11, the day of the work), render, and let `finally` delete the copy.
       await call(owner, 'POST', `${path}/close`, {});
-      await db.query(`UPDATE work_orders SET closed_at = $2 WHERE id = $1`, [copyId, demoNow]);
-      pdfToPng(await pdf(owner, `${path}/pdf`), join(DOCS, 'smeta.png'));
-    } finally {
-      if (copyId) await call(owner, 'DELETE', `/work-orders/${copyId}`);
-      // order-pdf drew a number for the copy; give it back so the database ends as it started.
-      for (const s of SEQUENCES) {
-        const { v, called } = seqBefore[s];
-        await db.query(`SELECT setval($1, $2::bigint, $3)`, [s, v, called]);
+      const slotEnd = new Date(freeSlot.startsAt.getTime() + freeSlot.durationMin * 60_000);
+      await db.query(`UPDATE work_orders SET closed_at = $2 WHERE id = $1`, [copyId, slotEnd]);
+      const { rows } = await db.query(`SELECT doc_number, order_doc_number FROM work_orders WHERE id = $1`, [copyId]);
+      if (rows[0].doc_number !== docNext || rows[0].order_doc_number !== docNext) {
+        throw new Error(`doc numbers: estimate ${rows[0].doc_number}, order ${rows[0].order_doc_number}, expected ${docNext}`);
       }
+      pdfToPng(await pdf(owner, `${path}/pdf`), join(DOCS, 'smeta.png'));
+    } catch (err) {
+      errors.push(err);
+    } finally {
+      try {
+        if (copyId) await call(owner, 'DELETE', `/work-orders/${copyId}`);
+      } catch (err) {
+        errors.push(err);
+      }
+      // order-pdf / close drew numbers for the copy; give them back so the database ends as it started.
+      for (const s of SEQUENCES) {
+        try {
+          const { v, called } = seqBefore[s];
+          await db.query(`SELECT setval($1, $2::bigint, $3)`, [s, v, called]);
+        } catch (err) {
+          errors.push(err);
+        }
+      }
+    }
+    if (errors.length) {
+      for (const e of errors.slice(1)) {
+        process.stderr.write(`export-fixtures: also failed during cleanup: ${e instanceof Error ? e.message : String(e)}\n`);
+      }
+      throw errors[0];
     }
     const seqAfter = await readSequences(db);
     if (JSON.stringify(seqAfter) !== JSON.stringify(seqBefore)) throw new Error('sequences not restored');

@@ -204,7 +204,7 @@ function DiscountsClip({ theme, brand, callouts, accent }: ShowcaseProps) {
           <EstimateWindow key="reset" theme={theme} brandName={brand.name} state={{ ...quiet, wo: woHero[1] }} />
         </Over>
         <Fade opacity={DISCOUNTS_LOOP.overlays(t).caption} z={90}>
-          {/* The Estimate scene's placement: left of the summary, level with «Скидка на наряд». */}
+          {/* The Estimate scene's placement: left of the summary, between its two discount rows. */}
           <Callout text={callouts.discounts} at={DC_CAPTION} anchor={DISCOUNTS_ANCHOR} side="left" accent={accent} />
         </Fade>
         <Cursor path={DISCOUNTS_LOOP.cursor} clicks={DISCOUNTS_LOOP.clicks} accent={accent} />

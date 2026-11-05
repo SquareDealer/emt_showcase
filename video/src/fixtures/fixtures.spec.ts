@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { HERO, heroSchedule } from '../../../demo/seed/hero';
 import { orderTotal } from '@crm/lib/format';
+import { laborMinutes } from '@crm/features/work-orders/ScheduleFields';
 import {
   DEMO_NOW,
   blocksWeek,
@@ -70,6 +71,11 @@ describe('fixtures: hero snapshots', () => {
     expect(w2.total_cached).toBeLessThan(w1.total_cached);
     expect(w4.status).toBe('in_progress');
     expect(w4.total_cached).toBe(w3.total_cached);
+  });
+
+  it('после шаблона длительность подогнана под часы работ — подсказки «Подогнать» нет', () => {
+    expect(laborMinutes(woHero[1])).toBe(480);
+    for (const wo of woHero.slice(1)) expect(wo.scheduled_duration_min).toBe(laborMinutes(wo));
   });
 
   it('превью шаблона — шаблон цепи, масло среди кандидатов', () => {

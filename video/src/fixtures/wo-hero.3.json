@@ -8,7 +8,7 @@
   "complaint": "Треск двигателя на холодную",
   "recommendation": "Растяжение цепи ГРМ (N14) — рекомендована замена цепи и натяжителя",
   "scheduled_at": "2026-11-19T11:00:00.000Z",
-  "scheduled_duration_min": 120,
+  "scheduled_duration_min": 480,
   "discount_type": "percent",
   "discount_value": 5,
   "total_cached": 40764.5,

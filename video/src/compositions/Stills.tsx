@@ -75,9 +75,9 @@ export const Cover = ({ theme, brand }: ShowcaseProps) => (
 /** OG 1200×630, readable at 600 px wide: wordmark + one-line pitch on the left, the estimate's
  *  summary card (discounts and «Итого») at 1.85× on the right. */
 /** UI px of the estimate window: the summary card (x 1097–1416) centred with 13.5 px of page on each
- *  side (the parts panel ends at 1080), from under the divider above «Работы + запчасти» (y 458) to
- *  just past the «Оплачено» input (ends 740) — 346×281 UI px at 1.85 fill the 640×520 card. */
-const OG_CROP = { x: 1083.5, y: 466, zoom: 1.85 };
+ *  side (the parts panel ends at 1080), from under the divider above «Работы + запчасти» (y 420) to
+ *  just past the «Оплачено» input (ends 702) — 346×281 UI px at 1.85 fill the 640×520 card. */
+const OG_CROP = { x: 1083.5, y: 428, zoom: 1.85 };
 const OG_PANEL_W = 500;
 const OG_CARD = { left: OG_PANEL_W + 16, top: 55, width: 640, height: 520 };
 export const OG = ({ theme, brand, callouts, accent }: ShowcaseProps) => (

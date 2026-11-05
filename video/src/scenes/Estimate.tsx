@@ -37,11 +37,14 @@ import { FPS, SCENE_CLICKS } from '../timing';
 //   estimate (snapshots 1–3, same height): labor row «Замена цепи ГРМ» y 424–471, its add-form
 //                  471–519 (labor panel ends 519); parts panel 535 (head + column heads to 611.8),
 //                  kit row 648.3 h 47 (56 with the 10 % discount: «−1 490 ₽ (10%)» x 824.6 w 62.4).
-//   SUMMARY        `[data-demo="wo-summary"]` x 1096 w 320 from y 195; «Скидка на наряд» y 509.5
-//                  (h 39 once the % input shows), «Скидки по строкам» 551.5 / 560.5, «Скидка наряда»
-//                  592, «Итого» 604 (snapshot 2) / 644.5 (snapshot 3) h 33, «Остаток» 752.5.
+//   SUMMARY        `[data-demo="wo-summary"]` x 1096 w 320 from y 195; «Скидка на наряд» y 471.5
+//                  (h 39 once the % input shows), «Скидки по строкам» 513.5 / 522.5, «Скидка наряда»
+//                  554, «Итого» 566 (snapshot 2) / 606.5 (snapshot 3) h 33, «Остаток» 714.5.
+//                  Snapshots 1–3 carry the fitted duration (480 = Σ labor hours), so no «Подогнать
+//                  под часы работ» button: everything below «Запись» sits 38 px (30 + the 8-px gap)
+//                  higher than in snapshot 0, whose 120-min booking still shows the button.
 //   new block's group headers (`.smeta-group`): works 265,377 814×47; parts 265,611.8 814×36.5.
-//   DISC_TYPE      `[data-demo="wo-discount"] select` (snapshot 2, type «нет»): x 1307 y 509.5 w 92 h 30.
+//   DISC_TYPE      `[data-demo="wo-discount"] select` (snapshot 2, type «нет»): x 1307 y 471.5 w 92 h 30.
 //   toast          `.toast` (fixed, bottom-centre of the window): x 617 y 840.5 w 205.5 h 35.5.
 // ---------------------------------------------------------------------------------------------
 export const ADD_FROM_PRICE = { x: 692, y: 208, w: 371, h: 30 };
@@ -52,13 +55,14 @@ const CONFIRM = { x: 823, y: 684, w: 190, h: 36 };
 /** FakeSelect list: 4 px below the control, 4 px padding, 36 px rows (kit/FakeSelect.tsx). */
 const optionY = (i: number) => ADD_FROM_PRICE.y + ADD_FROM_PRICE.h + 4 + 4 + 36 * i + 18;
 const SUMMARY_X = 1096;
-/** The discounts caption's dot: the summary's left edge, level with «Скидка на наряд». */
-export const DISCOUNTS_ANCHOR = { x: SUMMARY_X, y: 540 };
+/** The discounts caption's dot: the summary's left edge, between «Скидки по строкам» and «Скидка
+ *  наряда» (snapshot 3: rows 522.5 and 554) — the two amounts that make the 14,5 %. */
+export const DISCOUNTS_ANCHOR = { x: SUMMARY_X, y: 548 };
 const NEW_HEADERS = [
   { x: 265, y: 377, w: 814, h: 47 },
   { x: 265, y: 611.8, w: 814, h: 36.5 },
 ];
-export const DISC_TYPE = { x: 1307, y: 509.5, w: 92, h: 30 };
+export const DISC_TYPE = { x: 1307, y: 471.5, w: 92, h: 30 };
 /** The kit's «−1 490 ₽ (10%)» (`.smeta-row .disc` x 824.6 y 657.3 w 62.4 h 36.5), padded. */
 const KIT_DISC_CELL = { x: 816, y: 652, w: 80, h: 47 };
 
@@ -375,13 +379,14 @@ const WIDE_KEYS: CamKey[] = [
 //          group total (from 838 / 866; only the empty add-form inputs are crossed); y 372–882 — both
 //          group heads (377), the work line, the four parts (to 836) and the toast (to 876).
 //   SUMMARY 1.7 from 198: x 789–1425, y 329–900 — the summary column (1096–1416) from «Скидка на наряд»
-//          to «Остаток», and the parts' right half with the kit's «−1 490 ₽ (10%)» (816–896).
+//          (471.5) to «Остаток» (to 734) and on to the buttons, and the parts' right half with the kit's
+//          «−1 490 ₽ (10%)» (816–896).
 export const SOCIAL_ZONES = {
   select: { x: ADD_FROM_PRICE.x, y: ADD_FROM_PRICE.y, w: ADD_FROM_PRICE.w, h: optionY(OPTION_WINDOW.length - 1) + 18 - ADD_FROM_PRICE.y },
   modal: DIALOG,
   /** To the toast's right edge (822); the prices end at 783. */
   block: { x: NEW_HEADERS[0].x, y: NEW_HEADERS[0].y, w: 822 - NEW_HEADERS[0].x, h: 876 - NEW_HEADERS[0].y },
-  summary: { x: KIT_DISC_CELL.x, y: DISC_TYPE.y - 10, w: 1416 - KIT_DISC_CELL.x, h: 790 - (DISC_TYPE.y - 10) },
+  summary: { x: KIT_DISC_CELL.x, y: DISC_TYPE.y - 10, w: 1416 - KIT_DISC_CELL.x, h: 752 - (DISC_TYPE.y - 10) },
 };
 // Views stated by their edges (kit socialKeyForView); the select views' tops sit under the vehicle line.
 const SOCIAL_SELECT_IN = socialKeyForView(770 - SOCIAL_STAGE.width / 2 / 1.7, 190, 1.7);
@@ -520,7 +525,7 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
             <Fade opacity={fadeOut(frame, BLOCK_CAPTION_OUT, 6)} z={90}>
               <Callout text={callouts.block} at={APPLY_AT} anchor={BLOCK_ANCHOR} side="bottom" accent={accent} />
             </Fade>
-            {/* At the summary's left edge, level with «Скидка на наряд»: the pill lies over the empty
+            {/* At the summary's left edge, between the two discount rows: the pill lies over the empty
                 right half of the parts panel head, above the column heads and the kit's «−1 490 ₽». */}
             <Callout text={callouts.discounts} at={SNAP3_AT} anchor={DISCOUNTS_ANCHOR} side="left" accent={accent} />
           </>
