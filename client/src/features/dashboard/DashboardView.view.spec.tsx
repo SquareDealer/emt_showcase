@@ -57,4 +57,49 @@ describe('DashboardView', () => {
     expect(html).toMatch(/data-demo="load"[^>]*data-highlight=""|data-highlight=""[^>]*data-demo="load"/);
     expect(render()).not.toContain('data-highlight');
   });
+
+  it('progress=0 даёт нулевую высоту, по умолчанию = progress=1', () => {
+    expect(barHeights(render({ progress: 0 })).every((h) => h === 0)).toBe(true);
+    expect(render()).toBe(render({ progress: 1 }));
+  });
+
+  it('ширина полос загрузки и топа масштабируется progress', () => {
+    const widths = (html: string, k: string) =>
+      [...html.matchAll(new RegExp(`data-demo="${k}"[^>]*style="width:([\\d.]+)%`, 'g'))].map((m) =>
+        Number(m[1]),
+      );
+    for (const k of ['load-bar', 'top-bar']) {
+      const full = widths(render({ progress: 1 }), k);
+      const half = widths(render({ progress: 0.5 }), k);
+      expect(full).toHaveLength(k === 'load-bar' ? 2 : 5);
+      full.forEach((w, i) => expect(half[i]).toBeCloseTo(w / 2, 5));
+    }
+  });
+
+  it('отрицательная динамика: «−» и класс down', () => {
+    const html = renderToStaticMarkup(
+      <DashboardView data={{ ...data, kpi: { ...data.kpi, revenueDeltaPct: -3.5 } }} />,
+    );
+    expect(html).toMatch(/dash-delta mono down/);
+    expect(html).toContain('−3,5%');
+  });
+
+  it.each([['revenue'], ['top']] as const)('highlight=%s подсвечивает свой блок', (h) => {
+    const html = render({ highlight: h });
+    expect(html.match(/data-highlight=""/g)).toHaveLength(1);
+    expect(html).toMatch(new RegExp(`data-demo="${h}"[^>]*data-highlight=""`));
+  });
+
+  it('топ работ отсортирован по выручке', () => {
+    const html = render();
+    const order = ['Замена цепи ГРМ', 'Диагностика двигателя', 'Замена масла и фильтра', 'Замена тормозных колодок', 'Замена свечей зажигания'];
+    const idx = order.map((n) => html.indexOf(n));
+    expect([...idx].sort((a, b) => a - b)).toEqual(idx);
+  });
+
+  it('подписи 1 050 000 и 1 142 000 различаются', () => {
+    const labels = [...render().matchAll(/class="dash-val mono[^"]*"[^>]*>([^<]+)</g)].map((m) => m[1]);
+    expect(labels).toHaveLength(6);
+    expect(new Set(labels).size).toBe(6);
+  });
 });
