@@ -1,7 +1,7 @@
 {
   "id": "hero-copy",
-  "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-  "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+  "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+  "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
   "status": "scheduled",
   "title": "Замена цепи ГРМ + ТО",
   "notes": "Пробег при приёме: 125 240 км",
@@ -23,7 +23,7 @@
     {
       "id": "hero-line-1",
       "work_order_id": "hero-copy",
-      "template_id": "71c9ed38-ef30-5bf3-9f22-08d9004680ed",
+      "template_id": "71c9ed38-ef30-4bf3-9f22-08d9004680ed",
       "name": "Диагностика двигателя",
       "hours": 1,
       "rate_snapshot": 2200,
@@ -39,8 +39,8 @@
   ],
   "part_lines": [],
   "vehicle": {
-    "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-    "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+    "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+    "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
     "vin": "WMWSV32050TZ56421",
     "make": "MINI",
     "model": "Cooper S",
@@ -53,7 +53,7 @@
     "created_at": "2025-03-26T07:20:00.000Z",
     "updated_at": "2025-03-26T07:20:00.000Z",
     "client": {
-      "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+      "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
       "full_name": "Ковалёв Артём Сергеевич",
       "phone": "+75550105656",
       "source": "csv_import",
@@ -66,7 +66,7 @@
     }
   },
   "assigned_master": {
-    "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+    "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
     "name": "Соколов Денис Александрович"
   }
 }

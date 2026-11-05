@@ -1,6 +1,6 @@
 [
   {
-    "id": "0ddc7072-2ee7-571e-99dd-58850979ba5a",
+    "id": "ead1c38f-77bf-4204-ba91-6f29783ee6c3",
     "type": "vehicle",
     "vin": "WMW5477Z1A11J8XFV",
     "plate": "Т256СА 77",
@@ -8,13 +8,13 @@
     "model": "Clubman",
     "generation_code": "F54",
     "client": {
-      "id": "07d63066-a200-5f03-8e20-08484c41658d",
+      "id": "07d63066-a200-4f03-8e20-08484c41658d",
       "full_name": "Игнатов Олег Анатольевич",
       "phone": "+75552092673"
     }
   },
   {
-    "id": "86e1fb45-6375-52f1-8428-91c7ebe03c99",
+    "id": "e8d55666-d6d9-41b3-8117-f10d97095ce3",
     "type": "vehicle",
     "vin": "JTNJH8NLEDW9KY8VH",
     "plate": "С113СО 177",
@@ -22,13 +22,13 @@
     "model": "Corolla",
     "generation_code": null,
     "client": {
-      "id": "f08a8be1-e927-5751-a331-08fa7ae45831",
+      "id": "f08a8be1-e927-4751-a331-08fa7ae45831",
       "full_name": "Игнатов Вадим Игоревич",
       "phone": "+75552668938"
     }
   },
   {
-    "id": "129756b9-4ba4-579a-8b5a-c315e69c836e",
+    "id": "8785fd98-14fc-47b0-a8c5-99cac43f5c48",
     "type": "vehicle",
     "vin": "WMW77ZX0YG9HAMNA9",
     "plate": "Т968КУ 750",
@@ -36,13 +36,13 @@
     "model": "Hatch",
     "generation_code": "F56",
     "client": {
-      "id": "d711df13-d2ab-562c-8068-7126db31e72d",
+      "id": "d711df13-d2ab-462c-8068-7126db31e72d",
       "full_name": "ООО «Курьер-Экспресс Плюс»",
       "phone": "+75558589738"
     }
   },
   {
-    "id": "4d9c24e1-322c-5db0-b769-469dd4fc6e03",
+    "id": "18a2e9f8-45b2-4f75-a89c-ed512afe81f1",
     "type": "vehicle",
     "vin": "WMWF3RRX7BSUD2F83",
     "plate": "В415ВВ 150",
@@ -50,13 +50,13 @@
     "model": "Hatch",
     "generation_code": "F56",
     "client": {
-      "id": "d711df13-d2ab-562c-8068-7126db31e72d",
+      "id": "d711df13-d2ab-462c-8068-7126db31e72d",
       "full_name": "ООО «Курьер-Экспресс Плюс»",
       "phone": "+75558589738"
     }
   },
   {
-    "id": "2d2dca50-cb3a-55ad-8491-3e81c9a6760a",
+    "id": "97d54521-80f9-4222-9857-406cd97c9693",
     "type": "vehicle",
     "vin": "WMW8HKL3ADE5LH6S7",
     "plate": "В250УА 97",
@@ -64,13 +64,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "29c93b51-0a61-5475-8a37-1d9b595aa726",
+      "id": "29c93b51-0a61-4475-8a37-1d9b595aa726",
       "full_name": "Журавлев Даниил Петрович",
       "phone": "+75551761065"
     }
   },
   {
-    "id": "293b9965-8c06-58f3-94db-5ba304df618a",
+    "id": "8f385da5-b2c0-4c66-80e3-71457c064f63",
     "type": "vehicle",
     "vin": "WMWLD1M81E27CKW7H",
     "plate": "Т271СО 777",
@@ -78,13 +78,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "0b95a5f2-d673-5110-93a6-73d4b0e536fc",
+      "id": "0b95a5f2-d673-4110-93a6-73d4b0e536fc",
       "full_name": "Семенов Григорий Фёдорович",
       "phone": "+75554981720"
     }
   },
   {
-    "id": "28d16a45-af72-5d0e-9ba1-db08351f706e",
+    "id": "661a3c0b-fb2a-477a-abd3-915e15602333",
     "type": "vehicle",
     "vin": "WMWS6EKSEPR9WF957",
     "plate": "О657МК 197",
@@ -92,13 +92,13 @@
     "model": "One",
     "generation_code": "F55",
     "client": {
-      "id": "28d154ed-49ee-565f-ba86-f863f4158faf",
+      "id": "28d154ed-49ee-465f-ba86-f863f4158faf",
       "full_name": "Шаров Илья Иванович",
       "phone": "+75553032934"
     }
   },
   {
-    "id": "0dc9d28c-93f1-54b5-a6fc-2c373ab1c225",
+    "id": "ab79fa3a-ceb5-4022-9e28-65a8319a0197",
     "type": "vehicle",
     "vin": "WMWNAAMDKM42DSJ0U",
     "plate": "Т814КМ 50",
@@ -106,13 +106,13 @@
     "model": "John Cooper Works",
     "generation_code": "F56",
     "client": {
-      "id": "d5b19afd-b152-587a-9948-424a4840960d",
+      "id": "d5b19afd-b152-487a-9948-424a4840960d",
       "full_name": "Калинин Николай Константинович",
       "phone": "+75557059953"
     }
   },
   {
-    "id": "5efc6495-fc96-5c61-8bab-ee4201b63b38",
+    "id": "ee1a96db-ab00-436c-af7f-94a06be47d6f",
     "type": "vehicle",
     "vin": "TMB8HMBDNYFWDWMTE",
     "plate": "М890МУ 77",
@@ -120,13 +120,13 @@
     "model": "Octavia",
     "generation_code": null,
     "client": {
-      "id": "3ba3db3c-4fb9-5b23-9940-1b797b03de4c",
+      "id": "3ba3db3c-4fb9-4b23-9940-1b797b03de4c",
       "full_name": "Колобова Алла Андреевна",
       "phone": "+75551836822"
     }
   },
   {
-    "id": "5a824d6f-0981-5068-a53a-d14119d07633",
+    "id": "acf13254-e31f-4be1-bc56-e44a0f4efcb7",
     "type": "vehicle",
     "vin": "KNA7XAS0EH9KWSRPG",
     "plate": "Т130ВЕ 150",
@@ -134,13 +134,13 @@
     "model": "Sorento",
     "generation_code": null,
     "client": {
-      "id": "2d63f358-15b4-5786-82a0-487a388ebee7",
+      "id": "2d63f358-15b4-4786-82a0-487a388ebee7",
       "full_name": "Полякова Инна Николаевна",
       "phone": "+75555497854"
     }
   },
   {
-    "id": "c11166ef-10c0-5c82-96fc-e6ae4e8e7fd4",
+    "id": "611d16f6-bd88-4606-86a4-227db4343fbd",
     "type": "vehicle",
     "vin": "WMWSJLD4XZJE5SKWH",
     "plate": "М569ХА 97",
@@ -148,13 +148,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "2491c02b-9f32-53f0-a122-cc82ca3815dd",
+      "id": "2491c02b-9f32-43f0-a122-cc82ca3815dd",
       "full_name": "Фокин Алексей Анатольевич",
       "phone": "+75553520366"
     }
   },
   {
-    "id": "054f0b6c-8421-5131-ae67-d7ea003ff631",
+    "id": "0d771f9a-9637-4fbe-a585-91fc5278d933",
     "type": "vehicle",
     "vin": "WMW2C34CNEX0JELNH",
     "plate": "Т479АХ 50",
@@ -162,13 +162,13 @@
     "model": "Clubman",
     "generation_code": "R55",
     "client": {
-      "id": "7ab667c2-c243-583d-b575-25894fff66c0",
+      "id": "7ab667c2-c243-483d-b575-25894fff66c0",
       "full_name": "Борисов Олег Константинович",
       "phone": "+75551501310"
     }
   },
   {
-    "id": "9c8e4115-a2c9-51eb-bebb-3e6fe253ff50",
+    "id": "8920b44e-2653-4edf-89b9-5bfae4feca4b",
     "type": "vehicle",
     "vin": "WMW0873PZ3THAHJHF",
     "plate": "Р933НР 97",
@@ -176,13 +176,13 @@
     "model": "Hatch",
     "generation_code": "F56",
     "client": {
-      "id": "d1d40801-63aa-5868-b75e-fcb196e00dc6",
+      "id": "d1d40801-63aa-4868-b75e-fcb196e00dc6",
       "full_name": "Панова Галина Павловна",
       "phone": "+75551420457"
     }
   },
   {
-    "id": "a88ac2d2-13a3-5f93-b79d-9b5a0d8f34e3",
+    "id": "9255cfd5-5d03-4957-8e4c-87ba02234dc6",
     "type": "vehicle",
     "vin": "WMWH0KHY4717NBK01",
     "plate": "С882УН 78",
@@ -190,13 +190,13 @@
     "model": "Hatch",
     "generation_code": "R56",
     "client": {
-      "id": "3a396c60-bb6b-5d8e-9904-80c264de40fb",
+      "id": "3a396c60-bb6b-4d8e-9904-80c264de40fb",
       "full_name": "Сазонова Алёна Анатольевна",
       "phone": "+75555932168"
     }
   },
   {
-    "id": "fa324be7-8f26-597e-8529-8b738ce823e9",
+    "id": "82829272-2688-454e-bd74-6256b0b2302b",
     "type": "vehicle",
     "vin": "KNAN2ZKH88R2WGVRP",
     "plate": "В089ХН 150",
@@ -204,13 +204,13 @@
     "model": "Rio",
     "generation_code": null,
     "client": {
-      "id": "f8518eee-5e4a-5f46-b3fd-9caee6f550a3",
+      "id": "f8518eee-5e4a-4f46-b3fd-9caee6f550a3",
       "full_name": "Трофимова Надежда Романовна",
       "phone": "+75557972365"
     }
   },
   {
-    "id": "a6330584-359e-53f7-8370-e2c235b7a35e",
+    "id": "03dc3eeb-bda9-4ab6-9906-4f9625e25a14",
     "type": "vehicle",
     "vin": "WMW4SF111YAEJENLK",
     "plate": "К364ОА 50",
@@ -218,13 +218,13 @@
     "model": "One",
     "generation_code": "F55",
     "client": {
-      "id": "f8518eee-5e4a-5f46-b3fd-9caee6f550a3",
+      "id": "f8518eee-5e4a-4f46-b3fd-9caee6f550a3",
       "full_name": "Трофимова Надежда Романовна",
       "phone": "+75557972365"
     }
   },
   {
-    "id": "aae0f5a1-11d8-59fd-9d6b-708506f1047a",
+    "id": "147ba544-a485-472f-bc2b-f80d0629b2d1",
     "type": "vehicle",
     "vin": "WMWVFWPJVE49FJ7WG",
     "plate": "Т099ОН 777",
@@ -232,13 +232,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+      "id": "0d4a25c0-90f7-4cf1-ae06-10eeaf856aca",
       "full_name": "ООО «Кедровый Двор»",
       "phone": "+75557316967"
     }
   },
   {
-    "id": "42252b84-b728-5d42-bb27-b5461cfeee1c",
+    "id": "6de2f725-1e82-462e-a605-7416b7eef9fc",
     "type": "vehicle",
     "vin": "WMWGZGS055NSN3572",
     "plate": "О296ХН 77",
@@ -246,13 +246,13 @@
     "model": "Hatch",
     "generation_code": "F56",
     "client": {
-      "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+      "id": "0d4a25c0-90f7-4cf1-ae06-10eeaf856aca",
       "full_name": "ООО «Кедровый Двор»",
       "phone": "+75557316967"
     }
   },
   {
-    "id": "2516df96-bd54-5b78-909b-75d8d7b281d3",
+    "id": "2fcb50c5-f9d6-4ce8-8f23-6d5e18aae19a",
     "type": "vehicle",
     "vin": "WMWLWWAJJMG31DBSB",
     "plate": "В127НА 197",
@@ -260,13 +260,13 @@
     "model": "Countryman",
     "generation_code": "R60",
     "client": {
-      "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+      "id": "0d4a25c0-90f7-4cf1-ae06-10eeaf856aca",
       "full_name": "ООО «Кедровый Двор»",
       "phone": "+75557316967"
     }
   },
   {
-    "id": "f199bcf4-7424-59da-b154-638813b112b9",
+    "id": "7b570930-d87e-433e-a09a-734c005490e9",
     "type": "vehicle",
     "vin": "WMW08WB3K94G1YY7Z",
     "plate": "Е390УО 197",
@@ -274,13 +274,13 @@
     "model": "Cabrio",
     "generation_code": "F57",
     "client": {
-      "id": "5000c629-55ac-5d7a-a395-152470a9c2ed",
+      "id": "5000c629-55ac-4d7a-a395-152470a9c2ed",
       "full_name": "Мишин Владимир Викторович",
       "phone": "+75555353746"
     }
   },
   {
-    "id": "b42b4325-2a8f-52fb-9b41-917525117457",
+    "id": "da3a0491-75d1-42ed-b0bd-92d7c285d272",
     "type": "vehicle",
     "vin": "WMW090893YPTWJV15",
     "plate": "Х423МВ 99",
@@ -288,13 +288,13 @@
     "model": "John Cooper Works",
     "generation_code": "R50",
     "client": {
-      "id": "6335a72b-b282-5c24-a776-67615f830027",
+      "id": "6335a72b-b282-4c24-a776-67615f830027",
       "full_name": "ООО «Румяный Каравай Пекарня»",
       "phone": "+75556485050"
     }
   },
   {
-    "id": "998fd8e8-0706-5a28-bf1e-c1bc3c8fb0ac",
+    "id": "3d7cc67a-bd7a-49ab-9c47-8dd7072c65f0",
     "type": "vehicle",
     "vin": "WVWP1DECDKMXKB9X0",
     "plate": "Х324НМ 99",
@@ -302,13 +302,13 @@
     "model": "Tiguan",
     "generation_code": null,
     "client": {
-      "id": "6335a72b-b282-5c24-a776-67615f830027",
+      "id": "6335a72b-b282-4c24-a776-67615f830027",
       "full_name": "ООО «Румяный Каравай Пекарня»",
       "phone": "+75556485050"
     }
   },
   {
-    "id": "c5ce9761-dcf6-5e5c-b867-b8502dacdf06",
+    "id": "56259fe4-6bbf-495e-a8d9-732c11949c69",
     "type": "vehicle",
     "vin": "WMWXLAR0ZJ49XK783",
     "plate": "Е599ХР 177",
@@ -316,13 +316,13 @@
     "model": "Cooper",
     "generation_code": "F55",
     "client": {
-      "id": "603a18df-ad88-52cf-ae17-4e29bc57fc41",
+      "id": "603a18df-ad88-42cf-ae17-4e29bc57fc41",
       "full_name": "Гущин Вадим Фёдорович",
       "phone": "+75553263890"
     }
   },
   {
-    "id": "6b3fa391-fc1b-5323-8293-6ab71e9baa45",
+    "id": "1a8c0d88-ce1d-421c-bf11-859bf349acac",
     "type": "vehicle",
     "vin": "WMWNRVYAYCHTW087T",
     "plate": "Е696КВ 99",
@@ -330,13 +330,13 @@
     "model": "Hatch",
     "generation_code": "R53",
     "client": {
-      "id": "beb3ea8e-7339-50d7-b129-cc03e9284be4",
+      "id": "beb3ea8e-7339-40d7-b129-cc03e9284be4",
       "full_name": "Некрасова Ксения Николаевна",
       "phone": "+75558616453"
     }
   },
   {
-    "id": "625708f5-b8bf-5cb8-a2eb-726c921ad783",
+    "id": "929471a1-f14d-438b-b1e6-ed1a35f27e64",
     "type": "vehicle",
     "vin": "WMWZG23459AKEHCMF",
     "plate": "А399АТ 750",
@@ -344,13 +344,13 @@
     "model": "Hatch 5D",
     "generation_code": "F55",
     "client": {
-      "id": "597d7404-a8ea-50e7-9306-2378bfc58cb4",
+      "id": "597d7404-a8ea-40e7-9306-2378bfc58cb4",
       "full_name": "Виноградов Игорь Николаевич",
       "phone": "+75555390865"
     }
   },
   {
-    "id": "4fb16a22-ef64-5e6c-88d0-62f8319621c4",
+    "id": "3dabdd38-12c4-4211-b6be-69478269e33b",
     "type": "vehicle",
     "vin": "WMWCMJLW5LW7EKAS9",
     "plate": "С813ТР 78",
@@ -358,13 +358,13 @@
     "model": "Cooper S",
     "generation_code": "R53",
     "client": {
-      "id": "597d7404-a8ea-50e7-9306-2378bfc58cb4",
+      "id": "597d7404-a8ea-40e7-9306-2378bfc58cb4",
       "full_name": "Виноградов Игорь Николаевич",
       "phone": "+75555390865"
     }
   },
   {
-    "id": "5befed85-df89-5241-bb11-d8387d801da1",
+    "id": "b12ef285-f329-4bc7-bc51-ac085edfbb7e",
     "type": "vehicle",
     "vin": "WMWMBSK2Y79L0KZGZ",
     "plate": "Х325АУ 750",
@@ -372,13 +372,13 @@
     "model": "Cooper S",
     "generation_code": "F55",
     "client": {
-      "id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+      "id": "fcc0f757-5d95-4211-987e-5292b58373b8",
       "full_name": "Гущина Анастасия Алексеевна",
       "phone": "+75558196525"
     }
   },
   {
-    "id": "37530049-ec7e-5bac-ac06-444bce2fa09f",
+    "id": "ea7f52e8-84ab-4bc9-9ef2-f4ceacf2c81d",
     "type": "vehicle",
     "vin": "WMWXZB3ZLBYND2GNG",
     "plate": "О877УХ 78",
@@ -386,13 +386,13 @@
     "model": "John Cooper Works",
     "generation_code": "R56",
     "client": {
-      "id": "4dcd6f00-42ca-59de-a3ba-7a2ebdf9c351",
+      "id": "4dcd6f00-42ca-49de-a3ba-7a2ebdf9c351",
       "full_name": "Бобылева Евгения Викторовна",
       "phone": "+75559628392"
     }
   },
   {
-    "id": "3a6ea738-8568-5b39-981d-06a352bd43a6",
+    "id": "9d3b7b35-b2bb-489a-ae7e-2e73217ddad6",
     "type": "vehicle",
     "vin": "WMWKMAXCMLZ7Y9544",
     "plate": "Е762ВО 177",
@@ -400,13 +400,13 @@
     "model": "Cooper",
     "generation_code": "R56",
     "client": {
-      "id": "961335d3-5a73-5a78-b134-ed753fe6e8b0",
+      "id": "961335d3-5a73-4a78-b134-ed753fe6e8b0",
       "full_name": "Овчинникова Галина Михайловна",
       "phone": "+75556834999"
     }
   },
   {
-    "id": "1b6f9d16-e842-5804-a569-b81d08535e79",
+    "id": "94bda500-cb28-45ba-9e1d-5dd9c58f106c",
     "type": "vehicle",
     "vin": "WMW5DN2Z7AYBR5A20",
     "plate": "М197КА 197",
@@ -414,13 +414,13 @@
     "model": "Hatch",
     "generation_code": "F56",
     "client": {
-      "id": "2e260ed0-4acb-58e2-b057-75f646185cb5",
+      "id": "2e260ed0-4acb-48e2-b057-75f646185cb5",
       "full_name": "Зимин Евгений Михайлович",
       "phone": "+75557401981"
     }
   },
   {
-    "id": "36815ab9-b75d-58a1-878f-acad2fcb11ed",
+    "id": "8bb8aeae-9d0b-4f43-89e2-e9249ae55e61",
     "type": "vehicle",
     "vin": "WMWPM82G66F76930Y",
     "plate": "У252РВ 150",
@@ -428,13 +428,13 @@
     "model": "Cooper S",
     "generation_code": "R53",
     "client": {
-      "id": "61e09cda-67c7-55e3-a342-1391d69bfe3f",
+      "id": "61e09cda-67c7-45e3-a342-1391d69bfe3f",
       "full_name": "Панфилова Галина Андреевна",
       "phone": "+75551590241"
     }
   },
   {
-    "id": "c631d734-6cfa-5aca-99b8-350462f90104",
+    "id": "7a2edea5-e3cc-4bd4-890e-b2c51b0174b0",
     "type": "vehicle",
     "vin": "WMW8HJ6LRYAXL65CN",
     "plate": "Е271НУ 78",
@@ -442,13 +442,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "1cabebfe-35f3-5a30-ae75-a63b1f726ce7",
+      "id": "1cabebfe-35f3-4a30-ae75-a63b1f726ce7",
       "full_name": "Калашников Александр Павлович",
       "phone": "+75552450446"
     }
   },
   {
-    "id": "4e81398c-66c7-5ae2-882c-b9e2c5f5f89e",
+    "id": "d698159a-6b59-454b-a0f5-6845f7018b8b",
     "type": "vehicle",
     "vin": "WMWYB7F5SN783XBL7",
     "plate": "О274МН 77",
@@ -456,13 +456,13 @@
     "model": "Hatch",
     "generation_code": "F56",
     "client": {
-      "id": "3bad0fe3-aeef-52a9-aa5b-f12c56e8eefe",
+      "id": "3bad0fe3-aeef-42a9-aa5b-f12c56e8eefe",
       "full_name": "Уварова Светлана Павловна",
       "phone": "+75551229379"
     }
   },
   {
-    "id": "b71b35cd-c618-5833-aa91-63b9f2c49259",
+    "id": "aa5b8385-e7f4-422e-9e79-cabb9653a230",
     "type": "vehicle",
     "vin": "WVW3LGEEAA1HYC9D3",
     "plate": "Н401ОО 777",
@@ -470,13 +470,13 @@
     "model": "Tiguan",
     "generation_code": null,
     "client": {
-      "id": "68390429-3792-5377-991a-59d476b4ca29",
+      "id": "68390429-3792-4377-991a-59d476b4ca29",
       "full_name": "Дементьева Ксения Владимировна",
       "phone": "+75553912538"
     }
   },
   {
-    "id": "2b112e29-21f0-50aa-892b-a6852b36a04c",
+    "id": "3c3dbe2c-27bc-4127-955b-2f2344838731",
     "type": "vehicle",
     "vin": "WMWFYAG3MS0956CL4",
     "plate": "Т363ЕА 97",
@@ -484,13 +484,13 @@
     "model": "Countryman",
     "generation_code": "R60",
     "client": {
-      "id": "15fa92b7-25f1-5b4a-8d1a-e89352e9fba4",
+      "id": "15fa92b7-25f1-4b4a-8d1a-e89352e9fba4",
       "full_name": "Силина Инна Александровна",
       "phone": "+75556603160"
     }
   },
   {
-    "id": "004f69b8-32c7-558d-8431-9eb5dd1fd5ea",
+    "id": "e942c03a-45c4-4bb0-b223-ce6fe541d1a9",
     "type": "vehicle",
     "vin": "WMW6WXG1LB0MWMC15",
     "plate": "С859РО 197",
@@ -498,13 +498,13 @@
     "model": "Clubman",
     "generation_code": "F54",
     "client": {
-      "id": "62a8fab4-d743-5cea-9493-4317a8769dd5",
+      "id": "62a8fab4-d743-4cea-9493-4317a8769dd5",
       "full_name": "Маркова Ирина Михайловна",
       "phone": "+75558799470"
     }
   },
   {
-    "id": "7b1a8853-140d-582f-bf1a-543780f44ea5",
+    "id": "e26ff0ff-2cd9-4d44-9fc6-ef25705b6f5a",
     "type": "vehicle",
     "vin": "WMW94T6K634XUAXL9",
     "plate": "К364УА 197",
@@ -512,13 +512,13 @@
     "model": "Cooper S",
     "generation_code": "F55",
     "client": {
-      "id": "11dcc268-3bfb-5d6b-8dfa-75ab041cf003",
+      "id": "11dcc268-3bfb-4d6b-8dfa-75ab041cf003",
       "full_name": "Журавлева Людмила Фёдоровна",
       "phone": "+75555527244"
     }
   },
   {
-    "id": "67ca0691-e9a6-5ef2-b7cf-d81506f900fd",
+    "id": "3ec29c83-3153-4e57-9023-6beac7aab09d",
     "type": "vehicle",
     "vin": "JTNE6DP24M90FWUS9",
     "plate": "Н471НА 78",
@@ -526,13 +526,13 @@
     "model": "Corolla",
     "generation_code": null,
     "client": {
-      "id": "1721541a-b683-5317-a8d1-fa757bef3ef7",
+      "id": "1721541a-b683-4317-a8d1-fa757bef3ef7",
       "full_name": "Лаврентьева Анастасия Константиновна",
       "phone": "+75551608690"
     }
   },
   {
-    "id": "b01a7b31-961d-50ad-bb15-ea1398539a5a",
+    "id": "b925bbac-80d6-47d6-b119-adac8904bbb3",
     "type": "vehicle",
     "vin": "WMW6SZUEKSRKK4YZD",
     "plate": "О256ТМ 77",
@@ -540,13 +540,13 @@
     "model": "Cooper",
     "generation_code": "R56",
     "client": {
-      "id": "c0f1161c-72df-55a5-8972-dd67e5d0a83a",
+      "id": "c0f1161c-72df-45a5-8972-dd67e5d0a83a",
       "full_name": "ООО «СтройРесурс Монтаж»",
       "phone": "+75555963143"
     }
   },
   {
-    "id": "d9961295-d8fd-53bd-bb5f-d976d1082f67",
+    "id": "13585eb9-a499-4a84-bba8-03659fd1da39",
     "type": "vehicle",
     "vin": "WMWEH4HPKF21E5WAM",
     "plate": "У276НМ 750",
@@ -554,13 +554,13 @@
     "model": "Cooper",
     "generation_code": "R56",
     "client": {
-      "id": "c0f1161c-72df-55a5-8972-dd67e5d0a83a",
+      "id": "c0f1161c-72df-45a5-8972-dd67e5d0a83a",
       "full_name": "ООО «СтройРесурс Монтаж»",
       "phone": "+75555963143"
     }
   },
   {
-    "id": "63577ac0-dcb0-5b8b-bea0-84bc6f4da849",
+    "id": "416f34f9-1d97-479f-bae7-ee726026f9e7",
     "type": "vehicle",
     "vin": "TMBS9W3N96Y42YXXD",
     "plate": "О369РЕ 197",
@@ -568,13 +568,13 @@
     "model": "Rapid",
     "generation_code": null,
     "client": {
-      "id": "4647d83a-5b27-51f0-b3e6-64d7e61fe135",
+      "id": "4647d83a-5b27-41f0-b3e6-64d7e61fe135",
       "full_name": "Симонова Любовь Дмитриевна",
       "phone": "+75555489114"
     }
   },
   {
-    "id": "2f2f501a-70ef-52fb-a2a3-bd55cd4ba724",
+    "id": "4b4964fc-673c-44aa-8f1a-53e62defc43b",
     "type": "vehicle",
     "vin": "WMWC0GDAW75PMJA8C",
     "plate": "М041МА 78",
@@ -582,13 +582,13 @@
     "model": "Countryman",
     "generation_code": "R60",
     "client": {
-      "id": "2e10f538-d216-5821-b5fc-90c0b9ea5beb",
+      "id": "2e10f538-d216-4821-b5fc-90c0b9ea5beb",
       "full_name": "Муравьев Артём Геннадьевич",
       "phone": "+75552220476"
     }
   },
   {
-    "id": "8d6623c6-9a37-5472-9895-06394bcdeab0",
+    "id": "72681cad-24ef-45b9-9a44-58bd698ec081",
     "type": "vehicle",
     "vin": "WVW47J9AVN3CZ8L45",
     "plate": "Н793ВС 150",
@@ -596,13 +596,13 @@
     "model": "Golf",
     "generation_code": null,
     "client": {
-      "id": "23a12e33-bda2-5d66-bd44-b1efade9e86d",
+      "id": "23a12e33-bda2-4d66-bd44-b1efade9e86d",
       "full_name": "Самсонов Ярослав Андреевич",
       "phone": "+75554246300"
     }
   },
   {
-    "id": "cdec65d6-6139-53bf-bb54-c4ede33b846d",
+    "id": "735e901b-e068-474f-b3e2-21973e6d9bd5",
     "type": "vehicle",
     "vin": "WMWG9YSHU2USSAK2N",
     "plate": "Т408ВХ 750",
@@ -610,13 +610,13 @@
     "model": "Countryman",
     "generation_code": "R60",
     "client": {
-      "id": "b6905407-b560-516a-9806-b6f612c0d018",
+      "id": "b6905407-b560-416a-9806-b6f612c0d018",
       "full_name": "Захарова Татьяна Николаевна",
       "phone": "+75559329061"
     }
   },
   {
-    "id": "2e7a20f8-b899-5afd-a4d1-f693dc9979dc",
+    "id": "4d2f7936-cd17-4647-ae34-d7a7cec2cb76",
     "type": "vehicle",
     "vin": "WVWAW8C266T5UMAN7",
     "plate": "О607СС 99",
@@ -624,13 +624,13 @@
     "model": "Polo",
     "generation_code": null,
     "client": {
-      "id": "115762be-a852-562e-b216-92d9685dd8d3",
+      "id": "115762be-a852-462e-b216-92d9685dd8d3",
       "full_name": "ООО «Флагман Клининг»",
       "phone": "+75557136127"
     }
   },
   {
-    "id": "856ed6e0-85f1-5019-ac91-e9a9acf4fc0a",
+    "id": "42e54be6-3c3e-418b-a6d1-1255e793007d",
     "type": "vehicle",
     "vin": "WMW6X8S0N227HLK2A",
     "plate": "А329РО 150",
@@ -638,13 +638,13 @@
     "model": "Clubman",
     "generation_code": "F54",
     "client": {
-      "id": "72e0f2de-23e0-5496-8d45-f37dafcf6742",
+      "id": "72e0f2de-23e0-4496-8d45-f37dafcf6742",
       "full_name": "Федосеева Елизавета Михайловна",
       "phone": "+75558666065"
     }
   },
   {
-    "id": "efaec364-af5a-5ea4-bd2b-3bcf7bbd9c87",
+    "id": "28502722-0d0e-47a6-a47c-9aadc9a3e714",
     "type": "vehicle",
     "vin": "WMWC2AH9FTUCXD4V3",
     "plate": "В106КХ 750",
@@ -652,13 +652,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "cff9500e-2d21-5077-b2c7-6c5032b1c4d1",
+      "id": "cff9500e-2d21-4077-b2c7-6c5032b1c4d1",
       "full_name": "Авдеев Фёдор Валерьевич",
       "phone": "+75554010785"
     }
   },
   {
-    "id": "f0f899bd-3398-5ce2-8668-b99994eff2d2",
+    "id": "e02e6635-cdfc-4563-a59f-b45ee57410b5",
     "type": "vehicle",
     "vin": "WMWNJCF37KZWLN2NR",
     "plate": "С886КЕ 99",
@@ -666,13 +666,13 @@
     "model": "John Cooper Works",
     "generation_code": "R56",
     "client": {
-      "id": "6ba80648-b2f1-53ce-8d52-cb2042645057",
+      "id": "6ba80648-b2f1-43ce-8d52-cb2042645057",
       "full_name": "Рогов Артём Игоревич",
       "phone": "+75559929052"
     }
   },
   {
-    "id": "c59b567d-c106-5583-bdd2-68271188b044",
+    "id": "f5194890-8143-4d99-b85b-829bf7a74527",
     "type": "vehicle",
     "vin": "WMWAZV698XAU6CHAD",
     "plate": "А052ВО 97",
@@ -680,13 +680,13 @@
     "model": "Clubman",
     "generation_code": "R55",
     "client": {
-      "id": "953f77d4-7ea9-55b2-8008-a92c01c463c6",
+      "id": "953f77d4-7ea9-45b2-8008-a92c01c463c6",
       "full_name": "Белова Марина Дмитриевна",
       "phone": "+75551619891"
     }
   },
   {
-    "id": "00d49eef-7384-5571-a99a-bb95dc19cc05",
+    "id": "099ba548-cf1c-4d64-847d-39e04fe32d89",
     "type": "vehicle",
     "vin": "WVWX1X4E1G4RWNZ7D",
     "plate": "А736ОН 150",
@@ -694,7 +694,7 @@
     "model": "Tiguan",
     "generation_code": null,
     "client": {
-      "id": "51bdf11f-6360-5eb4-b0ab-3a5f4bb535b0",
+      "id": "51bdf11f-6360-4eb4-b0ab-3a5f4bb535b0",
       "full_name": "Гришин Вадим Романович",
       "phone": "+75551658119"
     }

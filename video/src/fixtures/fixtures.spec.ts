@@ -48,6 +48,11 @@ describe('fixtures: hero snapshots', () => {
       }
       expect(wo.created_at).toBe(meta.demoNow);
     }
+    // by block, labor before parts, then sort — and stable across snapshots
+    for (const wo of woHero.slice(1)) {
+      expect(wo.labor_lines!.map((l) => l.id)).toEqual(['hero-line-1', 'hero-line-2']);
+      expect(wo.part_lines!.map((p) => p.id)).toEqual(['hero-line-3', 'hero-line-4', 'hero-line-5', 'hero-line-6']);
+    }
   });
 
   it('снимки идут по алгоритму: шаблон без масла → скидка строки → скидка наряда → в работе', () => {

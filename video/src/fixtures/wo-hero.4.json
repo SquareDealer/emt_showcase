@@ -1,7 +1,7 @@
 {
   "id": "hero-copy",
-  "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-  "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+  "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+  "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
   "status": "in_progress",
   "title": "Замена цепи ГРМ + ТО",
   "notes": "Пробег при приёме: 125 240 км",
@@ -23,7 +23,7 @@
     {
       "id": "hero-line-1",
       "work_order_id": "hero-copy",
-      "template_id": "71c9ed38-ef30-5bf3-9f22-08d9004680ed",
+      "template_id": "71c9ed38-ef30-4bf3-9f22-08d9004680ed",
       "name": "Диагностика двигателя",
       "hours": 1,
       "rate_snapshot": 2200,
@@ -37,9 +37,9 @@
       "created_at": "2026-11-18T09:00:00.000Z"
     },
     {
-      "id": "hero-line-3",
+      "id": "hero-line-2",
       "work_order_id": "hero-copy",
-      "template_id": "d8ed88a0-2843-503c-ba4f-c56c5d80025f",
+      "template_id": "d8ed88a0-2843-403c-ba4f-c56c5d80025f",
       "name": "Замена цепи ГРМ (R56/N14)",
       "hours": 7,
       "rate_snapshot": 2200,
@@ -55,12 +55,12 @@
   ],
   "part_lines": [
     {
-      "id": "hero-line-2",
+      "id": "hero-line-3",
       "work_order_id": "hero-copy",
       "name": "Комплект цепи ГРМ N14",
       "catalog_number": "INA-559028110",
       "manufacturer": "INA",
-      "part_template_id": "60f53037-7828-57a1-8653-549f3e6c4a47",
+      "part_template_id": "60f53037-7828-47a1-8653-549f3e6c4a47",
       "qty": 1,
       "unit": "pcs",
       "unit_price": 14900,
@@ -78,7 +78,7 @@
       "name": "Натяжитель цепи ГРМ, усиленный",
       "catalog_number": "INA-551021110",
       "manufacturer": "INA",
-      "part_template_id": "7feaf7a6-3fbd-5cd4-87f7-d239e602df2a",
+      "part_template_id": "7feaf7a6-3fbd-4cd4-87f7-d239e602df2a",
       "qty": 1,
       "unit": "pcs",
       "unit_price": 5600,
@@ -96,7 +96,7 @@
       "name": "Прокладка клапанной крышки",
       "catalog_number": "EL-454440",
       "manufacturer": "Elring",
-      "part_template_id": "46b4c2da-ebb0-5fef-8aca-7dedcbccc154",
+      "part_template_id": "46b4c2da-ebb0-4fef-8aca-7dedcbccc154",
       "qty": 1,
       "unit": "pcs",
       "unit_price": 2300,
@@ -114,7 +114,7 @@
       "name": "Сальник коленвала передний",
       "catalog_number": "EL-458210",
       "manufacturer": "Elring",
-      "part_template_id": "1e7caa23-4a16-5551-985c-5ac359e6af51",
+      "part_template_id": "1e7caa23-4a16-4551-985c-5ac359e6af51",
       "qty": 1,
       "unit": "pcs",
       "unit_price": 900,
@@ -128,8 +128,8 @@
     }
   ],
   "vehicle": {
-    "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-    "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+    "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+    "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
     "vin": "WMWSV32050TZ56421",
     "make": "MINI",
     "model": "Cooper S",
@@ -142,7 +142,7 @@
     "created_at": "2025-03-26T07:20:00.000Z",
     "updated_at": "2025-03-26T07:20:00.000Z",
     "client": {
-      "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+      "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
       "full_name": "Ковалёв Артём Сергеевич",
       "phone": "+75550105656",
       "source": "csv_import",
@@ -155,7 +155,7 @@
     }
   },
   "assigned_master": {
-    "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+    "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
     "name": "Соколов Денис Александрович"
   }
 }

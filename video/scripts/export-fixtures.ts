@@ -131,7 +131,7 @@ type Line = (LaborLine | PartLine) & { created_at?: string };
 
 /**
  * Stable names for the copy's database ids: `hero-copy`, `hero-line-<n>` (numbered as lines first
- * appear, by group_sort, sort — kept across snapshots), `hero-group-<n>` (apply-template draws a random
+ * appear, by group_sort, labor before parts, sort — kept across snapshots), `hero-group-<n>` (apply-template draws a random
  * group_key). created_at/updated_at of the copy and its lines → DEMO_NOW.
  */
 class HeroNormaliser {
@@ -153,7 +153,7 @@ class HeroNormaliser {
     const parts = (wo.part_lines ?? []) as Line[];
     const fresh = [...labor.map((l) => ['l', l] as const), ...parts.map((p) => ['p', p] as const)]
       .filter(([, l]) => !this.lines.has(l.id))
-      .sort(([ka, a], [kb, b]) => a.group_sort - b.group_sort || a.sort - b.sort || cmp(ka, kb) || cmp(ts(a.created_at), ts(b.created_at)));
+      .sort(([ka, a], [kb, b]) => a.group_sort - b.group_sort || cmp(ka, kb) || a.sort - b.sort || cmp(ts(a.created_at), ts(b.created_at)));
     for (const [, l] of fresh) this.lines.set(l.id, `hero-line-${this.lines.size + 1}`);
     // Group names in order of block position, not of first sight in the arrays.
     for (const l of [...labor, ...parts].sort((a, b) => a.group_sort - b.group_sort)) this.group(l.group_key);
@@ -359,15 +359,12 @@ async function main(): Promise<void> {
       norm.assertClean(preview);
       write('template-preview.json', preview);
 
-      // «Apply without the oil». The API's part_template_ids is @IsUUID('4') and the seed's catalog ids
-      // are demoId() v5 uuids, so the list would be rejected (400). Same end state by two real calls:
-      // apply the default parts, then remove the oil line. Oil is the last default part, so the other
-      // lines keep the sort they would have had.
+      // What the modal sends after unticking the oil: the default parts minus HERO.parts.oil5w30.
       const picked = preview.parts.filter((p) => p.is_default && p.part_template_id !== HERO.parts.oil5w30);
-      const applied = await call<WorkOrder>(owner, 'POST', `${path}/apply-template`, { template_id: HERO.templates.timingChain });
-      const oil = (applied.part_lines ?? []).find((p) => p.part_template_id === HERO.parts.oil5w30);
-      if (!oil) throw new Error('oil line missing after apply-template');
-      await call(owner, 'DELETE', `${path}/parts/${oil.id}`);
+      await call(owner, 'POST', `${path}/apply-template`, {
+        template_id: HERO.templates.timingChain,
+        part_template_ids: picked.map((p) => p.part_template_id),
+      });
       const w1 = await snap(1);
       const got = (w1.part_lines ?? []).map((p) => p.part_template_id).sort();
       const want = picked.map((p) => p.part_template_id).sort();

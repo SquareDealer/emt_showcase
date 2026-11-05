@@ -1,6 +1,6 @@
 [
   {
-    "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
+    "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
     "type": "vehicle",
     "vin": "WMWSV32050TZ56421",
     "plate": "М056РК 77",
@@ -8,7 +8,7 @@
     "model": "Cooper S",
     "generation_code": "R56",
     "client": {
-      "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+      "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
       "full_name": "Ковалёв Артём Сергеевич",
       "phone": "+75550105656"
     }

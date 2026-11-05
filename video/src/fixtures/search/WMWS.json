@@ -1,6 +1,6 @@
 [
   {
-    "id": "28d16a45-af72-5d0e-9ba1-db08351f706e",
+    "id": "661a3c0b-fb2a-477a-abd3-915e15602333",
     "type": "vehicle",
     "vin": "WMWS6EKSEPR9WF957",
     "plate": "О657МК 197",
@@ -8,13 +8,13 @@
     "model": "One",
     "generation_code": "F55",
     "client": {
-      "id": "28d154ed-49ee-565f-ba86-f863f4158faf",
+      "id": "28d154ed-49ee-465f-ba86-f863f4158faf",
       "full_name": "Шаров Илья Иванович",
       "phone": "+75553032934"
     }
   },
   {
-    "id": "c11166ef-10c0-5c82-96fc-e6ae4e8e7fd4",
+    "id": "611d16f6-bd88-4606-86a4-227db4343fbd",
     "type": "vehicle",
     "vin": "WMWSJLD4XZJE5SKWH",
     "plate": "М569ХА 97",
@@ -22,13 +22,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "2491c02b-9f32-53f0-a122-cc82ca3815dd",
+      "id": "2491c02b-9f32-43f0-a122-cc82ca3815dd",
       "full_name": "Фокин Алексей Анатольевич",
       "phone": "+75553520366"
     }
   },
   {
-    "id": "01c08f40-4785-5d1d-97bc-24cafdd7e07b",
+    "id": "9506b4ef-8993-47f3-b089-90657e3fe2fe",
     "type": "vehicle",
     "vin": "WMWSY6DFS15MZNCCJ",
     "plate": "М743МТ 50",
@@ -36,13 +36,13 @@
     "model": "Cabrio",
     "generation_code": "R57",
     "client": {
-      "id": "83f7ff9a-fb48-5bda-ad81-275331974a69",
+      "id": "83f7ff9a-fb48-4bda-ad81-275331974a69",
       "full_name": "Баранов Денис Алексеевич",
       "phone": "+75555401307"
     }
   },
   {
-    "id": "e126f930-44af-5a8e-b360-9355ac3c724b",
+    "id": "542e3c9c-0176-4372-aa7d-abaee8281501",
     "type": "vehicle",
     "vin": "WMWS5B7S48ZNCJM50",
     "plate": "А580ХК 77",
@@ -50,13 +50,13 @@
     "model": "Countryman",
     "generation_code": "F60",
     "client": {
-      "id": "89909f4c-b2c0-58dc-b1e0-821e10647668",
+      "id": "89909f4c-b2c0-48dc-b1e0-821e10647668",
       "full_name": "Александрова Виктория Борисовна",
       "phone": "+75557872857"
     }
   },
   {
-    "id": "ff6e6de8-ad93-52a8-8020-a0275eb02726",
+    "id": "a5f372e4-b34e-47ac-8560-64ebb3dcb528",
     "type": "vehicle",
     "vin": "WMWSLRYPL5FRE85RF",
     "plate": "М577КС 150",
@@ -64,13 +64,13 @@
     "model": "Roadster",
     "generation_code": "R59",
     "client": {
-      "id": "02ea4f9d-519b-59f0-8ae5-57feef2bba42",
+      "id": "02ea4f9d-519b-49f0-8ae5-57feef2bba42",
       "full_name": "Фомин Василий Николаевич",
       "phone": "+75557217087"
     }
   },
   {
-    "id": "2ade7f84-0e62-5464-999c-7581af46bc5f",
+    "id": "68f4bebe-d30d-47b3-8df8-e050a67bacbb",
     "type": "vehicle",
     "vin": "WMWS2U11650PPBXX0",
     "plate": "С621ЕН 177",
@@ -78,13 +78,13 @@
     "model": "Hatch",
     "generation_code": "R56",
     "client": {
-      "id": "c371e0cf-964a-5d30-afa4-11101d43b343",
+      "id": "c371e0cf-964a-4d30-afa4-11101d43b343",
       "full_name": "Стрелков Василий Павлович",
       "phone": "+75555180911"
     }
   },
   {
-    "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
+    "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
     "type": "vehicle",
     "vin": "WMWSV32050TZ56421",
     "plate": "М056РК 77",
@@ -92,13 +92,13 @@
     "model": "Cooper S",
     "generation_code": "R56",
     "client": {
-      "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+      "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
       "full_name": "Ковалёв Артём Сергеевич",
       "phone": "+75550105656"
     }
   },
   {
-    "id": "71ac067f-2c10-56ef-b0df-cab920f8118f",
+    "id": "e49be45b-1038-485c-8bb1-1ea0c3900b65",
     "type": "vehicle",
     "vin": "WMWS2YL2WJ155D6WP",
     "plate": "В779СН 177",
@@ -106,13 +106,13 @@
     "model": "Hatch",
     "generation_code": "R56",
     "client": {
-      "id": "a9c08741-ba22-5da9-96b9-7b3ab20e2c7c",
+      "id": "a9c08741-ba22-4da9-96b9-7b3ab20e2c7c",
       "full_name": "Крылова Оксана Борисовна",
       "phone": "+75559828253"
     }
   },
   {
-    "id": "2fd32b2f-8760-52d0-808c-2f98aba49daf",
+    "id": "69db77a6-ad67-4520-95d2-5371e7bf6332",
     "type": "vehicle",
     "vin": "WMWSZ2JRUYGP0LMU3",
     "plate": "Х675УМ 777",
@@ -120,7 +120,7 @@
     "model": "Countryman",
     "generation_code": "R60",
     "client": {
-      "id": "e3fb087d-12dc-51a7-8643-f29006794a9e",
+      "id": "e3fb087d-12dc-41a7-8643-f29006794a9e",
       "full_name": "Лебедев Даниил Иванович",
       "phone": "+75558780577"
     }

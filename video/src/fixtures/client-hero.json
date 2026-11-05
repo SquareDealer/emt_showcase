@@ -1,6 +1,6 @@
 {
   "client": {
-    "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+    "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
     "full_name": "Ковалёв Артём Сергеевич",
     "phone": "+75550105656",
     "source": "csv_import",
@@ -13,8 +13,8 @@
   },
   "vehicles": [
     {
-      "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+      "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
       "vin": "WMWSV32050TZ56421",
       "make": "MINI",
       "model": "Cooper S",
@@ -28,8 +28,8 @@
       "updated_at": "2025-03-26T07:20:00.000Z"
     },
     {
-      "id": "2c048705-f215-5def-aba5-05b4c9a5e728",
-      "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+      "id": "2c048705-f215-4def-aba5-05b4c9a5e728",
+      "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
       "vin": "JTN39482G70XKRY96",
       "make": "Toyota",
       "model": "RAV4",
@@ -45,9 +45,9 @@
   ],
   "orders": [
     {
-      "id": "238e2c83-180f-54b7-884d-329922bbe082",
-      "vehicle_id": "2c048705-f215-5def-aba5-05b4c9a5e728",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "238e2c83-180f-44b7-884d-329922bbe082",
+      "vehicle_id": "2c048705-f215-4def-aba5-05b4c9a5e728",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "Шиномонтаж (сезонная замена), Развал-схождение",
       "notes": "Пробег при приёме: 89 250 км",
@@ -66,8 +66,8 @@
       "order_doc_number": null,
       "paid_amount": 5900,
       "vehicle": {
-        "id": "2c048705-f215-5def-aba5-05b4c9a5e728",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "2c048705-f215-4def-aba5-05b4c9a5e728",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "JTN39482G70XKRY96",
         "make": "Toyota",
         "model": "RAV4",
@@ -80,7 +80,7 @@
         "created_at": "2025-03-26T07:25:00.000Z",
         "updated_at": "2025-03-26T07:25:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -93,14 +93,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "ce67ea41-ab1c-5b9e-a60e-b8f079906691",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "ce67ea41-ab1c-4b9e-a60e-b8f079906691",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "Диагностика двигателя",
       "notes": "Пробег при приёме: 125 240 км",
@@ -119,8 +119,8 @@
       "order_doc_number": null,
       "paid_amount": 2200,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -133,7 +133,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -146,14 +146,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "6a516502-ead4-5607-ab72-377a859ba7a2",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "6a516502-ead4-4607-ab72-377a859ba7a2",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "closed",
       "title": "Замена масла в двигателе, Шиномонтаж (сезонная замена)",
       "notes": "Пробег при приёме: 124 920 км",
@@ -172,8 +172,8 @@
       "order_doc_number": null,
       "paid_amount": 11220,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -186,7 +186,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -199,14 +199,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "e7ae7af3-ea1d-5ee2-a7a2-bd80565778a1",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "e7ae7af3-ea1d-4ee2-a7a2-bd80565778a1",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "Замена свечей зажигания, Шиномонтаж (сезонная замена)",
       "notes": "Пробег при приёме: 124 520 км",
@@ -225,8 +225,8 @@
       "order_doc_number": null,
       "paid_amount": 12160,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -239,7 +239,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -252,14 +252,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "00bd57a7-c89c-5c9b-bc45-2fea0aa45b3c",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "00bd57a7-c89c-4c9b-bc45-2fea0aa45b3c",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "closed",
       "title": "Замена охлаждающей жидкости",
       "notes": "Пробег при приёме: 124 150 км",
@@ -278,8 +278,8 @@
       "order_doc_number": null,
       "paid_amount": 4900,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -292,7 +292,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -305,14 +305,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "7ff2bad5-f6e4-57a0-81f8-6f1b3c1766e9",
-      "vehicle_id": "2c048705-f215-5def-aba5-05b4c9a5e728",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "7ff2bad5-f6e4-47a0-81f8-6f1b3c1766e9",
+      "vehicle_id": "2c048705-f215-4def-aba5-05b4c9a5e728",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "closed",
       "title": "ТО (регламент), Замена тормозной жидкости",
       "notes": "Пробег при приёме: 86 930 км",
@@ -331,8 +331,8 @@
       "order_doc_number": null,
       "paid_amount": 15270,
       "vehicle": {
-        "id": "2c048705-f215-5def-aba5-05b4c9a5e728",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "2c048705-f215-4def-aba5-05b4c9a5e728",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "JTN39482G70XKRY96",
         "make": "Toyota",
         "model": "RAV4",
@@ -345,7 +345,7 @@
         "created_at": "2025-03-26T07:25:00.000Z",
         "updated_at": "2025-03-26T07:25:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -358,14 +358,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "e8b5127c-5e62-5527-8a63-096a4eb537f4",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "e8b5127c-5e62-4527-8a63-096a4eb537f4",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "closed",
       "title": "Замена прокладки клапанной крышки",
       "notes": "Пробег при приёме: 123 380 км",
@@ -384,8 +384,8 @@
       "order_doc_number": null,
       "paid_amount": 6850,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -398,7 +398,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -411,14 +411,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "088b5d10-80e2-505b-8d07-e6e8a6a8d261",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "088b5d10-80e2-405b-8d07-e6e8a6a8d261",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "closed",
       "title": "Замена масла в двигателе",
       "notes": "Пробег при приёме: 122 990 км",
@@ -437,8 +437,8 @@
       "order_doc_number": null,
       "paid_amount": 7860,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -451,7 +451,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -464,14 +464,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "2a181720-0638-5e04-b38e-ebaa2ff997c7",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "2a181720-0638-4e04-b38e-ebaa2ff997c7",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "closed",
       "title": "Замена передних стоек стабилизатора, Диагностика ходовой части",
       "notes": "Пробег при приёме: 122 620 км",
@@ -490,8 +490,8 @@
       "order_doc_number": null,
       "paid_amount": 6700,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -504,7 +504,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -517,14 +517,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "3e79727b-238e-5fbc-ba36-9da751e83add",
-      "vehicle_id": "2c048705-f215-5def-aba5-05b4c9a5e728",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "3e79727b-238e-4fbc-ba36-9da751e83add",
+      "vehicle_id": "2c048705-f215-4def-aba5-05b4c9a5e728",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "Замена масла в двигателе, Замена салонного фильтра",
       "notes": "Пробег при приёме: 84 610 км",
@@ -543,8 +543,8 @@
       "order_doc_number": null,
       "paid_amount": 9610,
       "vehicle": {
-        "id": "2c048705-f215-5def-aba5-05b4c9a5e728",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "2c048705-f215-4def-aba5-05b4c9a5e728",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "JTN39482G70XKRY96",
         "make": "Toyota",
         "model": "RAV4",
@@ -557,7 +557,7 @@
         "created_at": "2025-03-26T07:25:00.000Z",
         "updated_at": "2025-03-26T07:25:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -570,14 +570,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "29ff9ce3-2ae8-5ec2-a145-fa6a4aebf25d",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "29ff9ce3-2ae8-4ec2-a145-fa6a4aebf25d",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "Замена передних тормозных колодок",
       "notes": "Пробег при приёме: 121 850 км",
@@ -596,8 +596,8 @@
       "order_doc_number": null,
       "paid_amount": 7800,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -610,7 +610,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -623,14 +623,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "6df97689-2c59-5454-8400-910023e40a14",
-      "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "6df97689-2c59-4454-8400-910023e40a14",
+      "vehicle_id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "ТО (регламент)",
       "notes": "Пробег при приёме: 121 450 км",
@@ -649,8 +649,8 @@
       "order_doc_number": null,
       "paid_amount": 11710,
       "vehicle": {
-        "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
-        "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+        "id": "884787df-de44-4f5e-9433-faaec4bc7aa7",
+        "client_id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
         "vin": "WMWSV32050TZ56421",
         "make": "MINI",
         "model": "Cooper S",
@@ -663,7 +663,7 @@
         "created_at": "2025-03-26T07:20:00.000Z",
         "updated_at": "2025-03-26T07:20:00.000Z",
         "client": {
-          "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+          "id": "c42601d6-92c3-47bd-bc73-fcdad7897046",
           "full_name": "Ковалёв Артём Сергеевич",
           "phone": "+75550105656",
           "source": "csv_import",
@@ -676,7 +676,7 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     }

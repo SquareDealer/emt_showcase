@@ -1,41 +1,41 @@
 [
   {
-    "id": "9fdf0a03-9a93-5d9e-962a-7e80092bdf68",
+    "id": "9fdf0a03-9a93-4d9e-962a-7e80092bdf68",
     "name": "Белова Екатерина Сергеевна",
     "login": "reception1",
     "role": "master_receptionist",
     "is_active": true
   },
   {
-    "id": "b386a954-fee4-5d7c-b9c3-0d6377e419c7",
+    "id": "b386a954-fee4-4d7c-b9c3-0d6377e419c7",
     "name": "Громов Андрей Викторович",
     "login": "owner",
     "role": "owner",
     "is_active": true
   },
   {
-    "id": "5b20b5b7-f288-5f81-ae33-6c17e0d2c80c",
+    "id": "5b20b5b7-f288-4f81-ae33-6c17e0d2c80c",
     "name": "Захаров Максим Олегович",
     "login": "reception2",
     "role": "master_receptionist",
     "is_active": true
   },
   {
-    "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+    "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
     "name": "Лебедев Роман Игоревич",
     "login": "master3",
     "role": "master",
     "is_active": true
   },
   {
-    "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+    "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
     "name": "Морозов Илья Николаевич",
     "login": "master2",
     "role": "master",
     "is_active": true
   },
   {
-    "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+    "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
     "name": "Соколов Денис Александрович",
     "login": "master1",
     "role": "master",

@@ -1,9 +1,9 @@
 {
   "scheduled": [
     {
-      "id": "cd464e23-74e9-5409-94d8-c2bb1f7ff5ba",
-      "vehicle_id": "0bd6f3dd-5ad0-51ae-8eca-8ebee2e2e5d8",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "cd464e23-74e9-4409-94d8-c2bb1f7ff5ba",
+      "vehicle_id": "5a19dcce-36ab-48cd-b1a5-c53407d3ee98",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена масла в двигателе, Замена задних тормозных колодок",
       "notes": "Пробег при приёме: 95 050 км",
@@ -22,8 +22,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "0bd6f3dd-5ad0-51ae-8eca-8ebee2e2e5d8",
-        "client_id": "32ae47f2-27b5-5718-88f9-1c8f3bd0f721",
+        "id": "5a19dcce-36ab-48cd-b1a5-c53407d3ee98",
+        "client_id": "32ae47f2-27b5-4718-88f9-1c8f3bd0f721",
         "vin": "WMWL1Z4RPW2HK3P2T",
         "make": "MINI",
         "model": "Clubman",
@@ -36,7 +36,7 @@
         "created_at": "2025-11-20T01:46:46.590Z",
         "updated_at": "2025-11-20T01:46:46.590Z",
         "client": {
-          "id": "32ae47f2-27b5-5718-88f9-1c8f3bd0f721",
+          "id": "32ae47f2-27b5-4718-88f9-1c8f3bd0f721",
           "full_name": "Соболев Павел Николаевич",
           "phone": "+75554315593",
           "source": "manual",
@@ -49,14 +49,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "6f07343b-6dd4-5c5a-a136-20a2ebe38ad5",
-      "vehicle_id": "2516df96-bd54-5b78-909b-75d8d7b281d3",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "6f07343b-6dd4-4c5a-a136-20a2ebe38ad5",
+      "vehicle_id": "2fcb50c5-f9d6-4ce8-8f23-6d5e18aae19a",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена охлаждающей жидкости, Замена топливного фильтра",
       "notes": "Пробег при приёме: 125 690 км",
@@ -75,8 +75,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "2516df96-bd54-5b78-909b-75d8d7b281d3",
-        "client_id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+        "id": "2fcb50c5-f9d6-4ce8-8f23-6d5e18aae19a",
+        "client_id": "0d4a25c0-90f7-4cf1-ae06-10eeaf856aca",
         "vin": "WMWLWWAJJMG31DBSB",
         "make": "MINI",
         "model": "Countryman",
@@ -89,7 +89,7 @@
         "created_at": "2026-09-24T01:33:58.893Z",
         "updated_at": "2026-09-24T01:33:58.893Z",
         "client": {
-          "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+          "id": "0d4a25c0-90f7-4cf1-ae06-10eeaf856aca",
           "full_name": "ООО «Кедровый Двор»",
           "phone": "+75557316967",
           "source": "manual",
@@ -102,14 +102,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "7f3f0d0b-2b66-5681-a9eb-3e47f86b7e20",
-      "vehicle_id": "7b1a8853-140d-582f-bf1a-543780f44ea5",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "7f3f0d0b-2b66-4681-a9eb-3e47f86b7e20",
+      "vehicle_id": "e26ff0ff-2cd9-4d44-9fc6-ef25705b6f5a",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Шиномонтаж (сезонная замена), Диагностика двигателя",
       "notes": "Пробег при приёме: 103 440 км",
@@ -128,8 +128,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "7b1a8853-140d-582f-bf1a-543780f44ea5",
-        "client_id": "11dcc268-3bfb-5d6b-8dfa-75ab041cf003",
+        "id": "e26ff0ff-2cd9-4d44-9fc6-ef25705b6f5a",
+        "client_id": "11dcc268-3bfb-4d6b-8dfa-75ab041cf003",
         "vin": "WMW94T6K634XUAXL9",
         "make": "MINI",
         "model": "Cooper S",
@@ -142,7 +142,7 @@
         "created_at": "2026-08-05T21:31:59.504Z",
         "updated_at": "2026-08-05T21:31:59.504Z",
         "client": {
-          "id": "11dcc268-3bfb-5d6b-8dfa-75ab041cf003",
+          "id": "11dcc268-3bfb-4d6b-8dfa-75ab041cf003",
           "full_name": "Журавлева Людмила Фёдоровна",
           "phone": "+75555527244",
           "source": "manual",
@@ -155,14 +155,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "9d28fb48-1579-581a-97dd-1c8a6fed73bc",
-      "vehicle_id": "00d49eef-7384-5571-a99a-bb95dc19cc05",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "9d28fb48-1579-481a-97dd-1c8a6fed73bc",
+      "vehicle_id": "099ba548-cf1c-4d64-847d-39e04fe32d89",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена опоры двигателя, Замена передних тормозных колодок",
       "notes": "Пробег при приёме: 191 520 км",
@@ -181,8 +181,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "00d49eef-7384-5571-a99a-bb95dc19cc05",
-        "client_id": "51bdf11f-6360-5eb4-b0ab-3a5f4bb535b0",
+        "id": "099ba548-cf1c-4d64-847d-39e04fe32d89",
+        "client_id": "51bdf11f-6360-4eb4-b0ab-3a5f4bb535b0",
         "vin": "WVWX1X4E1G4RWNZ7D",
         "make": "Volkswagen",
         "model": "Tiguan",
@@ -195,7 +195,7 @@
         "created_at": "2026-04-03T20:52:52.396Z",
         "updated_at": "2026-04-03T20:52:52.396Z",
         "client": {
-          "id": "51bdf11f-6360-5eb4-b0ab-3a5f4bb535b0",
+          "id": "51bdf11f-6360-4eb4-b0ab-3a5f4bb535b0",
           "full_name": "Гришин Вадим Романович",
           "phone": "+75551658119",
           "source": "manual",
@@ -208,14 +208,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "063d6e3b-047b-5036-ae6e-50374413ad11",
-      "vehicle_id": "8d6623c6-9a37-5472-9895-06394bcdeab0",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "063d6e3b-047b-4036-ae6e-50374413ad11",
+      "vehicle_id": "72681cad-24ef-45b9-9a44-58bd698ec081",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Хранение комплекта колёс (сезон), Замена салонного фильтра",
       "notes": "Пробег при приёме: 74 670 км",
@@ -234,8 +234,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "8d6623c6-9a37-5472-9895-06394bcdeab0",
-        "client_id": "23a12e33-bda2-5d66-bd44-b1efade9e86d",
+        "id": "72681cad-24ef-45b9-9a44-58bd698ec081",
+        "client_id": "23a12e33-bda2-4d66-bd44-b1efade9e86d",
         "vin": "WVW47J9AVN3CZ8L45",
         "make": "Volkswagen",
         "model": "Golf",
@@ -248,7 +248,7 @@
         "created_at": "2026-07-11T21:00:03.053Z",
         "updated_at": "2026-07-11T21:00:03.053Z",
         "client": {
-          "id": "23a12e33-bda2-5d66-bd44-b1efade9e86d",
+          "id": "23a12e33-bda2-4d66-bd44-b1efade9e86d",
           "full_name": "Самсонов Ярослав Андреевич",
           "phone": "+75554246300",
           "source": "manual",
@@ -261,14 +261,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "cafd76fb-1639-56ac-a35c-2dcc8c8ac7e0",
-      "vehicle_id": "3a5cab6a-2045-5984-ae1b-250487fe96e5",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "cafd76fb-1639-46ac-a35c-2dcc8c8ac7e0",
+      "vehicle_id": "21249550-820c-4041-93de-d5f9a7292e03",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "ТО (регламент), Замена опоры двигателя",
       "notes": "Пробег при приёме: 57 050 км",
@@ -287,8 +287,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "3a5cab6a-2045-5984-ae1b-250487fe96e5",
-        "client_id": "9649c3b7-d0cd-5eb6-abed-c7059156767a",
+        "id": "21249550-820c-4041-93de-d5f9a7292e03",
+        "client_id": "9649c3b7-d0cd-4eb6-abed-c7059156767a",
         "vin": "WMWJCE8SYEL6KEPTX",
         "make": "MINI",
         "model": "Cooper",
@@ -301,7 +301,7 @@
         "created_at": "2025-05-05T16:52:35.175Z",
         "updated_at": "2025-05-05T16:52:35.175Z",
         "client": {
-          "id": "9649c3b7-d0cd-5eb6-abed-c7059156767a",
+          "id": "9649c3b7-d0cd-4eb6-abed-c7059156767a",
           "full_name": "Стрелкова Ирина Романовна",
           "phone": "+75553032432",
           "source": "csv_import",
@@ -314,14 +314,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "14aaa7ce-c3c9-5c6e-acfd-3c6626249338",
-      "vehicle_id": "9c0e3962-15a2-5de8-a3eb-c8e1442eb63b",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "14aaa7ce-c3c9-4c6e-acfd-3c6626249338",
+      "vehicle_id": "d5c018f7-113a-451b-bdc0-594df22cf373",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "scheduled",
       "title": "Шиномонтаж (сезонная замена), Диагностика двигателя",
       "notes": "Пробег при приёме: 153 810 км",
@@ -340,8 +340,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "9c0e3962-15a2-5de8-a3eb-c8e1442eb63b",
-        "client_id": "afc75790-50ea-5f2a-9e2a-a90e1f1b2ef4",
+        "id": "d5c018f7-113a-451b-bdc0-594df22cf373",
+        "client_id": "afc75790-50ea-4f2a-9e2a-a90e1f1b2ef4",
         "vin": "WMWK58G002723AUHP",
         "make": "MINI",
         "model": "Paceman",
@@ -354,7 +354,7 @@
         "created_at": "2024-11-24T18:46:02.220Z",
         "updated_at": "2024-11-24T18:46:02.220Z",
         "client": {
-          "id": "afc75790-50ea-5f2a-9e2a-a90e1f1b2ef4",
+          "id": "afc75790-50ea-4f2a-9e2a-a90e1f1b2ef4",
           "full_name": "Филиппова Полина Васильевна",
           "phone": "+75554959971",
           "source": "manual",
@@ -367,14 +367,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "43fe7677-09bc-5c89-af99-86b46d32c5ec",
-      "vehicle_id": "efef4b7f-3e0e-51b8-ba31-30d3a5fa17c2",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "43fe7677-09bc-4c89-af99-86b46d32c5ec",
+      "vehicle_id": "8211e6df-a2c7-4afc-aa04-71690d5412dd",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Диагностика ходовой части, Диагностика кондиционера",
       "notes": "Пробег при приёме: 299 210 км",
@@ -393,8 +393,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "efef4b7f-3e0e-51b8-ba31-30d3a5fa17c2",
-        "client_id": "58e8b442-ff8c-5737-a9c9-d453dae0d0b5",
+        "id": "8211e6df-a2c7-4afc-aa04-71690d5412dd",
+        "client_id": "58e8b442-ff8c-4737-a9c9-d453dae0d0b5",
         "vin": "JTNSS14KUX3B1P7C1",
         "make": "Toyota",
         "model": "RAV4",
@@ -407,7 +407,7 @@
         "created_at": "2024-01-22T19:31:33.978Z",
         "updated_at": "2024-01-22T19:31:33.978Z",
         "client": {
-          "id": "58e8b442-ff8c-5737-a9c9-d453dae0d0b5",
+          "id": "58e8b442-ff8c-4737-a9c9-d453dae0d0b5",
           "full_name": "Осипов Артём Вадимович",
           "phone": "+75555647558",
           "source": "csv_import",
@@ -420,14 +420,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "e44a967c-2563-5b5e-992c-68969e564042",
-      "vehicle_id": "d33fca98-38da-5fb5-bd32-ded4c1a2988a",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "e44a967c-2563-4b5e-992c-68969e564042",
+      "vehicle_id": "b82b083f-fbdc-4220-a887-7962ce12df14",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "scheduled",
       "title": "Замена масла в двигателе",
       "notes": "Пробег при приёме: 218 070 км",
@@ -446,8 +446,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "d33fca98-38da-5fb5-bd32-ded4c1a2988a",
-        "client_id": "4824c452-9d75-5145-9858-326cbaf82302",
+        "id": "b82b083f-fbdc-4220-a887-7962ce12df14",
+        "client_id": "4824c452-9d75-4145-9858-326cbaf82302",
         "vin": "WMWJ07ADJSLYB3D5M",
         "make": "MINI",
         "model": "Hatch",
@@ -460,7 +460,7 @@
         "created_at": "2025-02-09T06:16:56.579Z",
         "updated_at": "2025-02-09T06:16:56.579Z",
         "client": {
-          "id": "4824c452-9d75-5145-9858-326cbaf82302",
+          "id": "4824c452-9d75-4145-9858-326cbaf82302",
           "full_name": "ООО «Бирюза Кейтеринг»",
           "phone": "+75552290037",
           "source": "manual",
@@ -473,14 +473,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "56953097-c84f-59e1-a8dd-f6be03b236a5",
-      "vehicle_id": "0bd6f3dd-5ad0-51ae-8eca-8ebee2e2e5d8",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "56953097-c84f-49e1-a8dd-f6be03b236a5",
+      "vehicle_id": "5a19dcce-36ab-48cd-b1a5-c53407d3ee98",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "scheduled",
       "title": "Хранение комплекта колёс (сезон), Замена лампы головного света",
       "notes": "Пробег при приёме: 95 090 км",
@@ -499,8 +499,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "0bd6f3dd-5ad0-51ae-8eca-8ebee2e2e5d8",
-        "client_id": "32ae47f2-27b5-5718-88f9-1c8f3bd0f721",
+        "id": "5a19dcce-36ab-48cd-b1a5-c53407d3ee98",
+        "client_id": "32ae47f2-27b5-4718-88f9-1c8f3bd0f721",
         "vin": "WMWL1Z4RPW2HK3P2T",
         "make": "MINI",
         "model": "Clubman",
@@ -513,7 +513,7 @@
         "created_at": "2025-11-20T01:46:46.590Z",
         "updated_at": "2025-11-20T01:46:46.590Z",
         "client": {
-          "id": "32ae47f2-27b5-5718-88f9-1c8f3bd0f721",
+          "id": "32ae47f2-27b5-4718-88f9-1c8f3bd0f721",
           "full_name": "Соболев Павел Николаевич",
           "phone": "+75554315593",
           "source": "manual",
@@ -526,14 +526,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "6be32ab8-8fea-57eb-86a7-2e85b8c257db",
-      "vehicle_id": "7b1a8853-140d-582f-bf1a-543780f44ea5",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "6be32ab8-8fea-47eb-86a7-2e85b8c257db",
+      "vehicle_id": "e26ff0ff-2cd9-4d44-9fc6-ef25705b6f5a",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена переднего рычага, Замена свечей зажигания",
       "notes": "Пробег при приёме: 103 440 км",
@@ -552,8 +552,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "7b1a8853-140d-582f-bf1a-543780f44ea5",
-        "client_id": "11dcc268-3bfb-5d6b-8dfa-75ab041cf003",
+        "id": "e26ff0ff-2cd9-4d44-9fc6-ef25705b6f5a",
+        "client_id": "11dcc268-3bfb-4d6b-8dfa-75ab041cf003",
         "vin": "WMW94T6K634XUAXL9",
         "make": "MINI",
         "model": "Cooper S",
@@ -566,7 +566,7 @@
         "created_at": "2026-08-05T21:31:59.504Z",
         "updated_at": "2026-08-05T21:31:59.504Z",
         "client": {
-          "id": "11dcc268-3bfb-5d6b-8dfa-75ab041cf003",
+          "id": "11dcc268-3bfb-4d6b-8dfa-75ab041cf003",
           "full_name": "Журавлева Людмила Фёдоровна",
           "phone": "+75555527244",
           "source": "manual",
@@ -579,14 +579,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "953f579b-b10f-59a6-b645-77da6c8711ea",
-      "vehicle_id": "c631d734-6cfa-5aca-99b8-350462f90104",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "953f579b-b10f-49a6-b645-77da6c8711ea",
+      "vehicle_id": "7a2edea5-e3cc-4bd4-890e-b2c51b0174b0",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "scheduled",
       "title": "Балансировка колёс",
       "notes": "Пробег при приёме: 52 470 км",
@@ -605,8 +605,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "c631d734-6cfa-5aca-99b8-350462f90104",
-        "client_id": "1cabebfe-35f3-5a30-ae75-a63b1f726ce7",
+        "id": "7a2edea5-e3cc-4bd4-890e-b2c51b0174b0",
+        "client_id": "1cabebfe-35f3-4a30-ae75-a63b1f726ce7",
         "vin": "WMW8HJ6LRYAXL65CN",
         "make": "MINI",
         "model": "Countryman",
@@ -619,7 +619,7 @@
         "created_at": "2026-08-26T23:11:20.453Z",
         "updated_at": "2026-08-26T23:11:20.453Z",
         "client": {
-          "id": "1cabebfe-35f3-5a30-ae75-a63b1f726ce7",
+          "id": "1cabebfe-35f3-4a30-ae75-a63b1f726ce7",
           "full_name": "Калашников Александр Павлович",
           "phone": "+75552450446",
           "source": "manual",
@@ -632,14 +632,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "75663e3c-5b3e-592b-a5ca-d6abbd6fd3fb",
-      "vehicle_id": "209ef81a-2f16-5768-bd39-0608fa22c6df",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "75663e3c-5b3e-492b-a5ca-d6abbd6fd3fb",
+      "vehicle_id": "c748f59f-7163-46ef-befe-ed79072c22c7",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена термостата, Предпродажная проверка автомобиля",
       "notes": "Пробег при приёме: 299 580 км",
@@ -658,8 +658,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "209ef81a-2f16-5768-bd39-0608fa22c6df",
-        "client_id": "bd614f29-30e6-55a4-ab7c-08b182ea0e62",
+        "id": "c748f59f-7163-46ef-befe-ed79072c22c7",
+        "client_id": "bd614f29-30e6-45a4-ab7c-08b182ea0e62",
         "vin": "WMW06JYCVWN6UW5VY",
         "make": "MINI",
         "model": "Hatch",
@@ -672,7 +672,7 @@
         "created_at": "2024-08-28T19:40:44.724Z",
         "updated_at": "2024-08-28T19:40:44.724Z",
         "client": {
-          "id": "bd614f29-30e6-55a4-ab7c-08b182ea0e62",
+          "id": "bd614f29-30e6-45a4-ab7c-08b182ea0e62",
           "full_name": "Рогов Сергей Олегович",
           "phone": "+75551119372",
           "source": "manual",
@@ -685,14 +685,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "b5ff2ae2-e973-517e-af57-e5a6b6b3b38f",
-      "vehicle_id": "b42b4325-2a8f-52fb-9b41-917525117457",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "b5ff2ae2-e973-417e-af57-e5a6b6b3b38f",
+      "vehicle_id": "da3a0491-75d1-42ed-b0bd-92d7c285d272",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена рулевого наконечника",
       "notes": "Пробег при приёме: 299 860 км",
@@ -711,8 +711,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "b42b4325-2a8f-52fb-9b41-917525117457",
-        "client_id": "6335a72b-b282-5c24-a776-67615f830027",
+        "id": "da3a0491-75d1-42ed-b0bd-92d7c285d272",
+        "client_id": "6335a72b-b282-4c24-a776-67615f830027",
         "vin": "WMW090893YPTWJV15",
         "make": "MINI",
         "model": "John Cooper Works",
@@ -725,7 +725,7 @@
         "created_at": "2026-09-17T23:54:16.892Z",
         "updated_at": "2026-09-17T23:54:16.892Z",
         "client": {
-          "id": "6335a72b-b282-5c24-a776-67615f830027",
+          "id": "6335a72b-b282-4c24-a776-67615f830027",
           "full_name": "ООО «Румяный Каравай Пекарня»",
           "phone": "+75556485050",
           "source": "manual",
@@ -738,14 +738,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "0deaa795-1fc1-58ec-8fe7-d20b2c82a6dd",
-      "vehicle_id": "0d29d0b3-3171-58f2-81ad-5cef2a6ed43c",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "0deaa795-1fc1-48ec-8fe7-d20b2c82a6dd",
+      "vehicle_id": "316378ab-784f-457c-ac7c-786b6453240b",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Диагностика кондиционера, Ремонт прокола",
       "notes": "Пробег при приёме: 164 740 км",
@@ -764,8 +764,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "0d29d0b3-3171-58f2-81ad-5cef2a6ed43c",
-        "client_id": "d0672005-af2a-5031-93f7-6ad38cf8de81",
+        "id": "316378ab-784f-457c-ac7c-786b6453240b",
+        "client_id": "d0672005-af2a-4031-93f7-6ad38cf8de81",
         "vin": "WMW98N1YHNFT7TZL2",
         "make": "MINI",
         "model": "Clubman",
@@ -778,7 +778,7 @@
         "created_at": "2025-04-09T12:57:55.730Z",
         "updated_at": "2025-04-09T12:57:55.730Z",
         "client": {
-          "id": "d0672005-af2a-5031-93f7-6ad38cf8de81",
+          "id": "d0672005-af2a-4031-93f7-6ad38cf8de81",
           "full_name": "Алексеев Григорий Викторович",
           "phone": "+75551430399",
           "source": "manual",
@@ -791,14 +791,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "5d0adf9f-288c-50fb-a14f-5e037d4d6859",
-      "vehicle_id": "129756b9-4ba4-579a-8b5a-c315e69c836e",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "5d0adf9f-288c-40fb-a14f-5e037d4d6859",
+      "vehicle_id": "8785fd98-14fc-47b0-a8c5-99cac43f5c48",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Диагностика двигателя",
       "notes": "Пробег при приёме: 163 400 км",
@@ -817,8 +817,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "129756b9-4ba4-579a-8b5a-c315e69c836e",
-        "client_id": "d711df13-d2ab-562c-8068-7126db31e72d",
+        "id": "8785fd98-14fc-47b0-a8c5-99cac43f5c48",
+        "client_id": "d711df13-d2ab-462c-8068-7126db31e72d",
         "vin": "WMW77ZX0YG9HAMNA9",
         "make": "MINI",
         "model": "Hatch",
@@ -831,7 +831,7 @@
         "created_at": "2026-11-13T03:21:07.391Z",
         "updated_at": "2026-11-13T03:21:07.391Z",
         "client": {
-          "id": "d711df13-d2ab-562c-8068-7126db31e72d",
+          "id": "d711df13-d2ab-462c-8068-7126db31e72d",
           "full_name": "ООО «Курьер-Экспресс Плюс»",
           "phone": "+75558589738",
           "source": "manual",
@@ -844,14 +844,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "183442ec-f009-549e-b063-1e7d7470bab9",
-      "vehicle_id": "c59b567d-c106-5583-bdd2-68271188b044",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "183442ec-f009-449e-b063-1e7d7470bab9",
+      "vehicle_id": "f5194890-8143-4d99-b85b-829bf7a74527",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Развал-схождение, Балансировка колёс",
       "notes": "Пробег при приёме: 133 940 км",
@@ -870,8 +870,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "c59b567d-c106-5583-bdd2-68271188b044",
-        "client_id": "953f77d4-7ea9-55b2-8008-a92c01c463c6",
+        "id": "f5194890-8143-4d99-b85b-829bf7a74527",
+        "client_id": "953f77d4-7ea9-45b2-8008-a92c01c463c6",
         "vin": "WMWAZV698XAU6CHAD",
         "make": "MINI",
         "model": "Clubman",
@@ -884,7 +884,7 @@
         "created_at": "2026-04-06T15:56:38.443Z",
         "updated_at": "2026-04-06T15:56:38.443Z",
         "client": {
-          "id": "953f77d4-7ea9-55b2-8008-a92c01c463c6",
+          "id": "953f77d4-7ea9-45b2-8008-a92c01c463c6",
           "full_name": "Белова Марина Дмитриевна",
           "phone": "+75551619891",
           "source": "csv_import",
@@ -897,14 +897,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "47678aab-dddb-5a0c-a7dd-e9c50beae42b",
-      "vehicle_id": "5befed85-df89-5241-bb11-d8387d801da1",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "47678aab-dddb-4a0c-a7dd-e9c50beae42b",
+      "vehicle_id": "b12ef285-f329-4bc7-bc51-ac085edfbb7e",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена лампы головного света, Ремонт прокола",
       "notes": "Пробег при приёме: 71 780 км",
@@ -923,8 +923,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "5befed85-df89-5241-bb11-d8387d801da1",
-        "client_id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+        "id": "b12ef285-f329-4bc7-bc51-ac085edfbb7e",
+        "client_id": "fcc0f757-5d95-4211-987e-5292b58373b8",
         "vin": "WMWMBSK2Y79L0KZGZ",
         "make": "MINI",
         "model": "Cooper S",
@@ -937,7 +937,7 @@
         "created_at": "2026-09-11T02:58:25.808Z",
         "updated_at": "2026-09-11T02:58:25.808Z",
         "client": {
-          "id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+          "id": "fcc0f757-5d95-4211-987e-5292b58373b8",
           "full_name": "Гущина Анастасия Алексеевна",
           "phone": "+75558196525",
           "source": "manual",
@@ -950,14 +950,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "b792339a-be68-50f1-8308-fa83ef3c1f0f",
-      "vehicle_id": "5a824d6f-0981-5068-a53a-d14119d07633",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "b792339a-be68-40f1-8308-fa83ef3c1f0f",
+      "vehicle_id": "acf13254-e31f-4be1-bc56-e44a0f4efcb7",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена сайлентблоков подрамника, Замена масла в двигателе",
       "notes": "Пробег при приёме: 299 850 км",
@@ -976,8 +976,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "5a824d6f-0981-5068-a53a-d14119d07633",
-        "client_id": "2d63f358-15b4-5786-82a0-487a388ebee7",
+        "id": "acf13254-e31f-4be1-bc56-e44a0f4efcb7",
+        "client_id": "2d63f358-15b4-4786-82a0-487a388ebee7",
         "vin": "KNA7XAS0EH9KWSRPG",
         "make": "Kia",
         "model": "Sorento",
@@ -990,7 +990,7 @@
         "created_at": "2026-10-22T01:43:02.805Z",
         "updated_at": "2026-10-22T01:43:02.805Z",
         "client": {
-          "id": "2d63f358-15b4-5786-82a0-487a388ebee7",
+          "id": "2d63f358-15b4-4786-82a0-487a388ebee7",
           "full_name": "Полякова Инна Николаевна",
           "phone": "+75555497854",
           "source": "manual",
@@ -1003,14 +1003,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "9375de69-4043-55f2-ac14-65e7e5af8f37",
-      "vehicle_id": "8d6623c6-9a37-5472-9895-06394bcdeab0",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "9375de69-4043-45f2-ac14-65e7e5af8f37",
+      "vehicle_id": "72681cad-24ef-45b9-9a44-58bd698ec081",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Шиномонтаж (сезонная замена), Диагностика ходовой части",
       "notes": "Пробег при приёме: 74 670 км",
@@ -1029,8 +1029,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "8d6623c6-9a37-5472-9895-06394bcdeab0",
-        "client_id": "23a12e33-bda2-5d66-bd44-b1efade9e86d",
+        "id": "72681cad-24ef-45b9-9a44-58bd698ec081",
+        "client_id": "23a12e33-bda2-4d66-bd44-b1efade9e86d",
         "vin": "WVW47J9AVN3CZ8L45",
         "make": "Volkswagen",
         "model": "Golf",
@@ -1043,7 +1043,7 @@
         "created_at": "2026-07-11T21:00:03.053Z",
         "updated_at": "2026-07-11T21:00:03.053Z",
         "client": {
-          "id": "23a12e33-bda2-5d66-bd44-b1efade9e86d",
+          "id": "23a12e33-bda2-4d66-bd44-b1efade9e86d",
           "full_name": "Самсонов Ярослав Андреевич",
           "phone": "+75554246300",
           "source": "manual",
@@ -1056,14 +1056,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "b1223dd1-188b-5fb1-8689-a54519ce0974",
-      "vehicle_id": "b81e35ee-2120-5606-a486-8c7cac72e8d6",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "b1223dd1-188b-4fb1-8689-a54519ce0974",
+      "vehicle_id": "6973280c-3c49-48c8-b7d1-3f8b5fc47ffb",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена масла в двигателе, Диагностика двигателя",
       "notes": "Пробег при приёме: 299 380 км",
@@ -1082,8 +1082,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "b81e35ee-2120-5606-a486-8c7cac72e8d6",
-        "client_id": "4c01d2b4-840c-507d-ae25-a896d02367ac",
+        "id": "6973280c-3c49-48c8-b7d1-3f8b5fc47ffb",
+        "client_id": "4c01d2b4-840c-407d-ae25-a896d02367ac",
         "vin": "WMW4XEE2PJYVPAMX7",
         "make": "MINI",
         "model": "John Cooper Works",
@@ -1096,7 +1096,7 @@
         "created_at": "2024-09-20T16:41:51.369Z",
         "updated_at": "2024-09-20T16:41:51.369Z",
         "client": {
-          "id": "4c01d2b4-840c-507d-ae25-a896d02367ac",
+          "id": "4c01d2b4-840c-407d-ae25-a896d02367ac",
           "full_name": "Авдеева Дарья Валерьевна",
           "phone": "+75557683036",
           "source": "manual",
@@ -1109,14 +1109,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "e0a5ccae-98b3-54e1-bd3c-91d6ddbe1c15",
-      "vehicle_id": "c59b567d-c106-5583-bdd2-68271188b044",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "e0a5ccae-98b3-44e1-bd3c-91d6ddbe1c15",
+      "vehicle_id": "f5194890-8143-4d99-b85b-829bf7a74527",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "scheduled",
       "title": "Замена масла в МКПП, Диагностика двигателя",
       "notes": "Пробег при приёме: 133 940 км",
@@ -1135,8 +1135,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "c59b567d-c106-5583-bdd2-68271188b044",
-        "client_id": "953f77d4-7ea9-55b2-8008-a92c01c463c6",
+        "id": "f5194890-8143-4d99-b85b-829bf7a74527",
+        "client_id": "953f77d4-7ea9-45b2-8008-a92c01c463c6",
         "vin": "WMWAZV698XAU6CHAD",
         "make": "MINI",
         "model": "Clubman",
@@ -1149,7 +1149,7 @@
         "created_at": "2026-04-06T15:56:38.443Z",
         "updated_at": "2026-04-06T15:56:38.443Z",
         "client": {
-          "id": "953f77d4-7ea9-55b2-8008-a92c01c463c6",
+          "id": "953f77d4-7ea9-45b2-8008-a92c01c463c6",
           "full_name": "Белова Марина Дмитриевна",
           "phone": "+75551619891",
           "source": "csv_import",
@@ -1162,14 +1162,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "93fc7ca7-97f6-5862-9b23-fc13ce8728da",
-      "vehicle_id": "00d49eef-7384-5571-a99a-bb95dc19cc05",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "93fc7ca7-97f6-4862-9b23-fc13ce8728da",
+      "vehicle_id": "099ba548-cf1c-4d64-847d-39e04fe32d89",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Правка литого диска, Диагностика двигателя",
       "notes": "Пробег при приёме: 191 520 км",
@@ -1188,8 +1188,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "00d49eef-7384-5571-a99a-bb95dc19cc05",
-        "client_id": "51bdf11f-6360-5eb4-b0ab-3a5f4bb535b0",
+        "id": "099ba548-cf1c-4d64-847d-39e04fe32d89",
+        "client_id": "51bdf11f-6360-4eb4-b0ab-3a5f4bb535b0",
         "vin": "WVWX1X4E1G4RWNZ7D",
         "make": "Volkswagen",
         "model": "Tiguan",
@@ -1202,7 +1202,7 @@
         "created_at": "2026-04-03T20:52:52.396Z",
         "updated_at": "2026-04-03T20:52:52.396Z",
         "client": {
-          "id": "51bdf11f-6360-5eb4-b0ab-3a5f4bb535b0",
+          "id": "51bdf11f-6360-4eb4-b0ab-3a5f4bb535b0",
           "full_name": "Гришин Вадим Романович",
           "phone": "+75551658119",
           "source": "manual",
@@ -1215,14 +1215,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "11680746-01cb-5f99-ab7d-2a3f44c0e771",
-      "vehicle_id": "6fa01c85-5a1c-519d-8c5d-58fda04dc167",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "11680746-01cb-4f99-ab7d-2a3f44c0e771",
+      "vehicle_id": "4fdf5b4a-cfd2-41ce-9c09-8af08580f4a1",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена масла в двигателе, Замена масла в раздаточной коробке и редукторе",
       "notes": "Пробег при приёме: 89 210 км",
@@ -1241,8 +1241,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "6fa01c85-5a1c-519d-8c5d-58fda04dc167",
-        "client_id": "3ab39b89-5061-5bd4-bafb-35c182f595fc",
+        "id": "4fdf5b4a-cfd2-41ce-9c09-8af08580f4a1",
+        "client_id": "3ab39b89-5061-4bd4-bafb-35c182f595fc",
         "vin": "WMW412CWXM8R2TM7V",
         "make": "MINI",
         "model": "John Cooper Works",
@@ -1255,7 +1255,7 @@
         "created_at": "2025-04-21T17:17:53.551Z",
         "updated_at": "2025-04-21T17:17:53.551Z",
         "client": {
-          "id": "3ab39b89-5061-5bd4-bafb-35c182f595fc",
+          "id": "3ab39b89-5061-4bd4-bafb-35c182f595fc",
           "full_name": "Кабанов Олег Николаевич",
           "phone": "+75552837568",
           "source": "manual",
@@ -1268,14 +1268,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "b989160c-0bfc-5fb8-b428-0fc9e7f1415e",
-      "vehicle_id": "d8c5230b-3d19-536e-a554-e63fee212bc0",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "b989160c-0bfc-4fb8-b428-0fc9e7f1415e",
+      "vehicle_id": "ea5a0ebd-3962-469b-972c-e630563f299b",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена сайлентблоков подрамника, Замена масла в двигателе",
       "notes": "Пробег при приёме: 161 100 км",
@@ -1294,8 +1294,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "d8c5230b-3d19-536e-a554-e63fee212bc0",
-        "client_id": "d51fc634-3508-5cfc-ae4c-0674deda5d9e",
+        "id": "ea5a0ebd-3962-469b-972c-e630563f299b",
+        "client_id": "d51fc634-3508-4cfc-ae4c-0674deda5d9e",
         "vin": "WVW3X596X48SRCYU6",
         "make": "Volkswagen",
         "model": "Tiguan",
@@ -1308,7 +1308,7 @@
         "created_at": "2025-04-09T00:05:14.836Z",
         "updated_at": "2025-04-09T00:05:14.836Z",
         "client": {
-          "id": "d51fc634-3508-5cfc-ae4c-0674deda5d9e",
+          "id": "d51fc634-3508-4cfc-ae4c-0674deda5d9e",
           "full_name": "ООО «Домовой Сервис Плюс»",
           "phone": "+75557451184",
           "source": "manual",
@@ -1321,14 +1321,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "8a3ac022-1905-5c1c-a944-3705e73d72aa",
-      "vehicle_id": "6f62c0e9-699d-5d8f-9683-ca06f9d33c05",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "8a3ac022-1905-4c1c-a944-3705e73d72aa",
+      "vehicle_id": "12c6c519-e484-4d5f-beb5-e20b2f555481",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "scheduled",
       "title": "Замена переднего рычага, Замена масла в двигателе",
       "notes": "Пробег при приёме: 298 680 км",
@@ -1347,8 +1347,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "6f62c0e9-699d-5d8f-9683-ca06f9d33c05",
-        "client_id": "6087fa30-b6ca-5db3-833c-25ef7e844910",
+        "id": "12c6c519-e484-4d5f-beb5-e20b2f555481",
+        "client_id": "6087fa30-b6ca-4db3-833c-25ef7e844910",
         "vin": "WMW9281EP7MB0TX3S",
         "make": "MINI",
         "model": "Countryman",
@@ -1361,7 +1361,7 @@
         "created_at": "2025-01-16T02:11:10.908Z",
         "updated_at": "2025-01-16T02:11:10.908Z",
         "client": {
-          "id": "6087fa30-b6ca-5db3-833c-25ef7e844910",
+          "id": "6087fa30-b6ca-4db3-833c-25ef7e844910",
           "full_name": "Симонов Вадим Андреевич",
           "phone": "+75554194724",
           "source": "manual",
@@ -1374,14 +1374,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "43303210-7311-5779-a9ab-9e91d360d637",
-      "vehicle_id": "5befed85-df89-5241-bb11-d8387d801da1",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "43303210-7311-4779-a9ab-9e91d360d637",
+      "vehicle_id": "b12ef285-f329-4bc7-bc51-ac085edfbb7e",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена задних тормозных дисков и колодок, Поиск течей и утечек масла",
       "notes": "Пробег при приёме: 71 780 км",
@@ -1400,8 +1400,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "5befed85-df89-5241-bb11-d8387d801da1",
-        "client_id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+        "id": "b12ef285-f329-4bc7-bc51-ac085edfbb7e",
+        "client_id": "fcc0f757-5d95-4211-987e-5292b58373b8",
         "vin": "WMWMBSK2Y79L0KZGZ",
         "make": "MINI",
         "model": "Cooper S",
@@ -1414,7 +1414,7 @@
         "created_at": "2026-09-11T02:58:25.808Z",
         "updated_at": "2026-09-11T02:58:25.808Z",
         "client": {
-          "id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+          "id": "fcc0f757-5d95-4211-987e-5292b58373b8",
           "full_name": "Гущина Анастасия Алексеевна",
           "phone": "+75558196525",
           "source": "manual",
@@ -1427,14 +1427,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "20f05b58-d25e-5a24-8166-eab16c0eda67",
-      "vehicle_id": "efef4b7f-3e0e-51b8-ba31-30d3a5fa17c2",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "20f05b58-d25e-4a24-8166-eab16c0eda67",
+      "vehicle_id": "8211e6df-a2c7-4afc-aa04-71690d5412dd",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена аккумулятора с регистрацией, Замена свечей зажигания",
       "notes": "Пробег при приёме: 299 210 км",
@@ -1453,8 +1453,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "efef4b7f-3e0e-51b8-ba31-30d3a5fa17c2",
-        "client_id": "58e8b442-ff8c-5737-a9c9-d453dae0d0b5",
+        "id": "8211e6df-a2c7-4afc-aa04-71690d5412dd",
+        "client_id": "58e8b442-ff8c-4737-a9c9-d453dae0d0b5",
         "vin": "JTNSS14KUX3B1P7C1",
         "make": "Toyota",
         "model": "RAV4",
@@ -1467,7 +1467,7 @@
         "created_at": "2024-01-22T19:31:33.978Z",
         "updated_at": "2024-01-22T19:31:33.978Z",
         "client": {
-          "id": "58e8b442-ff8c-5737-a9c9-d453dae0d0b5",
+          "id": "58e8b442-ff8c-4737-a9c9-d453dae0d0b5",
           "full_name": "Осипов Артём Вадимович",
           "phone": "+75555647558",
           "source": "csv_import",
@@ -1480,14 +1480,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "6dffda05-a4b2-5209-b865-bffc73a07213",
-      "vehicle_id": "004f69b8-32c7-558d-8431-9eb5dd1fd5ea",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "6dffda05-a4b2-4209-b865-bffc73a07213",
+      "vehicle_id": "e942c03a-45c4-4bb0-b223-ce6fe541d1a9",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "scheduled",
       "title": "Замена ступичного подшипника (передний), Ремонт суппорта (чистка, смазка направляющих)",
       "notes": "Пробег при приёме: 171 440 км",
@@ -1506,8 +1506,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "004f69b8-32c7-558d-8431-9eb5dd1fd5ea",
-        "client_id": "62a8fab4-d743-5cea-9493-4317a8769dd5",
+        "id": "e942c03a-45c4-4bb0-b223-ce6fe541d1a9",
+        "client_id": "62a8fab4-d743-4cea-9493-4317a8769dd5",
         "vin": "WMW6WXG1LB0MWMC15",
         "make": "MINI",
         "model": "Clubman",
@@ -1520,7 +1520,7 @@
         "created_at": "2026-08-11T02:20:33.839Z",
         "updated_at": "2026-08-11T02:20:33.839Z",
         "client": {
-          "id": "62a8fab4-d743-5cea-9493-4317a8769dd5",
+          "id": "62a8fab4-d743-4cea-9493-4317a8769dd5",
           "full_name": "Маркова Ирина Михайловна",
           "phone": "+75558799470",
           "source": "manual",
@@ -1533,14 +1533,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "ff6d97b3-5e35-59f8-9ab2-afc1638b9fce",
-      "vehicle_id": "4fb16a22-ef64-5e6c-88d0-62f8319621c4",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "ff6d97b3-5e35-49f8-9ab2-afc1638b9fce",
+      "vehicle_id": "3dabdd38-12c4-4211-b6be-69478269e33b",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена переднего сальника коленвала, Замена клапана вентиляции картера",
       "notes": "Пробег при приёме: 299 540 км",
@@ -1559,8 +1559,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "4fb16a22-ef64-5e6c-88d0-62f8319621c4",
-        "client_id": "597d7404-a8ea-50e7-9306-2378bfc58cb4",
+        "id": "3dabdd38-12c4-4211-b6be-69478269e33b",
+        "client_id": "597d7404-a8ea-40e7-9306-2378bfc58cb4",
         "vin": "WMWCMJLW5LW7EKAS9",
         "make": "MINI",
         "model": "Cooper S",
@@ -1573,7 +1573,7 @@
         "created_at": "2026-09-13T05:45:13.859Z",
         "updated_at": "2026-09-13T05:45:13.859Z",
         "client": {
-          "id": "597d7404-a8ea-50e7-9306-2378bfc58cb4",
+          "id": "597d7404-a8ea-40e7-9306-2378bfc58cb4",
           "full_name": "Виноградов Игорь Николаевич",
           "phone": "+75555390865",
           "source": "manual",
@@ -1586,14 +1586,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "3cd443c5-2586-5ff3-aee0-dac18380d75f",
-      "vehicle_id": "5c54eb6a-1526-51d6-96d0-90cd0f7b45ec",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "3cd443c5-2586-4ff3-aee0-dac18380d75f",
+      "vehicle_id": "6825d2b6-68f5-482d-9172-f25005b87d5b",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена задних тормозных дисков и колодок, Ремонт суппорта (чистка, смазка направляющих)",
       "notes": "Пробег при приёме: 96 530 км",
@@ -1612,8 +1612,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "5c54eb6a-1526-51d6-96d0-90cd0f7b45ec",
-        "client_id": "1bd92f87-7e91-5dbb-83ba-3e15861b02c7",
+        "id": "6825d2b6-68f5-482d-9172-f25005b87d5b",
+        "client_id": "1bd92f87-7e91-4dbb-83ba-3e15861b02c7",
         "vin": "WMW8TFD61MKJVXH9V",
         "make": "MINI",
         "model": "Cooper S",
@@ -1626,7 +1626,7 @@
         "created_at": "2024-07-27T05:19:06.719Z",
         "updated_at": "2024-07-27T05:19:06.719Z",
         "client": {
-          "id": "1bd92f87-7e91-5dbb-83ba-3e15861b02c7",
+          "id": "1bd92f87-7e91-4dbb-83ba-3e15861b02c7",
           "full_name": "Ильин Вячеслав Павлович",
           "phone": "+75555572274",
           "source": "manual",
@@ -1639,14 +1639,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "f5bc3837-f3b4-5bdf-8a33-74e615d064d1",
-      "vehicle_id": "e45a16d8-decd-5c63-9b8f-a1cfe0e239e7",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "f5bc3837-f3b4-4bdf-8a33-74e615d064d1",
+      "vehicle_id": "c779d286-b0d0-4753-9484-fe9ae186e4f1",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена рулевого наконечника",
       "notes": "Пробег при приёме: 105 170 км",
@@ -1665,8 +1665,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "e45a16d8-decd-5c63-9b8f-a1cfe0e239e7",
-        "client_id": "1185cc8f-776c-5658-ab00-160880647214",
+        "id": "c779d286-b0d0-4753-9484-fe9ae186e4f1",
+        "client_id": "1185cc8f-776c-4658-ab00-160880647214",
         "vin": "JTN2U8DU4Z9GEM77C",
         "make": "Toyota",
         "model": "Corolla",
@@ -1679,7 +1679,7 @@
         "created_at": "2025-07-05T22:58:42.954Z",
         "updated_at": "2025-07-05T22:58:42.954Z",
         "client": {
-          "id": "1185cc8f-776c-5658-ab00-160880647214",
+          "id": "1185cc8f-776c-4658-ab00-160880647214",
           "full_name": "Пахомов Никита Николаевич",
           "phone": "+75552501160",
           "source": "manual",
@@ -1692,14 +1692,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "085c9376-197e-54d1-bd7d-2c24b19ed3c2",
-      "vehicle_id": "00d49eef-7384-5571-a99a-bb95dc19cc05",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "085c9376-197e-44d1-bd7d-2c24b19ed3c2",
+      "vehicle_id": "099ba548-cf1c-4d64-847d-39e04fe32d89",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена масла в МКПП, Диагностика кондиционера",
       "notes": "Пробег при приёме: 191 520 км",
@@ -1718,8 +1718,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "00d49eef-7384-5571-a99a-bb95dc19cc05",
-        "client_id": "51bdf11f-6360-5eb4-b0ab-3a5f4bb535b0",
+        "id": "099ba548-cf1c-4d64-847d-39e04fe32d89",
+        "client_id": "51bdf11f-6360-4eb4-b0ab-3a5f4bb535b0",
         "vin": "WVWX1X4E1G4RWNZ7D",
         "make": "Volkswagen",
         "model": "Tiguan",
@@ -1732,7 +1732,7 @@
         "created_at": "2026-04-03T20:52:52.396Z",
         "updated_at": "2026-04-03T20:52:52.396Z",
         "client": {
-          "id": "51bdf11f-6360-5eb4-b0ab-3a5f4bb535b0",
+          "id": "51bdf11f-6360-4eb4-b0ab-3a5f4bb535b0",
           "full_name": "Гришин Вадим Романович",
           "phone": "+75551658119",
           "source": "manual",
@@ -1745,14 +1745,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "c01d493f-d6ed-5e50-b33e-78095328ea81",
-      "vehicle_id": "1cc9e7b2-08e8-5657-845d-caa7b027af0e",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "c01d493f-d6ed-4e50-b33e-78095328ea81",
+      "vehicle_id": "adab6fbb-310e-4347-8d8b-27a53e771d87",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Компьютерная диагностика всех систем",
       "notes": "Пробег при приёме: 60 410 км",
@@ -1771,8 +1771,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "1cc9e7b2-08e8-5657-845d-caa7b027af0e",
-        "client_id": "d09691de-fa21-5e4b-ace8-82392dcf667c",
+        "id": "adab6fbb-310e-4347-8d8b-27a53e771d87",
+        "client_id": "d09691de-fa21-4e4b-ace8-82392dcf667c",
         "vin": "WMWH70U5HM27DGLCG",
         "make": "MINI",
         "model": "Countryman",
@@ -1785,7 +1785,7 @@
         "created_at": "2025-01-04T21:20:33.201Z",
         "updated_at": "2025-01-04T21:20:33.201Z",
         "client": {
-          "id": "d09691de-fa21-5e4b-ace8-82392dcf667c",
+          "id": "d09691de-fa21-4e4b-ace8-82392dcf667c",
           "full_name": "Князев Александр Олегович",
           "phone": "+75555828342",
           "source": "csv_import",
@@ -1798,14 +1798,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "a89f015f-a16f-5003-b4a1-4561567f84cb",
-      "vehicle_id": "6e2c2467-e58b-5328-9601-3da50596db1b",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "a89f015f-a16f-4003-b4a1-4561567f84cb",
+      "vehicle_id": "1af48ca5-5d82-4f5b-a61e-864ee9bb2cfc",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена передних стоек стабилизатора",
       "notes": "Пробег при приёме: 257 110 км",
@@ -1824,8 +1824,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "6e2c2467-e58b-5328-9601-3da50596db1b",
-        "client_id": "a2ef01a4-070c-5614-a7af-6e06940f086e",
+        "id": "1af48ca5-5d82-4f5b-a61e-864ee9bb2cfc",
+        "client_id": "a2ef01a4-070c-4614-a7af-6e06940f086e",
         "vin": "WMW75T85N3H443NXX",
         "make": "MINI",
         "model": "Clubman",
@@ -1838,7 +1838,7 @@
         "created_at": "2025-09-14T21:49:29.007Z",
         "updated_at": "2025-09-14T21:49:29.007Z",
         "client": {
-          "id": "a2ef01a4-070c-5614-a7af-6e06940f086e",
+          "id": "a2ef01a4-070c-4614-a7af-6e06940f086e",
           "full_name": "Гуляев Вадим Алексеевич",
           "phone": "+75552226762",
           "source": "csv_import",
@@ -1851,14 +1851,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "92937e74-5d3a-5ebe-ac96-b0cb51993137",
-      "vehicle_id": "f045ccb5-636c-572e-9b1c-a875fea448e6",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "92937e74-5d3a-4ebe-ac96-b0cb51993137",
+      "vehicle_id": "ae8ac7c0-f8df-410e-9bac-e8b43aa73d2e",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Диагностика двигателя, Замена воздушного фильтра",
       "notes": "Пробег при приёме: 173 960 км",
@@ -1877,8 +1877,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "f045ccb5-636c-572e-9b1c-a875fea448e6",
-        "client_id": "bda0032a-2f5a-512b-b83d-59074465c79a",
+        "id": "ae8ac7c0-f8df-410e-9bac-e8b43aa73d2e",
+        "client_id": "bda0032a-2f5a-412b-b83d-59074465c79a",
         "vin": "WMWMXNM80TEHK7LNR",
         "make": "MINI",
         "model": "John Cooper Works",
@@ -1891,7 +1891,7 @@
         "created_at": "2025-11-24T05:47:56.115Z",
         "updated_at": "2025-11-24T05:47:56.115Z",
         "client": {
-          "id": "bda0032a-2f5a-512b-b83d-59074465c79a",
+          "id": "bda0032a-2f5a-412b-b83d-59074465c79a",
           "full_name": "Ермакова Мария Павловна",
           "phone": "+75551100200",
           "source": "manual",
@@ -1904,14 +1904,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "d6152fb8-4ae6-5667-b37e-a9db80d35c97",
-      "vehicle_id": "aae0f5a1-11d8-59fd-9d6b-708506f1047a",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "d6152fb8-4ae6-4667-b37e-a9db80d35c97",
+      "vehicle_id": "147ba544-a485-472f-bc2b-f80d0629b2d1",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена задних тормозных колодок, Замена передних стоек стабилизатора",
       "notes": "Пробег при приёме: 61 320 км",
@@ -1930,8 +1930,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "aae0f5a1-11d8-59fd-9d6b-708506f1047a",
-        "client_id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+        "id": "147ba544-a485-472f-bc2b-f80d0629b2d1",
+        "client_id": "0d4a25c0-90f7-4cf1-ae06-10eeaf856aca",
         "vin": "WMWVFWPJVE49FJ7WG",
         "make": "MINI",
         "model": "Countryman",
@@ -1944,7 +1944,7 @@
         "created_at": "2026-09-24T01:40:58.893Z",
         "updated_at": "2026-09-24T01:40:58.893Z",
         "client": {
-          "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+          "id": "0d4a25c0-90f7-4cf1-ae06-10eeaf856aca",
           "full_name": "ООО «Кедровый Двор»",
           "phone": "+75557316967",
           "source": "manual",
@@ -1957,14 +1957,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "55beb1d8-58f2-5adf-90d2-f4881ab90ff0",
-      "vehicle_id": "2f2f501a-70ef-52fb-a2a3-bd55cd4ba724",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "55beb1d8-58f2-4adf-90d2-f4881ab90ff0",
+      "vehicle_id": "4b4964fc-673c-44aa-8f1a-53e62defc43b",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Шиномонтаж (сезонная замена), Замена тормозной жидкости",
       "notes": "Пробег при приёме: 220 160 км",
@@ -1983,8 +1983,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "2f2f501a-70ef-52fb-a2a3-bd55cd4ba724",
-        "client_id": "2e10f538-d216-5821-b5fc-90c0b9ea5beb",
+        "id": "4b4964fc-673c-44aa-8f1a-53e62defc43b",
+        "client_id": "2e10f538-d216-4821-b5fc-90c0b9ea5beb",
         "vin": "WMWC0GDAW75PMJA8C",
         "make": "MINI",
         "model": "Countryman",
@@ -1997,7 +1997,7 @@
         "created_at": "2026-07-12T16:02:35.782Z",
         "updated_at": "2026-07-12T16:02:35.782Z",
         "client": {
-          "id": "2e10f538-d216-5821-b5fc-90c0b9ea5beb",
+          "id": "2e10f538-d216-4821-b5fc-90c0b9ea5beb",
           "full_name": "Муравьев Артём Геннадьевич",
           "phone": "+75552220476",
           "source": "manual",
@@ -2010,14 +2010,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "f0a61cf3-d5ca-5cd4-b753-6b7a4693b04b",
-      "vehicle_id": "183ce219-96a6-50c5-89a2-35d5990a1972",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "f0a61cf3-d5ca-4cd4-b753-6b7a4693b04b",
+      "vehicle_id": "a083e082-0e39-4f40-8b99-8f6331866f52",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Компьютерная диагностика всех систем, Диагностика ходовой части",
       "notes": "Пробег при приёме: 113 930 км",
@@ -2036,8 +2036,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "183ce219-96a6-50c5-89a2-35d5990a1972",
-        "client_id": "af53ec7d-9338-51d8-963e-06a15067782c",
+        "id": "a083e082-0e39-4f40-8b99-8f6331866f52",
+        "client_id": "af53ec7d-9338-41d8-963e-06a15067782c",
         "vin": "WMW8J6G9WMEE6A92L",
         "make": "MINI",
         "model": "Hatch 5D",
@@ -2050,7 +2050,7 @@
         "created_at": "2024-03-26T13:36:14.833Z",
         "updated_at": "2024-03-26T13:36:14.833Z",
         "client": {
-          "id": "af53ec7d-9338-51d8-963e-06a15067782c",
+          "id": "af53ec7d-9338-41d8-963e-06a15067782c",
           "full_name": "Суханова Вера Михайловна",
           "phone": "+75554794768",
           "source": "csv_import",
@@ -2063,14 +2063,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "5c076984-8b0f-588f-870c-2e9c98cb6f94",
-      "vehicle_id": "c631d734-6cfa-5aca-99b8-350462f90104",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "5c076984-8b0f-488f-870c-2e9c98cb6f94",
+      "vehicle_id": "7a2edea5-e3cc-4bd4-890e-b2c51b0174b0",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена масла в АКПП, Компьютерная диагностика всех систем",
       "notes": "Пробег при приёме: 52 470 км",
@@ -2089,8 +2089,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "c631d734-6cfa-5aca-99b8-350462f90104",
-        "client_id": "1cabebfe-35f3-5a30-ae75-a63b1f726ce7",
+        "id": "7a2edea5-e3cc-4bd4-890e-b2c51b0174b0",
+        "client_id": "1cabebfe-35f3-4a30-ae75-a63b1f726ce7",
         "vin": "WMW8HJ6LRYAXL65CN",
         "make": "MINI",
         "model": "Countryman",
@@ -2103,7 +2103,7 @@
         "created_at": "2026-08-26T23:11:20.453Z",
         "updated_at": "2026-08-26T23:11:20.453Z",
         "client": {
-          "id": "1cabebfe-35f3-5a30-ae75-a63b1f726ce7",
+          "id": "1cabebfe-35f3-4a30-ae75-a63b1f726ce7",
           "full_name": "Калашников Александр Павлович",
           "phone": "+75552450446",
           "source": "manual",
@@ -2116,14 +2116,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "34b26e41-8a48-5b35-9b19-be350602d9ae",
-      "vehicle_id": "6b3fa391-fc1b-5323-8293-6ab71e9baa45",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "34b26e41-8a48-4b35-9b19-be350602d9ae",
+      "vehicle_id": "1a8c0d88-ce1d-421c-bf11-859bf349acac",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена катушки зажигания, Компьютерная диагностика всех систем",
       "notes": "Пробег при приёме: 299 540 км",
@@ -2142,8 +2142,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "6b3fa391-fc1b-5323-8293-6ab71e9baa45",
-        "client_id": "beb3ea8e-7339-50d7-b129-cc03e9284be4",
+        "id": "1a8c0d88-ce1d-421c-bf11-859bf349acac",
+        "client_id": "beb3ea8e-7339-40d7-b129-cc03e9284be4",
         "vin": "WMWNRVYAYCHTW087T",
         "make": "MINI",
         "model": "Hatch",
@@ -2156,7 +2156,7 @@
         "created_at": "2026-09-13T15:07:13.661Z",
         "updated_at": "2026-09-13T15:07:13.661Z",
         "client": {
-          "id": "beb3ea8e-7339-50d7-b129-cc03e9284be4",
+          "id": "beb3ea8e-7339-40d7-b129-cc03e9284be4",
           "full_name": "Некрасова Ксения Николаевна",
           "phone": "+75558616453",
           "source": "csv_import",
@@ -2169,14 +2169,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "64e48991-abda-5520-bc63-0473291a2b74",
-      "vehicle_id": "d0c8f043-6f4f-5fd9-a7a9-7daaaf698fce",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "64e48991-abda-4520-bc63-0473291a2b74",
+      "vehicle_id": "a1bc9270-b09a-47e5-9af8-156b77b9dc16",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Ремонт прокола",
       "notes": "Пробег при приёме: 250 650 км",
@@ -2195,8 +2195,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "d0c8f043-6f4f-5fd9-a7a9-7daaaf698fce",
-        "client_id": "70db385a-500b-5b0a-a809-a718465474dc",
+        "id": "a1bc9270-b09a-47e5-9af8-156b77b9dc16",
+        "client_id": "70db385a-500b-4b0a-a809-a718465474dc",
         "vin": "WMW20GGFN3J4B7ZNE",
         "make": "MINI",
         "model": "Countryman",
@@ -2209,7 +2209,7 @@
         "created_at": "2023-12-23T03:24:39.569Z",
         "updated_at": "2023-12-23T03:24:39.569Z",
         "client": {
-          "id": "70db385a-500b-5b0a-a809-a718465474dc",
+          "id": "70db385a-500b-4b0a-a809-a718465474dc",
           "full_name": "Комарова Евгения Алексеевна",
           "phone": "+75555137598",
           "source": "manual",
@@ -2222,14 +2222,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "d888cf94-5c2a-5c6b-8fe1-344ab1da9e1c",
-      "vehicle_id": "9708412e-49d9-51a6-9ad4-1575f2f862e7",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "d888cf94-5c2a-4c6b-8fe1-344ab1da9e1c",
+      "vehicle_id": "a3d3e1db-9eeb-41a6-979c-748b42d9910f",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена рабочего цилиндра сцепления",
       "notes": "Пробег при приёме: 15 500 км",
@@ -2248,8 +2248,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "9708412e-49d9-51a6-9ad4-1575f2f862e7",
-        "client_id": "33aa224c-04d2-5d01-b293-f08502139be4",
+        "id": "a3d3e1db-9eeb-41a6-979c-748b42d9910f",
+        "client_id": "33aa224c-04d2-4d01-b293-f08502139be4",
         "vin": "WMWK0TU1F5J2PU5PX",
         "make": "MINI",
         "model": "Clubman",
@@ -2262,7 +2262,7 @@
         "created_at": "2025-03-14T11:22:25.743Z",
         "updated_at": "2025-03-14T11:22:25.743Z",
         "client": {
-          "id": "33aa224c-04d2-5d01-b293-f08502139be4",
+          "id": "33aa224c-04d2-4d01-b293-f08502139be4",
           "full_name": "Копылов Степан Сергеевич",
           "phone": "+75551684790",
           "source": "manual",
@@ -2275,14 +2275,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "dc9f6a49-f2cf-51af-8471-e092efdbf4ee",
-      "vehicle_id": "c5ce9761-dcf6-5e5c-b867-b8502dacdf06",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "dc9f6a49-f2cf-41af-8471-e092efdbf4ee",
+      "vehicle_id": "56259fe4-6bbf-495e-a8d9-732c11949c69",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "scheduled",
       "title": "Замена масла в двигателе, Замена охлаждающей жидкости",
       "notes": "Пробег при приёме: 228 590 км",
@@ -2301,8 +2301,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "c5ce9761-dcf6-5e5c-b867-b8502dacdf06",
-        "client_id": "603a18df-ad88-52cf-ae17-4e29bc57fc41",
+        "id": "56259fe4-6bbf-495e-a8d9-732c11949c69",
+        "client_id": "603a18df-ad88-42cf-ae17-4e29bc57fc41",
         "vin": "WMWXLAR0ZJ49XK783",
         "make": "MINI",
         "model": "Cooper",
@@ -2315,7 +2315,7 @@
         "created_at": "2026-09-13T20:55:45.120Z",
         "updated_at": "2026-09-13T20:55:45.120Z",
         "client": {
-          "id": "603a18df-ad88-52cf-ae17-4e29bc57fc41",
+          "id": "603a18df-ad88-42cf-ae17-4e29bc57fc41",
           "full_name": "Гущин Вадим Фёдорович",
           "phone": "+75553263890",
           "source": "manual",
@@ -2328,14 +2328,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "d0fd487f-7468-59f7-840d-64aae23f9f3c",
-      "vehicle_id": "00790757-8595-5ddf-9081-f32648e3c0ec",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "d0fd487f-7468-49f7-840d-64aae23f9f3c",
+      "vehicle_id": "7a44bb76-6dc8-4908-a902-1971c8d79032",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "scheduled",
       "title": "Замена масла в двигателе",
       "notes": "Пробег при приёме: 298 680 км",
@@ -2354,8 +2354,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "00790757-8595-5ddf-9081-f32648e3c0ec",
-        "client_id": "1b705d7b-5e48-5b8c-949a-bb582ef3b389",
+        "id": "7a44bb76-6dc8-4908-a902-1971c8d79032",
+        "client_id": "1b705d7b-5e48-4b8c-949a-bb582ef3b389",
         "vin": "WMWLZJ7H3A1N1JWCD",
         "make": "MINI",
         "model": "Countryman",
@@ -2368,7 +2368,7 @@
         "created_at": "2025-11-24T01:15:20.290Z",
         "updated_at": "2025-11-24T01:15:20.290Z",
         "client": {
-          "id": "1b705d7b-5e48-5b8c-949a-bb582ef3b389",
+          "id": "1b705d7b-5e48-4b8c-949a-bb582ef3b389",
           "full_name": "Маслова Ирина Олеговна",
           "phone": "+75555823853",
           "source": "manual",
@@ -2381,16 +2381,16 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     }
   ],
   "in_progress": [
     {
-      "id": "9ab0f76c-cf23-5979-a8fc-f6af5fa50bd4",
-      "vehicle_id": "a6330584-359e-53f7-8370-e2c235b7a35e",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "9ab0f76c-cf23-4979-a8fc-f6af5fa50bd4",
+      "vehicle_id": "03dc3eeb-bda9-4ab6-9906-4f9625e25a14",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "in_progress",
       "title": "Замена передних амортизаторов, Замена натяжителя цепи ГРМ",
       "notes": "Пробег при приёме: 21 700 км",
@@ -2409,8 +2409,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "a6330584-359e-53f7-8370-e2c235b7a35e",
-        "client_id": "f8518eee-5e4a-5f46-b3fd-9caee6f550a3",
+        "id": "03dc3eeb-bda9-4ab6-9906-4f9625e25a14",
+        "client_id": "f8518eee-5e4a-4f46-b3fd-9caee6f550a3",
         "vin": "WMW4SF111YAEJENLK",
         "make": "MINI",
         "model": "One",
@@ -2423,7 +2423,7 @@
         "created_at": "2026-09-26T18:55:59.970Z",
         "updated_at": "2026-09-26T18:55:59.970Z",
         "client": {
-          "id": "f8518eee-5e4a-5f46-b3fd-9caee6f550a3",
+          "id": "f8518eee-5e4a-4f46-b3fd-9caee6f550a3",
           "full_name": "Трофимова Надежда Романовна",
           "phone": "+75557972365",
           "source": "csv_import",
@@ -2436,14 +2436,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "0ce2a166-bfa7-5965-ab9c-58cebe5414cf",
-      "vehicle_id": "183ce219-96a6-50c5-89a2-35d5990a1972",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "0ce2a166-bfa7-4965-ab9c-58cebe5414cf",
+      "vehicle_id": "a083e082-0e39-4f40-8b99-8f6331866f52",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "in_progress",
       "title": "Хранение комплекта колёс (сезон), Правка литого диска",
       "notes": "Пробег при приёме: 113 930 км",
@@ -2462,8 +2462,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "183ce219-96a6-50c5-89a2-35d5990a1972",
-        "client_id": "af53ec7d-9338-51d8-963e-06a15067782c",
+        "id": "a083e082-0e39-4f40-8b99-8f6331866f52",
+        "client_id": "af53ec7d-9338-41d8-963e-06a15067782c",
         "vin": "WMW8J6G9WMEE6A92L",
         "make": "MINI",
         "model": "Hatch 5D",
@@ -2476,7 +2476,7 @@
         "created_at": "2024-03-26T13:36:14.833Z",
         "updated_at": "2024-03-26T13:36:14.833Z",
         "client": {
-          "id": "af53ec7d-9338-51d8-963e-06a15067782c",
+          "id": "af53ec7d-9338-41d8-963e-06a15067782c",
           "full_name": "Суханова Вера Михайловна",
           "phone": "+75554794768",
           "source": "csv_import",
@@ -2489,14 +2489,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "1e5ef750-2752-5d09-8cf1-0d1333f76619",
-      "vehicle_id": "116df04b-e370-59e7-9c9d-193700588c63",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "1e5ef750-2752-4d09-8cf1-0d1333f76619",
+      "vehicle_id": "116df04b-e370-49e7-9c9d-193700588c63",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "in_progress",
       "title": "Замена передних тормозных дисков и колодок, ТО (регламент)",
       "notes": "Пробег при приёме: 67 250 км",
@@ -2515,8 +2515,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "116df04b-e370-59e7-9c9d-193700588c63",
-        "client_id": "9e0779f1-f195-5307-91d2-afb317048978",
+        "id": "116df04b-e370-49e7-9c9d-193700588c63",
+        "client_id": "9e0779f1-f195-4307-91d2-afb317048978",
         "vin": "WMWZWPJPEGTS7K0PL",
         "make": "MINI",
         "model": "Countryman",
@@ -2529,7 +2529,7 @@
         "created_at": "2025-11-01T12:12:00.000Z",
         "updated_at": "2025-11-01T12:12:00.000Z",
         "client": {
-          "id": "9e0779f1-f195-5307-91d2-afb317048978",
+          "id": "9e0779f1-f195-4307-91d2-afb317048978",
           "full_name": "Никитин Ярослав Геннадьевич",
           "phone": "+75556745037",
           "source": "manual",
@@ -2542,14 +2542,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "f5345c9f-1d61-57cd-9704-9a14ecb46a41",
-      "vehicle_id": "cee0a73e-d124-5916-a4a2-4ab6517d160c",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "f5345c9f-1d61-47cd-9704-9a14ecb46a41",
+      "vehicle_id": "db362f08-620d-4a48-915d-511f28972796",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "in_progress",
       "title": "Шиномонтаж (сезонная замена), Диагностика двигателя",
       "notes": "Пробег при приёме: 85 510 км",
@@ -2568,8 +2568,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "cee0a73e-d124-5916-a4a2-4ab6517d160c",
-        "client_id": "6e3b9b7c-e42f-58ad-b0c1-03e75cbe0bf7",
+        "id": "db362f08-620d-4a48-915d-511f28972796",
+        "client_id": "6e3b9b7c-e42f-48ad-b0c1-03e75cbe0bf7",
         "vin": "WMWY4A5NW7F8TDYXS",
         "make": "MINI",
         "model": "Countryman",
@@ -2582,7 +2582,7 @@
         "created_at": "2026-01-13T01:28:47.446Z",
         "updated_at": "2026-01-13T01:28:47.446Z",
         "client": {
-          "id": "6e3b9b7c-e42f-58ad-b0c1-03e75cbe0bf7",
+          "id": "6e3b9b7c-e42f-48ad-b0c1-03e75cbe0bf7",
           "full_name": "Кириллова Елизавета Анатольевна",
           "phone": "+75557861231",
           "source": "manual",
@@ -2595,16 +2595,16 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     }
   ],
   "waiting": [
     {
-      "id": "a531b2cd-4df8-5364-b488-71666c65631b",
-      "vehicle_id": "5befed85-df89-5241-bb11-d8387d801da1",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "a531b2cd-4df8-4364-b488-71666c65631b",
+      "vehicle_id": "b12ef285-f329-4bc7-bc51-ac085edfbb7e",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "waiting",
       "title": "ТО расширенное (масло, фильтры, свечи)",
       "notes": "Пробег при приёме: 71 730 км\nЖдёт запчасть: Фильтр воздушный (R56/R55)",
@@ -2623,8 +2623,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "5befed85-df89-5241-bb11-d8387d801da1",
-        "client_id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+        "id": "b12ef285-f329-4bc7-bc51-ac085edfbb7e",
+        "client_id": "fcc0f757-5d95-4211-987e-5292b58373b8",
         "vin": "WMWMBSK2Y79L0KZGZ",
         "make": "MINI",
         "model": "Cooper S",
@@ -2637,7 +2637,7 @@
         "created_at": "2026-09-11T02:58:25.808Z",
         "updated_at": "2026-09-11T02:58:25.808Z",
         "client": {
-          "id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+          "id": "fcc0f757-5d95-4211-987e-5292b58373b8",
           "full_name": "Гущина Анастасия Алексеевна",
           "phone": "+75558196525",
           "source": "manual",
@@ -2650,14 +2650,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "bc1a1786-f9ec-55fd-b9b8-7ef3045a14ee",
-      "vehicle_id": "2d2dca50-cb3a-55ad-8491-3e81c9a6760a",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "bc1a1786-f9ec-45fd-b9b8-7ef3045a14ee",
+      "vehicle_id": "97d54521-80f9-4222-9857-406cd97c9693",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "waiting",
       "title": "Замена лампы головного света",
       "notes": "Пробег при приёме: 96 420 км\nЖдёт запчасть: Лампа галогенная H7",
@@ -2676,8 +2676,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "2d2dca50-cb3a-55ad-8491-3e81c9a6760a",
-        "client_id": "29c93b51-0a61-5475-8a37-1d9b595aa726",
+        "id": "97d54521-80f9-4222-9857-406cd97c9693",
+        "client_id": "29c93b51-0a61-4475-8a37-1d9b595aa726",
         "vin": "WMW8HKL3ADE5LH6S7",
         "make": "MINI",
         "model": "Countryman",
@@ -2690,7 +2690,7 @@
         "created_at": "2026-11-03T10:08:53.805Z",
         "updated_at": "2026-11-03T10:08:53.805Z",
         "client": {
-          "id": "29c93b51-0a61-5475-8a37-1d9b595aa726",
+          "id": "29c93b51-0a61-4475-8a37-1d9b595aa726",
           "full_name": "Журавлев Даниил Петрович",
           "phone": "+75551761065",
           "source": "manual",
@@ -2703,14 +2703,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "32d44981-f9b4-5deb-a389-fd9b7ab47ed6",
-      "vehicle_id": "5c54eb6a-1526-51d6-96d0-90cd0f7b45ec",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "32d44981-f9b4-4deb-a389-fd9b7ab47ed6",
+      "vehicle_id": "6825d2b6-68f5-482d-9172-f25005b87d5b",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "waiting",
       "title": "Шиномонтаж (сезонная замена), Замена лампы головного света",
       "notes": "Пробег при приёме: 96 400 км\nЖдёт запчасть: Лампа галогенная H7",
@@ -2729,8 +2729,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "5c54eb6a-1526-51d6-96d0-90cd0f7b45ec",
-        "client_id": "1bd92f87-7e91-5dbb-83ba-3e15861b02c7",
+        "id": "6825d2b6-68f5-482d-9172-f25005b87d5b",
+        "client_id": "1bd92f87-7e91-4dbb-83ba-3e15861b02c7",
         "vin": "WMW8TFD61MKJVXH9V",
         "make": "MINI",
         "model": "Cooper S",
@@ -2743,7 +2743,7 @@
         "created_at": "2024-07-27T05:19:06.719Z",
         "updated_at": "2024-07-27T05:19:06.719Z",
         "client": {
-          "id": "1bd92f87-7e91-5dbb-83ba-3e15861b02c7",
+          "id": "1bd92f87-7e91-4dbb-83ba-3e15861b02c7",
           "full_name": "Ильин Вячеслав Павлович",
           "phone": "+75555572274",
           "source": "manual",
@@ -2756,14 +2756,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "c3fd2223-fb4f-5fad-ba7e-a614302a28be",
-      "vehicle_id": "9c8e4115-a2c9-51eb-bebb-3e6fe253ff50",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "c3fd2223-fb4f-4fad-ba7e-a614302a28be",
+      "vehicle_id": "8920b44e-2653-4edf-89b9-5bfae4feca4b",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "waiting",
       "title": "Заправка кондиционера, Шиномонтаж (сезонная замена)",
       "notes": "Пробег при приёме: 93 160 км\nЖдёт запчасть: Масло компрессора кондиционера PAG 46",
@@ -2782,8 +2782,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "9c8e4115-a2c9-51eb-bebb-3e6fe253ff50",
-        "client_id": "d1d40801-63aa-5868-b75e-fcb196e00dc6",
+        "id": "8920b44e-2653-4edf-89b9-5bfae4feca4b",
+        "client_id": "d1d40801-63aa-4868-b75e-fcb196e00dc6",
         "vin": "WMW0873PZ3THAHJHF",
         "make": "MINI",
         "model": "Hatch",
@@ -2796,7 +2796,7 @@
         "created_at": "2026-10-10T07:48:05.064Z",
         "updated_at": "2026-10-10T07:48:05.064Z",
         "client": {
-          "id": "d1d40801-63aa-5868-b75e-fcb196e00dc6",
+          "id": "d1d40801-63aa-4868-b75e-fcb196e00dc6",
           "full_name": "Панова Галина Павловна",
           "phone": "+75551420457",
           "source": "csv_import",
@@ -2809,14 +2809,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "9d625c03-ab35-5bc4-8c71-19b7979a79c2",
-      "vehicle_id": "b81e35ee-2120-5606-a486-8c7cac72e8d6",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "9d625c03-ab35-4bc4-8c71-19b7979a79c2",
+      "vehicle_id": "6973280c-3c49-48c8-b7d1-3f8b5fc47ffb",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "waiting",
       "title": "Замена патрубка турбины, Шиномонтаж (сезонная замена)",
       "notes": "Пробег при приёме: 299 330 км\nЖдёт запчасть: Патрубок турбины интеркулера",
@@ -2835,8 +2835,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "b81e35ee-2120-5606-a486-8c7cac72e8d6",
-        "client_id": "4c01d2b4-840c-507d-ae25-a896d02367ac",
+        "id": "6973280c-3c49-48c8-b7d1-3f8b5fc47ffb",
+        "client_id": "4c01d2b4-840c-407d-ae25-a896d02367ac",
         "vin": "WMW4XEE2PJYVPAMX7",
         "make": "MINI",
         "model": "John Cooper Works",
@@ -2849,7 +2849,7 @@
         "created_at": "2024-09-20T16:41:51.369Z",
         "updated_at": "2024-09-20T16:41:51.369Z",
         "client": {
-          "id": "4c01d2b4-840c-507d-ae25-a896d02367ac",
+          "id": "4c01d2b4-840c-407d-ae25-a896d02367ac",
           "full_name": "Авдеева Дарья Валерьевна",
           "phone": "+75557683036",
           "source": "manual",
@@ -2862,14 +2862,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "55f27e03-118a-52a8-b2f4-41bf954684fc",
-      "vehicle_id": "6b3fa391-fc1b-5323-8293-6ab71e9baa45",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "55f27e03-118a-42a8-b2f4-41bf954684fc",
+      "vehicle_id": "1a8c0d88-ce1d-421c-bf11-859bf349acac",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "waiting",
       "title": "Замена передних стоек стабилизатора, Замена воздушного фильтра",
       "notes": "Пробег при приёме: 299 530 км\nЖдёт запчасть: Стойка стабилизатора передняя (R56/R55)",
@@ -2888,8 +2888,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "6b3fa391-fc1b-5323-8293-6ab71e9baa45",
-        "client_id": "beb3ea8e-7339-50d7-b129-cc03e9284be4",
+        "id": "1a8c0d88-ce1d-421c-bf11-859bf349acac",
+        "client_id": "beb3ea8e-7339-40d7-b129-cc03e9284be4",
         "vin": "WMWNRVYAYCHTW087T",
         "make": "MINI",
         "model": "Hatch",
@@ -2902,7 +2902,7 @@
         "created_at": "2026-09-13T15:07:13.661Z",
         "updated_at": "2026-09-13T15:07:13.661Z",
         "client": {
-          "id": "beb3ea8e-7339-50d7-b129-cc03e9284be4",
+          "id": "beb3ea8e-7339-40d7-b129-cc03e9284be4",
           "full_name": "Некрасова Ксения Николаевна",
           "phone": "+75558616453",
           "source": "csv_import",
@@ -2915,16 +2915,16 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     }
   ],
   "done": [
     {
-      "id": "cb66c17f-1b35-5389-a25e-ede522bd3ff5",
-      "vehicle_id": "efaec364-af5a-5ea4-bd2b-3bcf7bbd9c87",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "cb66c17f-1b35-4389-a25e-ede522bd3ff5",
+      "vehicle_id": "28502722-0d0e-47a6-a47c-9aadc9a3e714",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "done",
       "title": "Заправка кондиционера, Диагностика ходовой части",
       "notes": "Пробег при приёме: 43 750 км",
@@ -2943,8 +2943,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "efaec364-af5a-5ea4-bd2b-3bcf7bbd9c87",
-        "client_id": "cff9500e-2d21-5077-b2c7-6c5032b1c4d1",
+        "id": "28502722-0d0e-47a6-a47c-9aadc9a3e714",
+        "client_id": "cff9500e-2d21-4077-b2c7-6c5032b1c4d1",
         "vin": "WMWC2AH9FTUCXD4V3",
         "make": "MINI",
         "model": "Countryman",
@@ -2957,7 +2957,7 @@
         "created_at": "2026-05-30T11:08:25.941Z",
         "updated_at": "2026-05-30T11:08:25.941Z",
         "client": {
-          "id": "cff9500e-2d21-5077-b2c7-6c5032b1c4d1",
+          "id": "cff9500e-2d21-4077-b2c7-6c5032b1c4d1",
           "full_name": "Авдеев Фёдор Валерьевич",
           "phone": "+75554010785",
           "source": "manual",
@@ -2970,14 +2970,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "fd53ff13-38b7-5347-98f2-e36db55b2a81",
-      "vehicle_id": "73d1c525-7b59-5209-9f24-a49999cff354",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "fd53ff13-38b7-4347-98f2-e36db55b2a81",
+      "vehicle_id": "7a8c522c-564f-49f2-9b45-2bc113d89244",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "done",
       "title": "Замена топливного фильтра, Диагностика двигателя",
       "notes": "Пробег при приёме: 29 030 км",
@@ -2996,8 +2996,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "73d1c525-7b59-5209-9f24-a49999cff354",
-        "client_id": "ec5350b7-9dbe-52b2-945f-559e0ab63df5",
+        "id": "7a8c522c-564f-49f2-9b45-2bc113d89244",
+        "client_id": "ec5350b7-9dbe-42b2-945f-559e0ab63df5",
         "vin": "WMW89R20CD0HEEAWF",
         "make": "MINI",
         "model": "Countryman",
@@ -3010,7 +3010,7 @@
         "created_at": "2025-04-12T22:25:39.672Z",
         "updated_at": "2025-04-12T22:25:39.672Z",
         "client": {
-          "id": "ec5350b7-9dbe-52b2-945f-559e0ab63df5",
+          "id": "ec5350b7-9dbe-42b2-945f-559e0ab63df5",
           "full_name": "ООО «Вектор Телеком Сервис»",
           "phone": "+75551441385",
           "source": "csv_import",
@@ -3023,14 +3023,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "bb4aa580-a336-5124-84e6-4e25dad0e7bf",
-      "vehicle_id": "fb6d1816-bc6f-5a89-8513-c2750673c3e6",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "bb4aa580-a336-4124-84e6-4e25dad0e7bf",
+      "vehicle_id": "138d7bb5-afcd-4b59-887e-04799ce94953",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "done",
       "title": "Замена задних тормозных колодок, Шиномонтаж (сезонная замена)",
       "notes": "Пробег при приёме: 104 150 км",
@@ -3049,8 +3049,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "fb6d1816-bc6f-5a89-8513-c2750673c3e6",
-        "client_id": "ba227c90-bb1c-5bdc-92be-72673cb21974",
+        "id": "138d7bb5-afcd-4b59-887e-04799ce94953",
+        "client_id": "ba227c90-bb1c-4bdc-92be-72673cb21974",
         "vin": "WMW0K4ZJAPT29HE2A",
         "make": "MINI",
         "model": "Hatch",
@@ -3063,7 +3063,7 @@
         "created_at": "2025-02-04T08:51:59.467Z",
         "updated_at": "2025-02-04T08:51:59.467Z",
         "client": {
-          "id": "ba227c90-bb1c-5bdc-92be-72673cb21974",
+          "id": "ba227c90-bb1c-4bdc-92be-72673cb21974",
           "full_name": "Ермаков Артём Андреевич",
           "phone": "+75558685884",
           "source": "manual",
@@ -3076,14 +3076,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "b1b0340c-7bab-5297-b071-7b3dca0e153a",
-      "vehicle_id": "a88ac2d2-13a3-5f93-b79d-9b5a0d8f34e3",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "b1b0340c-7bab-4297-b071-7b3dca0e153a",
+      "vehicle_id": "9255cfd5-5d03-4957-8e4c-87ba02234dc6",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "done",
       "title": "Замена передних стоек стабилизатора, Диагностика двигателя",
       "notes": "Пробег при приёме: 299 500 км",
@@ -3102,8 +3102,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "a88ac2d2-13a3-5f93-b79d-9b5a0d8f34e3",
-        "client_id": "3a396c60-bb6b-5d8e-9904-80c264de40fb",
+        "id": "9255cfd5-5d03-4957-8e4c-87ba02234dc6",
+        "client_id": "3a396c60-bb6b-4d8e-9904-80c264de40fb",
         "vin": "WMWH0KHY4717NBK01",
         "make": "MINI",
         "model": "Hatch",
@@ -3116,7 +3116,7 @@
         "created_at": "2026-09-30T07:54:21.136Z",
         "updated_at": "2026-09-30T07:54:21.136Z",
         "client": {
-          "id": "3a396c60-bb6b-5d8e-9904-80c264de40fb",
+          "id": "3a396c60-bb6b-4d8e-9904-80c264de40fb",
           "full_name": "Сазонова Алёна Анатольевна",
           "phone": "+75555932168",
           "source": "csv_import",
@@ -3129,14 +3129,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "104a56a4-e5c9-5425-98ff-7ba9036ee956",
-      "vehicle_id": "8d6623c6-9a37-5472-9895-06394bcdeab0",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "104a56a4-e5c9-4425-98ff-7ba9036ee956",
+      "vehicle_id": "72681cad-24ef-45b9-9a44-58bd698ec081",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "done",
       "title": "Шиномонтаж (сезонная замена), Диагностика ходовой части",
       "notes": "Пробег при приёме: 74 640 км",
@@ -3155,8 +3155,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "8d6623c6-9a37-5472-9895-06394bcdeab0",
-        "client_id": "23a12e33-bda2-5d66-bd44-b1efade9e86d",
+        "id": "72681cad-24ef-45b9-9a44-58bd698ec081",
+        "client_id": "23a12e33-bda2-4d66-bd44-b1efade9e86d",
         "vin": "WVW47J9AVN3CZ8L45",
         "make": "Volkswagen",
         "model": "Golf",
@@ -3169,7 +3169,7 @@
         "created_at": "2026-07-11T21:00:03.053Z",
         "updated_at": "2026-07-11T21:00:03.053Z",
         "client": {
-          "id": "23a12e33-bda2-5d66-bd44-b1efade9e86d",
+          "id": "23a12e33-bda2-4d66-bd44-b1efade9e86d",
           "full_name": "Самсонов Ярослав Андреевич",
           "phone": "+75554246300",
           "source": "manual",
@@ -3182,14 +3182,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "4fe606ed-75a3-5cf1-a15c-e8c5b680fe0b",
-      "vehicle_id": "a28f4713-38ba-56ff-ac4f-9cd57237a817",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "4fe606ed-75a3-4cf1-a15c-e8c5b680fe0b",
+      "vehicle_id": "011238f3-238a-4635-940d-206122f29d03",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "done",
       "title": "Предпродажная проверка автомобиля, Замена тормозной жидкости",
       "notes": "Пробег при приёме: 33 120 км",
@@ -3208,8 +3208,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "a28f4713-38ba-56ff-ac4f-9cd57237a817",
-        "client_id": "12aacffa-b0a7-5e8b-b548-23d75940aec3",
+        "id": "011238f3-238a-4635-940d-206122f29d03",
+        "client_id": "12aacffa-b0a7-4e8b-b548-23d75940aec3",
         "vin": "WMWXNWZXV5JES8A6C",
         "make": "MINI",
         "model": "Countryman",
@@ -3222,7 +3222,7 @@
         "created_at": "2025-12-03T17:53:48.697Z",
         "updated_at": "2025-12-03T17:53:48.697Z",
         "client": {
-          "id": "12aacffa-b0a7-5e8b-b548-23d75940aec3",
+          "id": "12aacffa-b0a7-4e8b-b548-23d75940aec3",
           "full_name": "Волкова Жанна Борисовна",
           "phone": "+75555983145",
           "source": "csv_import",
@@ -3235,14 +3235,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "cd66fcec-292d-5787-a865-7d95d60ab89e",
-      "vehicle_id": "a3b10128-265b-5541-ba71-75814e7d2fd3",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "cd66fcec-292d-4787-a865-7d95d60ab89e",
+      "vehicle_id": "716d9f1a-c412-4f0e-9e56-b3adc8a3b623",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "done",
       "title": "Замена передних тормозных колодок",
       "notes": "Пробег при приёме: 297 900 км",
@@ -3261,8 +3261,8 @@
       "order_doc_number": null,
       "paid_amount": 0,
       "vehicle": {
-        "id": "a3b10128-265b-5541-ba71-75814e7d2fd3",
-        "client_id": "0660b1b5-43e9-5132-be93-507b54dcc728",
+        "id": "716d9f1a-c412-4f0e-9e56-b3adc8a3b623",
+        "client_id": "0660b1b5-43e9-4132-be93-507b54dcc728",
         "vin": "WMWEGPSCR6KACBVM4",
         "make": "MINI",
         "model": "Hatch",
@@ -3275,7 +3275,7 @@
         "created_at": "2025-01-07T18:10:11.589Z",
         "updated_at": "2025-01-07T18:10:11.589Z",
         "client": {
-          "id": "0660b1b5-43e9-5132-be93-507b54dcc728",
+          "id": "0660b1b5-43e9-4132-be93-507b54dcc728",
           "full_name": "Харитонова Нина Алексеевна",
           "phone": "+75557341323",
           "source": "manual",
@@ -3288,16 +3288,16 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     }
   ],
   "closed": [
     {
-      "id": "1921c43b-58a1-50fa-b819-d1690b6392ea",
-      "vehicle_id": "efaec364-af5a-5ea4-bd2b-3bcf7bbd9c87",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "1921c43b-58a1-40fa-b819-d1690b6392ea",
+      "vehicle_id": "28502722-0d0e-47a6-a47c-9aadc9a3e714",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "Диагностика кондиционера",
       "notes": "Пробег при приёме: 44 320 км",
@@ -3316,8 +3316,8 @@
       "order_doc_number": null,
       "paid_amount": 1045,
       "vehicle": {
-        "id": "efaec364-af5a-5ea4-bd2b-3bcf7bbd9c87",
-        "client_id": "cff9500e-2d21-5077-b2c7-6c5032b1c4d1",
+        "id": "28502722-0d0e-47a6-a47c-9aadc9a3e714",
+        "client_id": "cff9500e-2d21-4077-b2c7-6c5032b1c4d1",
         "vin": "WMWC2AH9FTUCXD4V3",
         "make": "MINI",
         "model": "Countryman",
@@ -3330,7 +3330,7 @@
         "created_at": "2026-05-30T11:08:25.941Z",
         "updated_at": "2026-05-30T11:08:25.941Z",
         "client": {
-          "id": "cff9500e-2d21-5077-b2c7-6c5032b1c4d1",
+          "id": "cff9500e-2d21-4077-b2c7-6c5032b1c4d1",
           "full_name": "Авдеев Фёдор Валерьевич",
           "phone": "+75554010785",
           "source": "manual",
@@ -3343,14 +3343,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "d6a8f6fe-2179-5932-bfe6-4e622cca89f6",
-      "vehicle_id": "2104308d-3b03-5adb-8b94-94410c6d22a9",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "d6a8f6fe-2179-4932-bfe6-4e622cca89f6",
+      "vehicle_id": "a8899f17-65ea-4a6b-a4f7-a5612ff3a0f9",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "ТО (регламент), Балансировка колёс",
       "notes": "Пробег при приёме: 160 310 км",
@@ -3369,8 +3369,8 @@
       "order_doc_number": null,
       "paid_amount": 16140,
       "vehicle": {
-        "id": "2104308d-3b03-5adb-8b94-94410c6d22a9",
-        "client_id": "e4c3287b-9a92-572f-8f4e-e3751b02546b",
+        "id": "a8899f17-65ea-4a6b-a4f7-a5612ff3a0f9",
+        "client_id": "e4c3287b-9a92-472f-8f4e-e3751b02546b",
         "vin": "WMWYCT4DWKH0LRCP4",
         "make": "MINI",
         "model": "Hatch",
@@ -3383,7 +3383,7 @@
         "created_at": "2025-05-15T19:48:44.164Z",
         "updated_at": "2025-05-15T19:48:44.164Z",
         "client": {
-          "id": "e4c3287b-9a92-572f-8f4e-e3751b02546b",
+          "id": "e4c3287b-9a92-472f-8f4e-e3751b02546b",
           "full_name": "Богданова Жанна Олеговна",
           "phone": "+75558542796",
           "source": "manual",
@@ -3396,14 +3396,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "a65b6a5a-cdbf-5f9b-8053-6e76d0c862c5",
-      "vehicle_id": "710609be-5b60-587c-a7af-06568e93d1b9",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "a65b6a5a-cdbf-4f9b-8053-6e76d0c862c5",
+      "vehicle_id": "c88b8557-0823-44fd-acf1-5a48f2ccbd29",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "closed",
       "title": "Компьютерная диагностика всех систем",
       "notes": "Пробег при приёме: 93 710 км",
@@ -3422,8 +3422,8 @@
       "order_doc_number": null,
       "paid_amount": 2200,
       "vehicle": {
-        "id": "710609be-5b60-587c-a7af-06568e93d1b9",
-        "client_id": "ed114258-cfd1-5d2e-9081-2680c518fd7d",
+        "id": "c88b8557-0823-44fd-acf1-5a48f2ccbd29",
+        "client_id": "ed114258-cfd1-4d2e-9081-2680c518fd7d",
         "vin": "WMW76RJBT45RUUL9K",
         "make": "MINI",
         "model": "Roadster",
@@ -3436,7 +3436,7 @@
         "created_at": "2025-03-02T00:38:31.992Z",
         "updated_at": "2025-03-02T00:38:31.992Z",
         "client": {
-          "id": "ed114258-cfd1-5d2e-9081-2680c518fd7d",
+          "id": "ed114258-cfd1-4d2e-9081-2680c518fd7d",
           "full_name": "Виноградов Павел Алексеевич",
           "phone": "+75554153855",
           "source": "manual",
@@ -3449,14 +3449,14 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     },
     {
-      "id": "577a6c98-4ade-564c-97ba-ecee33c52904",
-      "vehicle_id": "004f69b8-32c7-558d-8431-9eb5dd1fd5ea",
-      "assigned_master_id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+      "id": "577a6c98-4ade-464c-97ba-ecee33c52904",
+      "vehicle_id": "e942c03a-45c4-4bb0-b223-ce6fe541d1a9",
+      "assigned_master_id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
       "status": "closed",
       "title": "Правка литого диска, Замена воздушного фильтра",
       "notes": "Пробег при приёме: 171 340 км",
@@ -3475,8 +3475,8 @@
       "order_doc_number": null,
       "paid_amount": 5950,
       "vehicle": {
-        "id": "004f69b8-32c7-558d-8431-9eb5dd1fd5ea",
-        "client_id": "62a8fab4-d743-5cea-9493-4317a8769dd5",
+        "id": "e942c03a-45c4-4bb0-b223-ce6fe541d1a9",
+        "client_id": "62a8fab4-d743-4cea-9493-4317a8769dd5",
         "vin": "WMW6WXG1LB0MWMC15",
         "make": "MINI",
         "model": "Clubman",
@@ -3489,7 +3489,7 @@
         "created_at": "2026-08-11T02:20:33.839Z",
         "updated_at": "2026-08-11T02:20:33.839Z",
         "client": {
-          "id": "62a8fab4-d743-5cea-9493-4317a8769dd5",
+          "id": "62a8fab4-d743-4cea-9493-4317a8769dd5",
           "full_name": "Маркова Ирина Михайловна",
           "phone": "+75558799470",
           "source": "manual",
@@ -3502,14 +3502,14 @@
         }
       },
       "assigned_master": {
-        "id": "4c5d94eb-42d0-5de4-9cb7-93425da9745b",
+        "id": "4c5d94eb-42d0-4de4-9cb7-93425da9745b",
         "name": "Морозов Илья Николаевич"
       }
     },
     {
-      "id": "391f6ec9-d55f-5f9a-9eb0-ce9e9c6359aa",
-      "vehicle_id": "c1226334-7cea-5a2f-9fa7-985e6e2fe0d2",
-      "assigned_master_id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+      "id": "391f6ec9-d55f-4f9a-9eb0-ce9e9c6359aa",
+      "vehicle_id": "90f719b6-caa3-4cb1-8d91-8647782e884b",
+      "assigned_master_id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
       "status": "closed",
       "title": "Ремонт суппорта (чистка, смазка направляющих), Развал-схождение",
       "notes": "Пробег при приёме: 35 520 км",
@@ -3528,8 +3528,8 @@
       "order_doc_number": null,
       "paid_amount": 11090,
       "vehicle": {
-        "id": "c1226334-7cea-5a2f-9fa7-985e6e2fe0d2",
-        "client_id": "4824c452-9d75-5145-9858-326cbaf82302",
+        "id": "90f719b6-caa3-4cb1-8d91-8647782e884b",
+        "client_id": "4824c452-9d75-4145-9858-326cbaf82302",
         "vin": "WMWW12NTGEE0JJ0Y2",
         "make": "MINI",
         "model": "Cabrio",
@@ -3542,7 +3542,7 @@
         "created_at": "2025-02-09T06:11:56.579Z",
         "updated_at": "2025-02-09T06:11:56.579Z",
         "client": {
-          "id": "4824c452-9d75-5145-9858-326cbaf82302",
+          "id": "4824c452-9d75-4145-9858-326cbaf82302",
           "full_name": "ООО «Бирюза Кейтеринг»",
           "phone": "+75552290037",
           "source": "manual",
@@ -3555,14 +3555,14 @@
         }
       },
       "assigned_master": {
-        "id": "af33dc6b-c3b6-5a46-818b-4090d0e75e9c",
+        "id": "af33dc6b-c3b6-4a46-818b-4090d0e75e9c",
         "name": "Лебедев Роман Игоревич"
       }
     },
     {
-      "id": "8d54d77a-290d-5e2a-8bb7-a1cf59bcc660",
-      "vehicle_id": "98ef70fc-89df-57f2-af6a-b12c1eb9e60c",
-      "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+      "id": "8d54d77a-290d-4e2a-8bb7-a1cf59bcc660",
+      "vehicle_id": "debd6092-c558-4463-b4f0-dcc043fc427e",
+      "assigned_master_id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
       "status": "closed",
       "title": "Замена передних тормозных колодок, Замена катушки зажигания",
       "notes": "Пробег при приёме: 136 200 км",
@@ -3581,8 +3581,8 @@
       "order_doc_number": null,
       "paid_amount": 19304,
       "vehicle": {
-        "id": "98ef70fc-89df-57f2-af6a-b12c1eb9e60c",
-        "client_id": "ec5350b7-9dbe-52b2-945f-559e0ab63df5",
+        "id": "debd6092-c558-4463-b4f0-dcc043fc427e",
+        "client_id": "ec5350b7-9dbe-42b2-945f-559e0ab63df5",
         "vin": "TMBHYV0UARYU9NC4W",
         "make": "Skoda",
         "model": "Octavia",
@@ -3595,7 +3595,7 @@
         "created_at": "2025-04-12T22:34:39.672Z",
         "updated_at": "2025-04-12T22:34:39.672Z",
         "client": {
-          "id": "ec5350b7-9dbe-52b2-945f-559e0ab63df5",
+          "id": "ec5350b7-9dbe-42b2-945f-559e0ab63df5",
           "full_name": "ООО «Вектор Телеком Сервис»",
           "phone": "+75551441385",
           "source": "csv_import",
@@ -3608,7 +3608,7 @@
         }
       },
       "assigned_master": {
-        "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+        "id": "c8c535e3-52bd-4960-b6f1-ea4d14ff119b",
         "name": "Соколов Денис Александрович"
       }
     }
