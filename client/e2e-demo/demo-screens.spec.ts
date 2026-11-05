@@ -2,7 +2,29 @@ import { expect, test, type Page } from '@playwright/test';
 import { HERO } from '../../demo/seed/hero';
 import { mskAt } from '../../demo/seed/time';
 
-const demoNow = mskAt(process.env.DEMO_NOW ?? '2026-11-04', 12);
+/** The video's date, when neither DEMO_NOW nor the seeded settings.demo_now is at hand. */
+const DEFAULT_DEMO_DAY = '2026-11-18';
+
+/** DEMO_NOW, else settings.demo_now of the seeded base (with DATABASE_URL), else the video's date. */
+async function demoDay(): Promise<string> {
+  if (process.env.DEMO_NOW) return process.env.DEMO_NOW;
+  if (!process.env.DATABASE_URL) return DEFAULT_DEMO_DAY;
+  // pg lives in the repo root's node_modules (the backend's), reachable from client/e2e-demo.
+  const { default: pg } = await import('pg');
+  const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
+  await client.connect();
+  try {
+    const { rows } = await client.query(`SELECT value FROM settings WHERE key = 'demo_now'`);
+    return /^\d{4}-\d{2}-\d{2}$/.test(rows[0]?.value ?? '') ? rows[0].value : DEFAULT_DEMO_DAY;
+  } finally {
+    await client.end();
+  }
+}
+
+let demoNow: Date;
+test.beforeAll(async () => {
+  demoNow = mskAt(await demoDay(), 12);
+});
 let errors: string[] = [];
 test.beforeEach(async ({ page }) => {
   errors = [];
