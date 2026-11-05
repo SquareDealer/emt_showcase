@@ -68,8 +68,8 @@ export function ticketStats(totals: number[]): { median: number; mean: number; p
 }
 
 /**
- * October's tyre share of labor lines over July's. Measured over the 60-date sweep: 2.6–9.5 (median 3.8)
- * with the ×2 autumn boost; the former 3× sat just under the minimum of the old ×6 boost (3.5).
+ * October's tyre share of labor lines over July's. Over the 60-date sweep it is 2.5–6.2 (median 3.5)
+ * with the ×1.5 autumn boost; the former 3× sat just under the minimum of the old ×6 boost (3.5).
  */
 export const TIRE_PEAK_MIN_RATIO = 2;
 

@@ -45,8 +45,11 @@ const MS_DAY = 86_400_000;
 const LEAD_WEIGHTS = [1.5, 5, 5, 4, 2, 1.2, 1, 0.8, 0.6, 0.5, 0.4];
 const MAX_PICKS = 6;
 const TIRE_PEAK_MONTHS = [10, 11];
-/** The autumn swap: a tyre work is twice as likely in October–November (plus SEASON_FACTOR's +30% volume). */
-const TIRE_PEAK_FACTOR = 2;
+/**
+ * The autumn swap: a tyre work is 1.5× as likely in October–November (on top of SEASON_FACTOR's +30% volume).
+ * ×6 put a tyre work into 80% of October orders, ×2 still into 55–64%; ×1.5 gives ~50%, ~3.5× summer.
+ */
+const TIRE_PEAK_FACTOR = 1.5;
 /** The seasonal swap (with its balancing and wheel storage) belongs to the swap seasons; off-season only the odd straggler. */
 const SEASONAL_SWAP = new Set(['tire-change', 'wheel-balance', 'tire-storage']);
 const SWAP_MONTHS = [4, 5, 10, 11];

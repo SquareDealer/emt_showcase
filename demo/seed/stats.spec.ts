@@ -28,12 +28,12 @@ it('revenue grows 3–8% m/m net of season', () => {
 });
 it('tire work peaks in October', () =>
   expect(categoryShare(wos, '2026-10', 'tires', plan.catalog)).toBeGreaterThanOrEqual(TIRE_PEAK_MIN_RATIO * categoryShare(wos, '2026-07', 'tires', plan.catalog)));
-it('tyres do not take over the autumn: under 65% of October orders have a tyre work (the ×6 boost gave 80%)', () => {
+it('tyres do not take over the autumn: about half of October orders have a tyre work (the ×6 boost gave 80%)', () => {
   const tires = new Set(plan.catalog.tasks.filter((t) => t.category === 'tires').map((t) => t.id));
   const oct = wos.filter((w) => monthKey(w.scheduled_at) === '2026-10');
   const share = oct.filter((w) => w.labor.some((l) => l.template_id && tires.has(l.template_id))).length / oct.length;
   expect(share).toBeGreaterThan(0.3);
-  expect(share).toBeLessThan(0.65);
+  expect(share).toBeLessThan(0.55);
 });
 
 describe('helpers', () => {
