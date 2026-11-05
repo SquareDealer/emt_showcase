@@ -17,9 +17,13 @@ export const SCENES = [
 export type SceneId = (typeof SCENES)[number]['id'];
 export type SceneDef = { readonly id: SceneId; readonly dur: number };
 
-/** Social cut: no intro/docs, shorter booking. */
+/** Social durations that differ from the hero: booking ends on the landed order (no dive), the
+ *  dashboard drops the 15-frame hold after the load shot settles (110) and fades into the outro. */
+const SOCIAL_DUR: Partial<Record<SceneId, number>> = { booking: 150, dashboard: 135 };
+
+/** Social cut (≤ 30 s): no intro/docs, shorter booking and dashboard. */
 export const SCENES_SOCIAL: readonly SceneDef[] = SCENES.filter((s) => s.id !== 'intro' && s.id !== 'docs').map(
-  (s) => (s.id === 'booking' ? { id: s.id, dur: 150 } : { id: s.id, dur: s.dur }),
+  (s) => ({ id: s.id, dur: SOCIAL_DUR[s.id] ?? s.dur }),
 );
 
 /** Absolute start frame of a scene: sum of previous durations minus one transition per index. */

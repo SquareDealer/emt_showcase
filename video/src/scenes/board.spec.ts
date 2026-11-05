@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { STATUS_ORDER } from '@crm/lib/types';
 import { boardOwner, woHero } from '../fixtures';
-import { boardState, COLUMNS_AFTER, COLUMNS_BEFORE } from './Board';
+import { cameraAt, stageView } from '../kit/math';
+import { CAM, SOCIAL_ZONE, boardState, COLUMNS_AFTER, COLUMNS_BEFORE } from './Board';
 
 const at = (f: number) => boardState(f, 30);
 const HERO = woHero[3].id;
@@ -78,5 +79,29 @@ describe('board scene state', () => {
     expect(at(115).scroll).toBeGreaterThan(0);
     expect(at(140).scroll).toBe(116);
     expect(at(149).scroll).toBe(116);
+  });
+});
+
+describe('board social: two columns', () => {
+  const view = (f: number) => stageView(cameraAt(f, 30, CAM.social), 'social', 1080, 1350);
+  it('every social key is at least 1.7×', () => {
+    for (const k of CAM.social) expect(k.zoom).toBeGreaterThanOrEqual(1.7);
+  });
+  it('«Запланирована» and «В работе» whole — title, heads, two card rows — no sliver of the sidebar or «Ожидание»', () => {
+    for (let f = 0; f < 150; f++) {
+      const v = view(f);
+      const z = SOCIAL_ZONE;
+      expect(v.l).toBeLessThanOrEqual(z.x);
+      expect(v.r).toBeGreaterThanOrEqual(z.x + z.w);
+      expect(v.t).toBeLessThanOrEqual(z.y);
+      expect(v.b).toBeGreaterThanOrEqual(z.y + z.h);
+      expect(v.l).toBeGreaterThan(240); // sidebar edge
+      expect(v.r).toBeLessThan(776); // «Ожидание» starts
+      expect(v.b).toBeLessThan(534); // the third card row starts
+    }
+  });
+  it('the social board does not pan (the camera holds two columns); the wide one still does', () => {
+    for (const f of [0, 100, 149]) expect(boardState(f, 30, true).scroll).toBe(0);
+    expect(boardState(149, 30).scroll).toBe(116);
   });
 });

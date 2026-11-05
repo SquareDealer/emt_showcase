@@ -7,7 +7,7 @@ import { Callout } from '../kit/Callout';
 import { PaperSheet } from '../kit/PaperSheet';
 import { cameraAt, type CamKey } from '../kit/math';
 import { FPS } from '../timing';
-import { BOARD_LAST_FRAME, BoardWindow, boardState, cameraKeys as boardCameraKeys } from './Board';
+import { BOARD_LAST_FRAME, BoardWindow, boardState, CAM as BOARD_CAM } from './Board';
 
 // ---------------------------------------------------------------------------------------------
 // Geometry in PNG pixels: the order sheet's top-left is (0,0) and PaperSheet is `SHEET_W` = the PNG's
@@ -96,7 +96,7 @@ export function DocsScene({ theme, brand, callouts, accent }: ShowcaseProps) {
       {/* The Board scene's final frame (same camera key), static; scaled up a little so the blur's
           transparent edge never shows the backdrop. */}
       <AbsoluteFill style={{ filter: 'blur(8px)', transform: 'scale(1.04)' }}>
-        <Camera keys={boardCameraKeys(false).slice(-1)}>
+        <Camera keys={BOARD_CAM.wide.slice(-1)}>
           <BoardWindow theme={theme} brandName={brand.name} state={boardEnd} />
         </Camera>
       </AbsoluteFill>

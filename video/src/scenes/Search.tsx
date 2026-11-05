@@ -53,17 +53,18 @@ export const FRAMES_PER_CHAR = 5;
 export const SWITCH_AT = CLICK_HIT + 3;
 export const MOVE_FROM = 75;
 export const MOVE_TO = 135;
-/** Social: the camera holds on the whole card until the callout is gone (the pill is above the window). */
+/** Social: the camera holds on the card head until 90, then settles on the orders by SOCIAL_SETTLE. */
 export const SOCIAL_MOVE_FROM = 90;
+export const SOCIAL_SETTLE = 120;
 /** «Любая машина по VIN — за секунду» appears beside the hit as the hits narrow to the hero (45: «WMWSV3»,
- *  one hit) and stays through the switch; wide: gone by 75, before the camera moves; social: the pill is
- *  above the window, gone by 90, before its camera moves. */
+ *  one hit) and stays through the switch; wide: gone by 75, before the camera moves; social: the bottom
+ *  plaque, independent of the camera, stays to the end. */
 export const CALLOUT_AT = 45;
-const CALLOUT_OUT = { wide: 69, social: SOCIAL_MOVE_FROM - 6 };
+const CALLOUT_OUT = 69;
 const CALLOUT_FADE = 6;
 /** `.content` scroll at the end (UI px): wide — just enough for row 10 to clear the window's bottom
- *  edge; social — the page's end (1057 − 900), the whole orders panel in the window. */
-export const SCROLL = { wide: 40, social: 157 } as const;
+ *  edge; social — none (its orders shot is the panel head and the first nine rows). */
+export const SCROLL = { wide: 40, social: 0 } as const;
 
 export const QUERY = HERO.r56.vin.slice(0, 7);
 /** Scene-local frames where `typed(frame, TYPE_FROM, QUERY, FRAMES_PER_CHAR)` gains a character —
@@ -116,7 +117,7 @@ export const CLICK_POINT = { x: HIT.x + 190, y: HIT.y + HIT.h / 2 };
 // down-left — past the vehicles panel, through the empty page under it — and is out of every view (left
 // of x 264, below the window) by 84, so it never rests on the card's text.
 export const CURSOR_GONE = 84;
-/** Window px left of every view (wide ≥ 264, social ≥ 266) and below the window. */
+/** Window px left of every view (wide ≥ 264, social ≥ 263) and below the window. */
 export const CURSOR_PARK = { x: 200, y: 1000 };
 const CURSOR: CursorPoint[] = [
   { at: 0, x: 1180, y: 1000 },
@@ -140,12 +141,16 @@ export function searchState(frame: number, fps: number, social = false) {
       ...clamp,
       easing: CAM_EASE,
     }),
+    /** Behind the palette: the Board scene's last frame in the same layout. */
+    board: social ? BOARD_END_SOCIAL : BOARD_END,
   };
 }
 
 const noop = () => {};
-/** Behind the palette: the Board scene's last frame (hero «В работе», board panned to «Выдана»). */
+/** Behind the palette: the Board scene's last frame (hero «В работе»; wide: board panned to «Выдана»,
+ *  social: not panned). */
 const BOARD_END = boardState(BOARD_LAST_FRAME, FPS);
+const BOARD_END_SOCIAL = boardState(BOARD_LAST_FRAME, FPS, true);
 
 /** The CRM window at a given state (no camera) — also what the coordinates above were measured on. */
 export function SearchWindow({
@@ -163,7 +168,7 @@ export function SearchWindow({
       <BoardWindow
         theme={theme}
         brandName={brandName}
-        state={BOARD_END}
+        state={state.board}
         overlays={
           <div data-demo="search-open" style={{ display: 'contents' }}>
             {/* The app's `palette-in` keyframes (fade, −6 px, 0.99 scale), driven by the frame. The
@@ -242,42 +247,55 @@ const TOP = { x: 840, y: 414, zoom: 1.6 };
 const END_ZOOM = 1920 / 1152;
 const END_TOP_PAGE = ROW_Y0 + ROW_H * 11 - 1080 / END_ZOOM;
 const END = { x: 840, y: END_TOP_PAGE + 540 / END_ZOOM - SCROLL.wide, zoom: END_ZOOM };
-// SOCIAL (1080×1350). WHOLE 1.406× (view 768×960 UI px, the Board scene's social framing): x 266–1034 —
-// the palette (410–1030) and, after the switch, the back link, avatar (from 274), name, phone, stats and
-// the vehicles panel; y −60–900 — the window's full height plus a band of background above it for the
-// callout's pill. ORDERS 1.5× (view 720×900): x 698–1418 — the orders panel (710–1406) edge to edge;
-// y 0–900 — the window's full height: the page scrolled to its end (157) puts the panel at window y
-// 124–876 under the whole topbar, all 13 rows whole. The social camera holds until the callout is gone.
-const SOCIAL_WHOLE = { x: 650, y: 420, zoom: 1080 / 768 };
-const SOCIAL_ORDERS = { x: 1058, y: 450, zoom: 1.5 };
-export const cameraKeys = (social: boolean): CamKey[] =>
-  social
-    ? [
-        { at: 0, ...SOCIAL_WHOLE },
-        { at: s(SOCIAL_MOVE_FROM), ...SOCIAL_WHOLE },
-        { at: s(MOVE_TO), ...SOCIAL_ORDERS },
-      ]
-    : [
-        { at: 0, ...TOP },
-        { at: s(MOVE_FROM), ...TOP },
-        { at: s(MOVE_TO), ...END },
-      ];
+// SOCIAL (stage 1080×970 between the bands), one zone at a time:
+//   PALETTE 1.7 (view 635×571): x 402–1038 — the palette (410–1030) edge to edge; y 100–670 — its input
+//           and the hits (the one hero hit from 45; the 50-hit list of the first prefixes runs past the
+//           stage's bottom edge).
+//   HEAD    2.45 by 76 (view 441×396): x 264–704 — the back link, avatar, name, phone, stats and the
+//           vehicles panel (274–694), short of the orders panel (710); y 75–471 — back link (81) to the
+//           vehicles panel's bottom (461).
+//   ORDERS  1.95 from 90 by 120 (view 554×498): x 704–1258 — the orders panel from its left edge: titles,
+//           cars, dates and the status chips (end 1251); the amounts (from 1267) are left out whole, not
+//           cut; y 263–760.8 — under the stats (256), the panel head and rows 0–7, the bottom edge on the
+//           line under row 7. The page doesn't scroll.
+const SOCIAL_PALETTE = { x: 720, y: 385, zoom: 1.7 };
+const SOCIAL_HEAD = { x: 484, y: 273, zoom: 2.45 };
+/** Status chips end at x 1251, the amounts start at 1267 (measured on a full-scale still). */
+export const ORDER_CHIPS_END = 1251;
+export const ORDER_AMOUNTS_X = 1267;
+const ORDERS_ZOOM = 1080 / (1258 - 704);
+const ORDERS_BOTTOM = ROW_Y0 + ROW_H * 8;
+const SOCIAL_ORDERS = { x: 704 + 540 / ORDERS_ZOOM, y: ORDERS_BOTTOM - 485 / ORDERS_ZOOM, zoom: ORDERS_ZOOM };
+export const SOCIAL_ZONES = {
+  palette: { x: 410, y: 108, w: 620, h: HIT.y + HIT.h - 108 },
+  head: { x: 274, y: 81, w: 694 - 274, h: 461 - 81 },
+  orders: { x: 710, y: 281, w: ORDER_CHIPS_END - 710, h: ORDERS_BOTTOM - 281 },
+};
+export const CAM: { wide: CamKey[]; social: CamKey[] } = {
+  wide: [
+    { at: 0, ...TOP },
+    { at: s(MOVE_FROM), ...TOP },
+    { at: s(MOVE_TO), ...END },
+  ],
+  social: [
+    { at: 0, ...SOCIAL_PALETTE },
+    { at: s(SWITCH_AT), ...SOCIAL_PALETTE },
+    { at: s(76), ...SOCIAL_HEAD },
+    { at: s(SOCIAL_MOVE_FROM), ...SOCIAL_HEAD },
+    { at: s(SOCIAL_SETTLE), ...SOCIAL_ORDERS },
+  ],
+};
 
-/** The callout's dot (window px). */
-export const calloutAnchor = (social: boolean, scroll: number) =>
-  social
-    ? // On the topbar right of the search box (264–684), the pill above the window in the background
-      // band (as in the Board scene): it covers neither the palette nor the card. The topbar doesn't scroll.
-      { x: 760, y: 14 }
-    : // Right of the palette level with the hit; after the switch the same spot is the empty right part
-      // of the stats row: below «Изменить»/«Удалить» (end 152.5), above the panels (280). It rides with
-      // the page's scroll, so it never slides over the panels.
-      { x: HIT.x + HIT.w + 9, y: META_Y - scroll };
+/** The wide callout's dot (window px): right of the palette level with the hit; after the switch the
+ *  same spot is the empty right part of the stats row: below «Изменить»/«Удалить» (end 152.5), above the
+ *  panels (280). It rides with the page's scroll, so it never slides over the panels. (Social: the
+ *  bottom plaque, no anchor.) */
+export const calloutAnchor = (scroll: number) => ({ x: HIT.x + HIT.w + 9, y: META_Y - scroll });
 
 /** The callout's opacity on top of its own spring-in (0 before CALLOUT_AT, fades out by CALLOUT_OUT + 6). */
 export const calloutOpacity = (frame: number, social: boolean) => {
-  const out = social ? CALLOUT_OUT.social : CALLOUT_OUT.wide;
-  return frame < CALLOUT_AT ? 0 : interpolate(frame, [out, out + CALLOUT_FADE], [1, 0], clamp);
+  if (frame < CALLOUT_AT) return 0;
+  return social ? 1 : interpolate(frame, [CALLOUT_OUT, CALLOUT_OUT + CALLOUT_FADE], [1, 0], clamp);
 };
 
 /**
@@ -295,15 +313,15 @@ export function SearchScene({ theme, brand, callouts, accent }: ShowcaseProps) {
   return (
     <AbsoluteFill>
       <Background theme={theme} />
-      <Camera keys={cameraKeys(social)}>
+      <Camera keys={social ? CAM.social : CAM.wide}>
         <SearchWindow theme={theme} brandName={brand.name} state={state} />
         {callout > 0 ? (
           <div style={{ position: 'absolute', left: 0, top: 0, opacity: callout, zIndex: 90 }}>
             <Callout
               text={callouts.vin}
               at={CALLOUT_AT}
-              anchor={calloutAnchor(social, state.scroll)}
-              side={social ? 'top' : 'right'}
+              anchor={calloutAnchor(state.scroll)}
+              side="right"
               accent={accent}
             />
           </div>

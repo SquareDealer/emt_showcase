@@ -11,6 +11,7 @@ import {
   musicPlacement,
   musicVolume,
   planDuration,
+  sfxCues,
   transitionFor,
 } from './assembly';
 
@@ -81,7 +82,8 @@ describe('sound effects', () => {
       const keys = heroKeySfx(scenes);
       expect(keys).toHaveLength(QUERY.length);
       const grows: number[] = [];
-      for (let f = 1; f < 150; f++) {
+      const searchDur = scenes.find((s) => s.id === 'search')!.dur;
+      for (let f = 1; f < searchDur; f++) {
         const d = typed(f, TYPE_FROM, QUERY, FRAMES_PER_CHAR).length - typed(f - 1, TYPE_FROM, QUERY, FRAMES_PER_CHAR).length;
         expect(d === 0 || d === 1).toBe(true);
         if (d === 1) grows.push(start + f);
@@ -109,6 +111,44 @@ describe('sound effects', () => {
       for (const f of heroKeySfx(scenes)) expect(f + SFX.key.frames).toBeLessThanOrEqual(total);
       for (const f of heroWhooshSfx(scenes)) expect(f + SFX.whoosh.frames).toBeLessThanOrEqual(total);
     }
+  });
+});
+
+describe('sfxCues: the single list the assembly renders', () => {
+  const pick = (scenes: Parameters<typeof sfxCues>[0], name: string) => sfxCues(scenes).filter((c) => c.name === name).map((c) => c.at);
+  it('hero: clicks === clicksAbsolute(SCENES), 7 keys 740…770, whooshes at board/docs/dashboard', () => {
+    expect(pick(SCENES, 'click')).toEqual(clicksAbsolute(SCENES));
+    expect(pick(SCENES, 'key')).toEqual([740, 745, 750, 755, 760, 765, 770]);
+    expect(pick(SCENES, 'whoosh')).toEqual([480, 615, 855]);
+  });
+  it('social: clicks === clicksAbsolute(SCENES_SOCIAL), keys from its search start, whooshes on its two slides', () => {
+    expect(pick(SCENES_SOCIAL, 'click')).toEqual(clicksAbsolute(SCENES_SOCIAL));
+    expect(pick(SCENES_SOCIAL, 'click')).toEqual([75, 105, 180, 210, 255, 285, 345, 420, 465, 585]);
+    const s = sceneStart('search', SCENES_SOCIAL);
+    expect(s).toBe(525);
+    expect(pick(SCENES_SOCIAL, 'key')).toEqual([20, 25, 30, 35, 40, 45, 50].map((f) => s + f));
+    // Social transitions: booking>estimate fade, estimate>board slide, board>search fade, search>dashboard slide, dashboard>outro fade.
+    const kinds = assemblyPlan(SCENES_SOCIAL).flatMap((p) => (p.type === 'transition' ? [`${p.from}>${p.to}:${p.kind}`] : []));
+    expect(kinds).toEqual(['booking>estimate:fade', 'estimate>board:slide', 'board>search:fade', 'search>dashboard:slide', 'dashboard>outro:fade']);
+    expect(pick(SCENES_SOCIAL, 'whoosh')).toEqual([390, 660]);
+  });
+  it('every cue carries its sound\'s src/volume/frames, is on a whole frame and ends inside the composition', () => {
+    for (const scenes of [SCENES, SCENES_SOCIAL]) {
+      const cues = sfxCues(scenes);
+      expect(cues.length).toBe(clicksAbsolute(scenes).length + 7 + heroWhooshSfx(scenes).length);
+      for (const c of cues) {
+        const sfx = SFX[c.name];
+        expect(c).toEqual({ name: c.name, src: sfx.src, volume: sfx.volume, frames: sfx.frames, at: c.at });
+        expect(Number.isInteger(c.at)).toBe(true);
+        expect(c.at + c.frames).toBeLessThanOrEqual(totalDuration(scenes));
+      }
+    }
+  });
+  it('a scene list without search has no key cues; without slides, no whooshes', () => {
+    const noSearch = SCENES.filter((s) => s.id !== 'search');
+    expect(sfxCues(noSearch).some((c) => c.name === 'key')).toBe(false);
+    const fadesOnly = SCENES.filter((s) => ['intro', 'booking', 'estimate'].includes(s.id));
+    expect(sfxCues(fadesOnly).some((c) => c.name === 'whoosh')).toBe(false);
   });
 });
 

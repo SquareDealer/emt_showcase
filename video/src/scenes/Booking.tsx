@@ -34,16 +34,18 @@ import { FPS, SCENE_CLICKS } from '../timing';
 //   BOOKING  `[data-demo="slot-booking"]` («Новая запись»): x 974 y 585.5 w 386 h 54.5; the cursor
 //            tip lands on the label text, left part of the row.
 // ---------------------------------------------------------------------------------------------
-const SLOT = { x: 788, y: 533, w: 152, h: 96 };
-const MENU = { x: 957, y: 509, w: 420, h: 205 }; // x = slot's right edge + 14, y = slot top − 24
+export const SLOT = { x: 788, y: 533, w: 152, h: 96 };
+export const MENU = { x: 957, y: 509, w: 420, h: 205 }; // x = slot's right edge + 14, y = slot top − 24
+/** Top of the day-column heads («ЧТ 19 нояб.»). */
+export const DAY_HEADS_Y = 189.5;
 const BOOKING = { x: 1062, y: 600 };
 
 const slotCentre = { x: SLOT.x + SLOT.w / 2, y: SLOT.y + SLOT.h / 2 };
 
 const [CLICK_SLOT, CLICK_BOOKING] = SCENE_CLICKS.booking;
-const MENU_IN = 82;
-const CALLOUT_AT = 90;
-const LAND_AT = 120;
+export const MENU_IN = 82;
+export const CALLOUT_AT = 90;
+export const LAND_AT = 120;
 
 /** Brand for the sidebar: trimmed logos (the originals' padding reads tiny at 44px). */
 const brandFor = (name: string): Brand => ({
@@ -101,13 +103,31 @@ const SLOT_ISO = freeSlot.startsAt.toISOString();
 // headers in frame: x ≤ 1440 − 960/1.7 (window's right edge at the frame's edge, menu ends at
 // 1377); y 500 → rows 182–818, i.e. from just above the column heads (189.5) to the grid's bottom (821).
 const FOCUS = { x: 872, y: 500 };
-const cameraKeys = (wideZoom: number): CamKey[] => [
+const wideKeys = (wideZoom: number): CamKey[] => [
   { at: 0, x: 720, y: 450, zoom: wideZoom },
   { at: 1, x: 720, y: 450, zoom: wideZoom },
   { at: 2, x: FOCUS.x, y: FOCUS.y, zoom: 1.7 },
   { at: 5, x: FOCUS.x, y: FOCUS.y, zoom: 1.7 },
   { at: 6, x: slotCentre.x, y: slotCentre.y, zoom: 2.6 },
 ];
+// SOCIAL (1080×1350; the stage between the brand band and the caption plaque is 1080×970). At 1.7 it
+// shows 635×571 UI px. START x 622–1258: Wed (today, the now-line) to Sat whole (628–1257.5), y 170–740
+// from above the day heads (189.5). SLOT_MENU x 765–1400 — the slot (788) and the menu (to 1377) side by
+// side — same rows; settled by 72, before the click. From the landing (120) a push to 2.2 on the landed
+// order (view 491×441 around it) to the social end (150; the hero's 150–180 dive is not in the cut).
+const SOCIAL_START = { x: 940, y: 455, zoom: 1.7 };
+const SOCIAL_SLOT_MENU = { x: (SLOT.x + MENU.x + MENU.w) / 2, y: 455, zoom: 1.7 };
+const SOCIAL_LANDED = { x: slotCentre.x, y: slotCentre.y, zoom: 2.2 };
+export const CAM: { wide: CamKey[]; social: CamKey[] } = {
+  wide: wideKeys(1),
+  social: [
+    { at: 0, ...SOCIAL_START },
+    { at: 1, ...SOCIAL_START },
+    { at: 72 / FPS, ...SOCIAL_SLOT_MENU },
+    { at: LAND_AT / FPS, ...SOCIAL_SLOT_MENU },
+    { at: 150 / FPS, ...SOCIAL_LANDED },
+  ],
+};
 
 const s = (f: number) => f / FPS;
 // Cursor: idles low-right, glides onto the slot, then onto «Новая запись», then clears out to
@@ -250,10 +270,10 @@ export function BookingScene({ theme, brand, callouts, accent }: ShowcaseProps) 
   return (
     <AbsoluteFill>
       <Background theme={theme} />
-      <Camera keys={cameraKeys(social ? 0.72 : 1)}>
+      <Camera keys={social ? CAM.social : CAM.wide}>
         <BookingWindow theme={theme} brandName={brand.name} state={state} />
-        {/* Above the slot, over the empty bodies of the long morning orders: clear of the ghost,
-            the menu and the landed order's text. */}
+        {/* Wide: above the slot, over the empty bodies of the long morning orders: clear of the
+            ghost, the menu and the landed order's text. Social: the bottom plaque. */}
         <Callout
           text={callouts.booking}
           at={CALLOUT_AT}

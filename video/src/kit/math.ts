@@ -58,6 +58,38 @@ export function cursorAt(frame: number, fps: number, path: CursorPoint[]): { x: 
   return { x: r.x, y: r.y };
 }
 
+export type Layout = 'wide' | 'social';
+export type View = { l: number; t: number; r: number; b: number };
+
+/** The 4:5 frame: a 120-px brand band on top (BrandBand), a 260-px caption plaque at the bottom
+ *  (Callout's social form); the CRM is staged between them. */
+export const SOCIAL_FRAME = { width: 1080, height: 1350, brandH: 120, captionH: 260 } as const;
+
+/** Frame point a camera key's (x, y) is drawn at: the frame centre (wide), the stage's centre (social). */
+export function cameraCentre(layout: Layout, width: number, height: number): { x: number; y: number } {
+  if (layout === 'wide') return { x: width / 2, y: height / 2 };
+  return { x: width / 2, y: (SOCIAL_FRAME.brandH + height - SOCIAL_FRAME.captionH) / 2 };
+}
+
+/** Frame px → UI px under the camera `cam` drawn at `centre`. */
+export function frameToUi(
+  fx: number,
+  fy: number,
+  cam: { x: number; y: number; zoom: number },
+  centre: { x: number; y: number },
+): { x: number; y: number } {
+  return { x: cam.x + (fx - centre.x) / cam.zoom, y: cam.y + (fy - centre.y) / cam.zoom };
+}
+
+/** UI-px rect the camera shows on the stage: the whole frame (wide), between the bands (social). */
+export function stageView(cam: { x: number; y: number; zoom: number }, layout: Layout, width: number, height: number): View {
+  const c = cameraCentre(layout, width, height);
+  const [top, bottom] = layout === 'wide' ? [0, height] : [SOCIAL_FRAME.brandH, height - SOCIAL_FRAME.captionH];
+  const a = frameToUi(0, top, cam, c);
+  const b = frameToUi(width, bottom, cam, c);
+  return { l: a.x, t: a.y, r: b.x, b: b.y };
+}
+
 const PRESS_FRAMES = 6;
 const RING_FRAMES = 18;
 

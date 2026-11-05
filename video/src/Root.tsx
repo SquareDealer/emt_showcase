@@ -1,7 +1,8 @@
 import { Composition, Folder } from 'remotion';
 import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugLoop, DebugWorkOrder } from './compositions/Debug';
 import { DebugBoardScene, DebugBooking, DebugDashboardScene, DebugDocsScene, DebugEstimate, DebugSearchScene, DebugIntro, DebugOutro } from './compositions/DebugScenes';
-import { Hero, HeroSocial } from './compositions/Hero';
+import { Hero } from './compositions/Hero';
+import { HeroSocial } from './compositions/Social';
 import { MOBILE_FRAMES, MOBILE_H, MOBILE_W, MobileMaster } from './compositions/MobileMaster';
 import { defaultProps, showcaseSchema } from './schema';
 import { FPS, SCENES, SCENES_SOCIAL, totalDuration } from './timing';

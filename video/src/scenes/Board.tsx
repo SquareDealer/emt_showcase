@@ -43,10 +43,6 @@ const SLOT = { x: CARD.x + COL_PITCH, y: CARD.y };
 const PAN = 116;
 /** «В работе»'s counter `.board-count`: x 727 y 167 w 24 h 20 — the callout dot sits 33 px above its centre. */
 const CALLOUT_ANCHOR = { x: 739, y: 134 };
-/** Social: the pill (38 px type, ~380×50 UI px at 1.406×) doesn't fit right of the counter; it sits
- *  above the window, over the background band (view top −60), its dot in the empty topbar right of the
- *  search box (x 264–684, y 10–45), above «В работе». */
-const CALLOUT_ANCHOR_SOCIAL = { x: 760, y: 14 };
 
 /** Left edge of a column before the pan. */
 const colX = (status: WorkOrderStatus) => COL_X0 + COL_PITCH * STATUS_ORDER.indexOf(status);
@@ -121,7 +117,7 @@ const CURSOR: CursorPoint[] = [
 const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 
 /** Scene-local state: a pure function of the frame. */
-export function boardState(frame: number, fps: number) {
+export function boardState(frame: number, fps: number, social = false) {
   const dropped = frame >= DROP_AT;
   const dragging = frame >= CLICK_PRESS && frame < SWAP_AT + SWAP;
   const cursor = cursorAt(frame, fps, CURSOR);
@@ -167,7 +163,8 @@ export function boardState(frame: number, fps: number) {
           opacity: 1 - swap,
         }
       : null,
-    scroll: interpolate(frame, [PAN_FROM, PAN_TO], [0, PAN], {
+    // Social holds on two columns: no pan.
+    scroll: social ? 0 : interpolate(frame, [PAN_FROM, PAN_TO], [0, PAN], {
       ...clamp,
       // The camera's own curve (kit/math CAM_EASE), so the pan and the camera slide move as one.
       easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -263,20 +260,19 @@ export function BoardWindow({
 // cards (1407; only that column's 9-px padding and border are outside). Every card in view is whole.
 const START = { x: 806.5, y: 383.5, zoom: 1.75 };
 const FINAL = { x: 905.6, y: 413, zoom: 1080 / 566 };
-// Social (1080×1350): 1.406× (view 768×960 UI px, the window's full height plus a band of background
-// above it for the callout). START x 258–1026: «Запланирована», «В работе», «Ожидание» whole (from the
-// gap after the sidebar to the gap after «Ожидание»); FINAL x 654–1422: «Ожидание», «Готова», «Выдана»
-// after the pan (from the gap left of «Ожидание» to past «Выдана»).
-const SOCIAL_ZOOM = 1080 / 768;
-const SOCIAL_START = { x: 642, y: 420, zoom: SOCIAL_ZOOM };
-const SOCIAL_FINAL = { x: 1038, y: 420, zoom: SOCIAL_ZOOM };
-export const cameraKeys = (social: boolean): CamKey[] => {
-  const [a, b] = social ? [SOCIAL_START, SOCIAL_FINAL] : [START, FINAL];
-  return [
-    { at: 0, ...a },
-    { at: s(PAN_FROM), ...a },
-    { at: s(PAN_TO), ...b },
-  ];
+// SOCIAL (stage 1080×970 between the bands): two columns, held. 2.1× (view 514×462 UI px): x 257–771 —
+// «Запланирована» (264) and «В работе» (to 764) whole, clear of the sidebar (240) and of «Ожидание»
+// (776); y 65–527 — the page title (81) and subtitle, the column heads, two card rows (to 526), above the
+// third (534). The drag and the drop happen inside it; the board doesn't pan (boardState(…, social)).
+export const SOCIAL_ZONE = { x: COL_X0, y: 81, w: COL_PITCH + COL_W, h: CARD.y + SLOT_STEP * 2 - 8 - 81 };
+const SOCIAL_TWO_COLS = { x: COL_X0 + (COL_PITCH + COL_W) / 2, y: 296, zoom: 2.1 };
+export const CAM: { wide: CamKey[]; social: CamKey[] } = {
+  wide: [
+    { at: 0, ...START },
+    { at: s(PAN_FROM), ...START },
+    { at: s(PAN_TO), ...FINAL },
+  ],
+  social: [{ at: 0, ...SOCIAL_TWO_COLS }],
 };
 
 /** 1 → 0 over `dur` frames from `from` (the callout has no exit of its own). */
@@ -292,25 +288,19 @@ export function BoardScene({ theme, brand, callouts, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
-  const state = boardState(frame, fps);
+  const state = boardState(frame, fps, social);
   const calloutOpacity = fadeOut(frame, CALLOUT_OUT);
   return (
     <AbsoluteFill>
       <Background theme={theme} />
-      <Camera keys={cameraKeys(social)}>
+      <Camera keys={social ? CAM.social : CAM.wide}>
         <BoardWindow theme={theme} brandName={brand.name} state={state} />
         {calloutOpacity > 0 ? (
           <div style={{ position: 'absolute', left: 0, top: 0, opacity: calloutOpacity, zIndex: 90 }}>
-            {/* Dot just above «В работе»'s counter, pill to its right in the empty band between the
-                page subtitle (ends at x 680) and the column heads (from y 155): it covers no column
-                head, no card, neither the dragged card nor the target slot. */}
-            <Callout
-              text={callouts.board}
-              at={CALLOUT_AT}
-              anchor={social ? CALLOUT_ANCHOR_SOCIAL : CALLOUT_ANCHOR}
-              side={social ? 'top' : 'right'}
-              accent={accent}
-            />
+            {/* Wide: dot just above «В работе»'s counter, pill to its right in the empty band between
+                the page subtitle (ends at x 680) and the column heads (from y 155): it covers no column
+                head, no card, neither the dragged card nor the target slot. Social: the bottom plaque. */}
+            <Callout text={callouts.board} at={CALLOUT_AT} anchor={CALLOUT_ANCHOR} side="right" accent={accent} />
           </div>
         ) : null}
         <Cursor path={CURSOR} clicks={SCENE_CLICKS.board} accent={accent} />

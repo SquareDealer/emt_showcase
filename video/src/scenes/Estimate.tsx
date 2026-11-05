@@ -333,16 +333,63 @@ export function EstimateWindow({
 // right edge) and y 233–900 (from «Запись» to the window's bottom edge, «Остаток» included).
 const SUMMARY_FOCUS = { x: 847, y: 566, zoom: 1.62 };
 const s = (f: number) => f / FPS;
-const cameraKeys = (k: number): CamKey[] => [
-  { at: 0, x: 720, y: 450, zoom: 1.15 * k },
-  { at: s(30), x: 720, y: 450, zoom: 1.15 * k },
-  { at: s(55), x: 740, y: 420, zoom: 1.25 * k },
-  { at: s(CLICK_OPTION), x: 740, y: 420, zoom: 1.25 * k },
-  { at: s(95), x: 720, y: 450, zoom: 1.45 * k },
-  { at: s(APPLY_AT), x: 720, y: 450, zoom: 1.45 * k },
-  { at: s(168), x: 720, y: 450, zoom: 1.2 * k },
-  { at: s(180), x: 720, y: 450, zoom: 1.2 * k },
-  { at: s(198), ...SUMMARY_FOCUS, zoom: SUMMARY_FOCUS.zoom * k },
+const WIDE_KEYS: CamKey[] = [
+  { at: 0, x: 720, y: 450, zoom: 1.15 },
+  { at: s(30), x: 720, y: 450, zoom: 1.15 },
+  { at: s(55), x: 740, y: 420, zoom: 1.25 },
+  { at: s(CLICK_OPTION), x: 740, y: 420, zoom: 1.25 },
+  { at: s(95), x: 720, y: 450, zoom: 1.45 },
+  { at: s(APPLY_AT), x: 720, y: 450, zoom: 1.45 },
+  { at: s(168), x: 720, y: 450, zoom: 1.2 },
+  { at: s(180), x: 720, y: 450, zoom: 1.2 },
+  { at: s(198), ...SUMMARY_FOCUS },
+];
+
+// SOCIAL (stage 1080×970 between the bands; at 1.7 it shows 635×571 UI px, at 1.8 600×539). One zone
+// at a time — the sheet first, then the summary (with the landed block in between, as the wide cut's
+// 1.2 overview):
+//   SELECT 1.7 → 1.8 by 55: «+ Из прайса…» (692–1063) and its list (to y 534), view x 488–1088 y 190–729:
+//          the right edge in the gap before the summary (1079–1096), the top under the vehicle line.
+//   MODAL  1.7 by 95: the whole sheet (410–1030 × 167–733) in x 402–1038, y 165–735.
+//   BLOCK  1.9 168–180 (view 568×511): x 262–830 — the new block from its group heads' edge (265):
+//          names, qty, prices (to 783) and the toast (617–822), cut before the discount column and the
+//          group total (from 838 / 866; only the empty add-form inputs are crossed); y 372–882 — both
+//          group heads (377), the work line, the four parts (to 836) and the toast (to 876).
+//   SUMMARY 1.7 from 198: x 789–1425, y 329–900 — the summary column (1096–1416) from «Скидка на наряд»
+//          to «Остаток», and the parts' right half with the kit's «−1 490 ₽ (10%)» (816–896).
+export const SOCIAL_ZONES = {
+  select: { x: ADD_FROM_PRICE.x, y: ADD_FROM_PRICE.y, w: ADD_FROM_PRICE.w, h: optionY(OPTION_WINDOW.length - 1) + 18 - ADD_FROM_PRICE.y },
+  modal: DIALOG,
+  /** To the toast's right edge (822); the prices end at 783. */
+  block: { x: NEW_HEADERS[0].x, y: NEW_HEADERS[0].y, w: 822 - NEW_HEADERS[0].x, h: 876 - NEW_HEADERS[0].y },
+  summary: { x: KIT_DISC_CELL.x, y: DISC_TYPE.y - 10, w: 1416 - KIT_DISC_CELL.x, h: 790 - (DISC_TYPE.y - 10) },
+};
+const SOCIAL_SELECT_IN = { x: 770, y: 190 + 485 / 1.7, zoom: 1.7 };
+const SOCIAL_SELECT = { x: 788, y: 190 + 485 / 1.8, zoom: 1.8 };
+const SOCIAL_MODAL = { x: DIALOG.x + DIALOG.w / 2, y: 450, zoom: 1.7 };
+const SOCIAL_BLOCK = { x: 830 - 540 / 1.9, y: 627, zoom: 1.9 };
+const SOCIAL_SUMMARY = { x: 1107, y: 614.7, zoom: 1.7 };
+export const CAM: { wide: CamKey[]; social: CamKey[] } = {
+  wide: WIDE_KEYS,
+  social: [
+    { at: 0, ...SOCIAL_SELECT_IN },
+    { at: s(15), ...SOCIAL_SELECT_IN },
+    { at: s(55), ...SOCIAL_SELECT },
+    { at: s(CLICK_OPTION), ...SOCIAL_SELECT },
+    { at: s(95), ...SOCIAL_MODAL },
+    { at: s(APPLY_AT), ...SOCIAL_MODAL },
+    { at: s(168), ...SOCIAL_BLOCK },
+    { at: s(180), ...SOCIAL_BLOCK },
+    { at: s(198), ...SOCIAL_SUMMARY },
+  ],
+};
+
+/** Social captions (the bottom plaque): one at a time, `out` = start of a 6-frame fade (null: to the
+ *  end). «block» is one plaque from the sheet through the landing (the wide cut re-anchors it). */
+export const SOCIAL_CALLOUTS: readonly { key: 'generation' | 'block' | 'discounts'; at: number; out: number | null }[] = [
+  { key: 'generation', at: GEN_AT, out: 126 },
+  { key: 'block', at: BLOCK_AT, out: 213 },
+  { key: 'discounts', at: SNAP3_AT, out: null },
 ];
 
 const SELECT_AT = { x: ADD_FROM_PRICE.x + 70, y: ADD_FROM_PRICE.y + ADD_FROM_PRICE.h / 2 };
@@ -394,7 +441,7 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
   return (
     <AbsoluteFill>
       <Background theme={theme} />
-      <Camera keys={cameraKeys(social ? 0.62 : 1)}>
+      <Camera keys={social ? CAM.social : CAM.wide}>
         <EstimateWindow theme={theme} brandName={brand.name} state={state} />
         {state.showSelect ? (
           <FakeSelect
@@ -411,40 +458,51 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
         <Fade opacity={fadeOut(frame, 110, 6)} z={50}>
           <Highlight rect={APPLY_LABOR} appearAt={GEN_AT} accent={accent} />
         </Fade>
-        {/* One caption per beat: «generation» leaves once the oil count-down settles, before «block». */}
-        <Fade opacity={Math.min(state.modalOpacity, fadeOut(frame, 126, 6))} z={90}>
-          {/* Right of the dialog, level with the labor line: clear of its price and the checkboxes. */}
-          <Callout
-            text={callouts.generation}
-            at={GEN_AT}
-            anchor={{ x: APPLY_LABOR.x + APPLY_LABOR.w, y: APPLY_LABOR.y + APPLY_LABOR.h / 2 }}
-            side="right"
-            accent={accent}
-          />
-        </Fade>
-        <Fade opacity={state.modalOpacity} z={90}>
-          {/* Above the sheet, over the dimmed page title. */}
-          <Callout
-            text={callouts.block}
-            at={BLOCK_AT}
-            anchor={{ x: DIALOG.x + DIALOG.w / 2, y: DIALOG.y }}
-            side="top"
-            accent={accent}
-          />
-        </Fade>
-        {/* The same caption follows the block into the estimate: under the new work line, over the
-            add-form placeholders (left of the «2200» rate input), clear of every amount. */}
-        <Fade opacity={fadeOut(frame, 180, 6)} z={90}>
-          <Callout text={callouts.block} at={APPLY_AT} anchor={{ x: 330, y: 471 }} side="bottom" accent={accent} />
-        </Fade>
         {/* The kit's 10 % on wo-hero.2: ring the discount cell (the row keeps its outline), gone
             before the cursor reaches the order-discount type. */}
         <Fade opacity={fadeOut(frame, CLICK_DISC_TYPE - 8, 6)} z={50}>
           <Highlight rect={KIT_DISC_CELL} appearAt={SNAP2_AT} accent={accent} />
         </Fade>
-        {/* At the summary's left edge, level with «Скидка на наряд»: the pill lies over the empty
-            right half of the parts panel head, above the column heads and the kit's «−1 490 ₽». */}
-        <Callout text={callouts.discounts} at={SNAP3_AT} anchor={{ x: SUMMARY_X, y: 540 }} side="left" accent={accent} />
+        {social ? (
+          // One plaque at a time, from SOCIAL_CALLOUTS.
+          SOCIAL_CALLOUTS.map((c) => (
+            <Fade key={c.key} opacity={c.out === null ? 1 : fadeOut(frame, c.out, 6)} z={90}>
+              <Callout text={callouts[c.key]} at={c.at} anchor={{ x: 0, y: 0 }} side="bottom" accent={accent} />
+            </Fade>
+          ))
+        ) : (
+          <>
+            {/* One caption per beat: «generation» leaves once the oil count-down settles, before «block». */}
+            <Fade opacity={Math.min(state.modalOpacity, fadeOut(frame, 126, 6))} z={90}>
+              {/* Right of the dialog, level with the labor line: clear of its price and the checkboxes. */}
+              <Callout
+                text={callouts.generation}
+                at={GEN_AT}
+                anchor={{ x: APPLY_LABOR.x + APPLY_LABOR.w, y: APPLY_LABOR.y + APPLY_LABOR.h / 2 }}
+                side="right"
+                accent={accent}
+              />
+            </Fade>
+            <Fade opacity={state.modalOpacity} z={90}>
+              {/* Above the sheet, over the dimmed page title. */}
+              <Callout
+                text={callouts.block}
+                at={BLOCK_AT}
+                anchor={{ x: DIALOG.x + DIALOG.w / 2, y: DIALOG.y }}
+                side="top"
+                accent={accent}
+              />
+            </Fade>
+            {/* The same caption follows the block into the estimate: under the new work line, over the
+                add-form placeholders (left of the «2200» rate input), clear of every amount. */}
+            <Fade opacity={fadeOut(frame, 180, 6)} z={90}>
+              <Callout text={callouts.block} at={APPLY_AT} anchor={{ x: 330, y: 471 }} side="bottom" accent={accent} />
+            </Fade>
+            {/* At the summary's left edge, level with «Скидка на наряд»: the pill lies over the empty
+                right half of the parts panel head, above the column heads and the kit's «−1 490 ₽». */}
+            <Callout text={callouts.discounts} at={SNAP3_AT} anchor={{ x: SUMMARY_X, y: 540 }} side="left" accent={accent} />
+          </>
+        )}
         <Cursor path={CURSOR} clicks={SCENE_CLICKS.estimate} accent={accent} />
       </Camera>
     </AbsoluteFill>

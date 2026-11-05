@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cameraAt, clickState, countUp, cursorAt, loopLayers, pingPong, typed } from './math';
+import { SOCIAL_FRAME, cameraAt, cameraCentre, clickState, countUp, cursorAt, frameToUi, loopLayers, pingPong, stageView, typed } from './math';
 
 const keys = [
   { at: 0, x: 100, y: 200, zoom: 1 },
@@ -156,5 +156,25 @@ describe('pingPong', () => {
   });
   it('rejects a hold that leaves no room to move', () => {
     expect(() => pingPong(0, 0, 10, 1, 10)).toThrow();
+  });
+});
+
+describe('social stage geometry', () => {
+  it('wide: the camera key sits at the frame centre and the stage is the whole frame', () => {
+    expect(cameraCentre('wide', 1920, 1080)).toEqual({ x: 960, y: 540 });
+    expect(stageView({ x: 720, y: 450, zoom: 2 }, 'wide', 1920, 1080)).toEqual({ l: 240, t: 180, r: 1200, b: 720 });
+  });
+  it('social: 120-px brand band on top, 260-px caption plaque at the bottom, the key at the stage centre', () => {
+    expect(SOCIAL_FRAME).toEqual({ width: 1080, height: 1350, brandH: 120, captionH: 260 });
+    expect(cameraCentre('social', 1080, 1350)).toEqual({ x: 540, y: 605 });
+    const v = stageView({ x: 1000, y: 500, zoom: 2 }, 'social', 1080, 1350);
+    expect(v).toEqual({ l: 1000 - 270, t: 500 - 242.5, r: 1000 + 270, b: 500 + 242.5 });
+  });
+  it('frameToUi inverts the camera: the key maps to the centre, frame px shrink by the zoom', () => {
+    const cam = { x: 1000, y: 500, zoom: 2 };
+    const c = cameraCentre('social', 1080, 1350);
+    expect(frameToUi(540, 605, cam, c)).toEqual({ x: 1000, y: 500 });
+    expect(frameToUi(0, 1090, cam, c)).toEqual({ x: 1000 - 270, y: 500 + 242.5 });
+    expect(frameToUi(0, 120, cam, c)).toEqual({ x: 730, y: 257.5 });
   });
 });

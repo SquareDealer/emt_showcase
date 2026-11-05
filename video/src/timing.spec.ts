@@ -45,11 +45,19 @@ describe('timing', () => {
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [15] })).toEqual([]);
     expect(offBeatClicks(SCENES_SOCIAL, { ...SCENE_CLICKS, booking: [20] })).toEqual([20 + sceneStart('booking', SCENES_SOCIAL)]);
   });
-  it('social drops intro and docs and shortens booking', () => {
+  it('social drops intro and docs, shortens booking and trims the dashboard\'s tail hold', () => {
     const ids: string[] = SCENES_SOCIAL.map((s) => s.id);
     expect(ids).not.toContain('intro');
     expect(ids).not.toContain('docs');
     expect(SCENES_SOCIAL.find((s) => s.id === 'booking')?.dur).toBe(150);
-    expect(totalDuration(SCENES_SOCIAL)).toBeGreaterThan(0);
+    expect(SCENES_SOCIAL.find((s) => s.id === 'dashboard')?.dur).toBe(135);
+    for (const s of SCENES_SOCIAL) {
+      if (s.id !== 'booking' && s.id !== 'dashboard') expect(s.dur).toBe(SCENES.find((h) => h.id === s.id)?.dur);
+    }
+  });
+  it('social is at most 30 s (≤ 900 frames) and every scene starts on the beat', () => {
+    expect(totalDuration(SCENES_SOCIAL)).toBeLessThanOrEqual(900);
+    expect(totalDuration(SCENES_SOCIAL)).toBe(900);
+    for (const s of SCENES_SOCIAL) expect(sceneStart(s.id, SCENES_SOCIAL) % FRAMES_PER_BEAT).toBe(0);
   });
 });

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { orderTotal } from '@crm/lib/format';
 import { woHero } from '../fixtures';
-import { estimateState, newLineIds } from './Estimate';
+import { cameraAt, stageView, type View } from '../kit/math';
+import { SCENES_SOCIAL, sceneStart } from '../timing';
+import { CAM, SOCIAL_CALLOUTS, SOCIAL_ZONES, estimateState, newLineIds } from './Estimate';
 
 const at = (f: number) => estimateState(f, 30);
 /** Lines of wo-hero.1 absent in wo-hero.0, in rowStyle order (works, then parts). */
@@ -58,5 +60,55 @@ describe('estimate scene state', () => {
     expect(at(213).discountDraft).toEqual({ type: 'percent', value: '' });
     expect(at(218).discountDraft).toEqual({ type: 'percent', value: '5' });
     expect(at(240).discountDraft).toEqual({ type: 'percent', value: '5' });
+  });
+});
+
+describe('estimate social camera and captions', () => {
+  const view = (f: number) => stageView(cameraAt(f, 30, CAM.social), 'social', 1080, 1350);
+  const inside = (v: View, r: { x: number; y: number; w: number; h: number }) =>
+    v.l <= r.x && v.r >= r.x + r.w && v.t <= r.y && v.b >= r.y + r.h;
+  it('every social key is at least 1.7×', () => {
+    for (const k of CAM.social) expect(k.zoom).toBeGreaterThanOrEqual(1.7);
+  });
+  it('zone 1: «+ Из прайса…» and its open list (to the option clicked at 75)', () => {
+    for (let f = 0; f <= 78; f++) {
+      const v = view(f);
+      expect(inside(v, SOCIAL_ZONES.select)).toBe(true);
+      expect(v.r).toBeLessThanOrEqual(1096); // the summary column starts
+      expect(v.t).toBeGreaterThanOrEqual(189); // under the vehicle line (its last pixels end ~185)
+    }
+  });
+  it('zone 2: the whole confirmation sheet while it is up (from 95 to the confirm)', () => {
+    for (let f = 95; f <= 152; f++) expect(inside(view(f), SOCIAL_ZONES.modal)).toBe(true);
+  });
+  it('zone 3: the new block (both group heads, the work line, the parts) and the toast', () => {
+    for (let f = 168; f <= 180; f++) {
+      const v = view(f);
+      expect(inside(v, SOCIAL_ZONES.block)).toBe(true);
+      expect(v.l).toBeGreaterThan(240); // no sidebar
+      expect(v.r).toBeLessThan(838); // no discount column / group total cut mid-number
+    }
+  });
+  it('zone 4: the summary (discount type, totals, «Остаток») and the kit\'s 10 % cell, to the end', () => {
+    for (let f = 198; f < 270; f++) expect(inside(view(f), SOCIAL_ZONES.summary)).toBe(true);
+  });
+  it('no view leaves the 1440×900 window by more than a pixel', () => {
+    for (let f = 0; f < 270; f++) {
+      const v = view(f);
+      expect(v.l).toBeGreaterThanOrEqual(-1);
+      expect(v.r).toBeLessThanOrEqual(1441);
+      expect(v.t).toBeGreaterThanOrEqual(-1);
+      expect(v.b).toBeLessThanOrEqual(901);
+    }
+  });
+  it('captions: one at a time, each on the beat in the social cut; «block» spans the sheet and the landing', () => {
+    const start = sceneStart('estimate', SCENES_SOCIAL);
+    expect(SOCIAL_CALLOUTS.map((c) => c.key)).toEqual(['generation', 'block', 'discounts']);
+    SOCIAL_CALLOUTS.forEach((c, i) => {
+      expect((start + c.at) % 15).toBe(0);
+      const next = SOCIAL_CALLOUTS[i + 1];
+      if (next) expect(c.out! + 6).toBeLessThanOrEqual(next.at);
+    });
+    expect(SOCIAL_CALLOUTS[2].out).toBeNull();
   });
 });

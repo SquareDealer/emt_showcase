@@ -148,38 +148,52 @@ export function DashboardWindow({
 const OVERVIEW = { x: 720, y: 450, zoom: 1.15 };
 const REVENUE = { x: 819.3, y: 574, zoom: 1.66 };
 const LOAD = { x: 1022, y: 352.75, zoom: 2.32 };
-// SOCIAL (1080×1350). KPIS 1.5× (view 720×900): x 255–975 — the first two KPI cards (the second cut in
-// its empty right part) and the whole revenue panel; y 0–900 — the window's full height.
-// CHART: the same width, y 110–1010 — from under the header, a 110-px band of background under the
-// window for the callout's pill. LOAD 2.3× (view 470×587): x 966–1436 — the right column from the gap
-// after the chart; y 125–712 — the «Средний чек» card, the load panel, the top works' first three rows.
-const SOCIAL_KPIS = { x: 615, y: 450, zoom: 1.5 };
-const SOCIAL_CHART = { x: 615, y: 560, zoom: 1.5 };
-const SOCIAL_LOAD = { x: 1201, y: 418.5, zoom: 2.3 };
+// SOCIAL (stage 1080×970 between the bands), one zone at a time:
+//   KPI   1.7 (view 635×571): x 273.4–908.6 — the revenue card whole (274–640.7) counting up, the orders
+//         card's figure; y 130.7–701 — the KPI row (from 132.5) and the bars growing under it.
+//   CHART 1.7 from 45 by 65: x 299.7–935 — the plot (Jun's label from 317 to Nov's), the panel's own
+//         padding cut; y 267.4–838 — the panel's top and title (286.7) to the month ticks (833); the
+//         footnote (841) wholly under the edge.
+//   LOAD  2.38 from 90 by 110 (view 454×408): x 964.6–1418.4 — the right column, clear of the revenue
+//         panel (960.8); y 262–669.6 — the load panel whole, the top works' title and first two rows.
+export const SOCIAL_ZONES = {
+  kpi: { x: 274, y: 132.5, w: 366.7, h: 113.2 },
+  chart: { x: 317, y: 286.7, w: 603, h: 833 - 286.7 },
+  load: { x: 976.8, y: 269.7, w: 1406 - 976.8, h: 459 - 269.7 },
+};
+const SOCIAL_KPI = { x: 591, y: 416, zoom: 1.7 };
+const SOCIAL_CHART = { x: 617.4, y: 552.7, zoom: 1.7 };
+const SOCIAL_LOAD = { x: 1191.5, y: 465.8, zoom: 2.38 };
 /** Each move takes MOVE frames from its beat (45, 90). */
 export const MOVE = 20;
-export const cameraKeys = (social: boolean): CamKey[] => {
-  const [a, b, c] = social ? [SOCIAL_KPIS, SOCIAL_CHART, SOCIAL_LOAD] : [OVERVIEW, REVENUE, LOAD];
-  return [
-    { at: 0, ...a },
-    { at: s(REVENUE_AT), ...a },
-    { at: s(REVENUE_AT + MOVE), ...b },
-    { at: s(LOAD_AT), ...b },
-    { at: s(LOAD_AT + MOVE), ...c },
-  ];
+const keysThrough = ([a, b, c]: { x: number; y: number; zoom: number }[]): CamKey[] => [
+  { at: 0, ...a },
+  { at: s(REVENUE_AT), ...a },
+  { at: s(REVENUE_AT + MOVE), ...b },
+  { at: s(LOAD_AT), ...b },
+  { at: s(LOAD_AT + MOVE), ...c },
+];
+export const CAM: { wide: CamKey[]; social: CamKey[] } = {
+  wide: keysThrough([OVERVIEW, REVENUE, LOAD]),
+  social: keysThrough([SOCIAL_KPI, SOCIAL_CHART, SOCIAL_LOAD]),
 };
 
 /** «Владелец видит выручку и загрузку» from 60 (on the beat), gone before the camera leaves the chart. */
 export const CALLOUT_AT = 60;
 export const CALLOUT_OUT = LOAD_AT - 6;
 const CALLOUT_FADE = 6;
-/** The callout's dot (window px). Wide: in the gap left of October's bar (745.8), the pill to its left
+/** The wide callout's dot (window px): in the gap left of October's bar (745.8), the pill to its left
  *  over the chart's empty band — under the top gridline (371.4), above September's label (463.3), and
- *  right of the panel's left edge (pill ~355 UI px at 1.66×: x ~368–723). Social: in the band of
- *  background under the window (900–1010), 12 px below its edge, the pill under it (to ~975). */
-export const calloutAnchor = (social: boolean) => (social ? { x: 617, y: 912 } : { x: 738, y: 412 });
-export const calloutOpacity = (frame: number) =>
-  frame < CALLOUT_AT ? 0 : interpolate(frame, [CALLOUT_OUT, CALLOUT_OUT + CALLOUT_FADE], [1, 0], clamp);
+ *  right of the panel's left edge (pill ~355 UI px at 1.66×: x ~368–723). Social: the bottom plaque. */
+export const CALLOUT_ANCHOR = { x: 738, y: 412 };
+/** Wide: gone before the camera leaves the chart; social: the plaque (independent of the camera) stays
+ *  through the load shot — the caption names both. */
+export const calloutOpacity = (frame: number, social: boolean) =>
+  frame < CALLOUT_AT
+    ? 0
+    : social
+      ? 1
+      : interpolate(frame, [CALLOUT_OUT, CALLOUT_OUT + CALLOUT_FADE], [1, 0], clamp);
 
 /**
  * Dashboard (150 f): the owner's overview for the last full month — the bars, load and top works grow
@@ -191,19 +205,19 @@ export function DashboardScene({ theme, brand, callouts, accent, dashboardDeltaL
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
   const state = dashboardState(frame, fps);
-  const callout = calloutOpacity(frame);
+  const callout = calloutOpacity(frame, social);
   return (
     <AbsoluteFill>
       <Background theme={theme} />
-      <Camera keys={cameraKeys(social)}>
+      <Camera keys={social ? CAM.social : CAM.wide}>
         <DashboardWindow theme={theme} brandName={brand.name} deltaLabel={dashboardDeltaLabel} state={state} />
         {callout > 0 ? (
           <div style={{ position: 'absolute', left: 0, top: 0, opacity: callout, zIndex: 90 }}>
             <Callout
               text={callouts.dashboard}
               at={CALLOUT_AT}
-              anchor={calloutAnchor(social)}
-              side={social ? 'bottom' : 'left'}
+              anchor={CALLOUT_ANCHOR}
+              side="left"
               accent={accent}
             />
           </div>

@@ -1,5 +1,6 @@
 // Pure timeline of the showcase assembly (Hero / HeroSocial): which transition joins each pair of
-// scenes and on which absolute frames the sounds play. Hero.tsx renders exactly these values.
+// scenes and on which absolute frames the sounds play. ShowcaseAssembly (Hero.tsx) renders exactly
+// these values: assemblyPlan() and sfxCues().
 import { linearTiming, type TransitionTiming } from '@remotion/transitions';
 import { interpolate } from 'remotion';
 import { TYPE_KEY_FRAMES } from '../scenes/Search';
@@ -68,6 +69,20 @@ export function heroKeySfx(scenes: readonly SceneDef[] = SCENES): number[] {
 /** Whoosh: at the start of each slide transition, i.e. the entering scene's first frame. */
 export function heroWhooshSfx(scenes: readonly SceneDef[] = SCENES): number[] {
   return assemblyPlan(scenes).flatMap((p) => (p.type === 'transition' && p.kind === 'slide' ? [sceneStart(p.to, scenes)] : []));
+}
+
+export type SfxName = keyof typeof SFX;
+export type SfxCue = { name: SfxName; src: string; volume: number; frames: number; at: number };
+
+/** Every sound of the cut, in one list: clicks, then keys, then whooshes (absolute frames). The
+ *  assembly renders exactly this list, so a test on it is a test on what plays. */
+export function sfxCues(scenes: readonly SceneDef[]): SfxCue[] {
+  const cue = (name: SfxName) => (at: number): SfxCue => ({ name, ...SFX[name], at });
+  return [
+    ...heroClickSfx(scenes).map(cue('click')),
+    ...heroKeySfx(scenes).map(cue('key')),
+    ...heroWhooshSfx(scenes).map(cue('whoosh')),
+  ];
 }
 
 // ---- music ----
