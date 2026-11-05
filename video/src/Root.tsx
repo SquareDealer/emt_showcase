@@ -1,5 +1,5 @@
 import { Composition, Folder } from 'remotion';
-import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugWorkOrder } from './compositions/Debug';
+import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugLoop, DebugWorkOrder } from './compositions/Debug';
 
 export const RemotionRoot = () => {
   return (
@@ -49,6 +49,7 @@ export const RemotionRoot = () => {
         height={1080}
         defaultProps={{ theme: 'light' as const }}
       />
+      <Composition id="Debug-Loop" component={DebugLoop} durationInFrames={60} fps={30} width={1920} height={1080} />
     </Folder>
   );
 };

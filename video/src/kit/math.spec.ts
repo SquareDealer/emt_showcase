@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cameraAt, clickState, countUp, cursorAt, typed } from './math';
+import { cameraAt, clickState, countUp, cursorAt, loopLayers, typed } from './math';
 
 const keys = [
   { at: 0, x: 100, y: 200, zoom: 1 },
@@ -58,4 +58,31 @@ describe('countUp', () => {
   it('half way', () => expect(countUp(15, 0, 30, 0, 100)).toBe(50));
   it('rounds to kopecks and clamps', () => expect(countUp(99, 0, 30, 0, 100.555)).toBe(100.56));
   it('before start is from', () => expect(countUp(-5, 0, 30, 10, 20)).toBe(10));
+});
+
+describe('guards', () => {
+  it('countUp with equal frames steps', () => {
+    expect(countUp(4, 5, 5, 0, 10)).toBe(0);
+    expect(countUp(5, 5, 5, 0, 10)).toBe(10);
+  });
+  it('duplicate camera keys do not throw', () => {
+    const k = [
+      { at: 0, x: 0, y: 0, zoom: 1 },
+      { at: 1, x: 10, y: 0, zoom: 1 },
+      { at: 1, x: 50, y: 0, zoom: 2 },
+    ];
+    expect(() => cameraAt(30, 30, k)).not.toThrow();
+    expect(cameraAt(90, 30, k).x).toBe(50);
+  });
+  it('rounds half-kopeck up', () => expect(countUp(1, 0, 1, 0, 1.005)).toBe(1.01));
+});
+
+describe('loopLayers', () => {
+  it('frame 0: base head plus fully opaque tail continuation clip(D)', () =>
+    expect(loopLayers(0, 60, 10)).toEqual([
+      { clipFrame: 0, opacity: 1 },
+      { clipFrame: 60, opacity: 1 },
+    ]));
+  it('mid blend', () => expect(loopLayers(5, 60, 10)[1]).toEqual({ clipFrame: 65, opacity: 0.5 }));
+  it('last frame is clip(D-1) only', () => expect(loopLayers(59, 60, 10)).toEqual([{ clipFrame: 59, opacity: 1 }]));
 });

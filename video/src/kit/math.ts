@@ -20,7 +20,9 @@ function along<T extends { at: number }>(
     for (const f of fields) out[f] = keys[0][f] as number;
     return out;
   }
-  const times = keys.map((k) => k.at);
+  // interpolate needs strictly increasing inputs: nudge duplicate/unsorted times apart (a step).
+  const times: number[] = [];
+  for (const k of keys) times.push(times.length && k.at <= times[times.length - 1] ? times[times.length - 1] + 1e-6 : k.at);
   for (const f of fields) {
     out[f] = interpolate(
       t,
@@ -70,9 +72,24 @@ export function typed(frame: number, startFrame: number, text: string, framesPer
 }
 
 export function countUp(frame: number, fromFrame: number, toFrame: number, from: number, to: number): number {
+  if (toFrame <= fromFrame) return Math.round((frame < fromFrame ? from : to + Number.EPSILON) * 100) / 100;
   const v = interpolate(frame, [fromFrame, toFrame], [from, to], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  return Math.round(v * 100) / 100;
+  return Math.round((v + Number.EPSILON) * 100) / 100;
+}
+
+/**
+ * Layers of LoopCrossfade at output frame `frame` (0 <= frame < D): the base clip(frame), plus for
+ * frame < overlap the tail continuation clip(D + frame) on top at opacity 1 - frame/overlap.
+ */
+export function loopLayers(
+  frame: number,
+  D: number,
+  overlap: number,
+): { clipFrame: number; opacity: number }[] {
+  const layers = [{ clipFrame: frame, opacity: 1 }];
+  if (frame < overlap) layers.push({ clipFrame: D + frame, opacity: 1 - frame / overlap });
+  return layers;
 }

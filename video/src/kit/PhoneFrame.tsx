@@ -12,6 +12,7 @@ export function PhoneFrame({ src, scale = 1 }: { src: string; scale?: number }) 
         borderRadius: 64,
         background: '#14181d',
         boxShadow: '0 40px 80px -20px rgba(0,0,0,.5), inset 0 0 0 2px #2b3138',
+        transformOrigin: 'center',
         transform: `scale(${scale})`,
       }}
     >

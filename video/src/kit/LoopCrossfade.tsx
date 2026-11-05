@@ -1,11 +1,14 @@
-import { AbsoluteFill, interpolate, Sequence, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, Sequence, useCurrentFrame } from 'remotion';
 import type { ReactNode } from 'react';
+import { loopLayers } from './math';
 
 /**
- * Seamless loop of `durationInFrames`. `children` is authored as a clip of
- * `durationInFrames + overlap` frames (its own frame 0..D+overlap-1). Output frame f shows clip
- * time f+overlap; during the first `overlap` frames the clip's head (time f) is cross-faded
- * out over it, so the end of the clip (time D+overlap-1) flows into the head of the next loop.
+ * Seamless loop of `durationInFrames` (D). Contract: `children` is a clip that is at least
+ * D + overlap frames long (it reads its own frame via useCurrentFrame). Output frame f shows
+ * clip(f); during the first `overlap` frames the clip's continuation clip(D + f) is laid on top
+ * with opacity 1 - f/overlap, so output frame 0 == clip(D), which continues straight from
+ * clip(D - 1) (the last output frame), and then dissolves into the head clip(f). The clip only
+ * has to be continuous across its own tail, not from its last frame back to its first.
  */
 export function LoopCrossfade({
   durationInFrames,
@@ -17,20 +20,15 @@ export function LoopCrossfade({
   children: ReactNode;
 }) {
   const frame = useCurrentFrame();
-  const headOpacity = interpolate(frame, [0, overlap], [1, 0], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  const layers = loopLayers(frame, durationInFrames, overlap);
   return (
     <AbsoluteFill>
-      <Sequence from={-overlap} durationInFrames={durationInFrames + overlap} layout="none">
-        <AbsoluteFill>{children}</AbsoluteFill>
-      </Sequence>
-      {frame < overlap ? (
-        <Sequence from={0} durationInFrames={overlap} layout="none">
-          <AbsoluteFill style={{ opacity: headOpacity }}>{children}</AbsoluteFill>
+      {layers.map((l, i) => (
+        // Sequence offset makes the child's useCurrentFrame() equal l.clipFrame.
+        <Sequence key={i} from={frame - l.clipFrame} layout="none">
+          <AbsoluteFill style={{ opacity: l.opacity }}>{children}</AbsoluteFill>
         </Sequence>
-      ) : null}
+      ))}
     </AbsoluteFill>
   );
 }

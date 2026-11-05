@@ -1,7 +1,7 @@
 // One-frame compositions that render each real CRM view with fixtures — the scaffold's smoke test
 // (fonts, CSS, dedupe, brand, TZ) before any animation exists.
 import type { ReactNode } from 'react';
-import { AbsoluteFill, staticFile } from 'remotion';
+import { AbsoluteFill, staticFile, useCurrentFrame } from 'remotion';
 import { addDays, startOfWeek } from 'date-fns';
 import { AppShellView } from '@crm/components/AppShellView';
 import { BoardView } from '@crm/features/board/BoardView';
@@ -27,6 +27,7 @@ import {
 import { VideoProviders } from '../providers/VideoProviders';
 import { AppWindow } from '../kit/AppWindow';
 import { Background } from '../kit/Background';
+import { LoopCrossfade } from '../kit/LoopCrossfade';
 import { Camera } from '../kit/Camera';
 import { Cursor } from '../kit/Cursor';
 import { Highlight } from '../kit/Highlight';
@@ -263,3 +264,21 @@ export function DebugKit({ theme }: DebugProps) {
   );
 }
 
+
+export const LOOP_D = 60;
+function LoopClip() {
+  const f = useCurrentFrame();
+  return (
+    <AbsoluteFill style={{ background: '#fff' }}>
+      <div style={{ position: 'absolute', left: 100 + f * 10, top: 400, width: 80, height: 80, background: '#c00' }} />
+    </AbsoluteFill>
+  );
+}
+/** Moving square, clip of D+10 frames: output frame 0 must continue from frame D-1. */
+export function DebugLoop() {
+  return (
+    <LoopCrossfade durationInFrames={LOOP_D} overlap={10}>
+      <LoopClip />
+    </LoopCrossfade>
+  );
+}
