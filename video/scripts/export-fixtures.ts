@@ -202,11 +202,13 @@ async function buildDashboard(db: pg.Client, demoNow: Date): Promise<DashboardDa
   const q = dashboardQueries();
   const run = async <R>(name: string) => (await db.query(q[name], [demoNow])).rows as R[];
   const months = await run<{ month: string; revenue: string }>('revenue_by_month');
-  const [kpi] = await run<{ revenue: string; orders: number; prev_revenue: string }>('kpi');
+  const [kpi] = await run<{ month: string; revenue: string; orders: number; prev_revenue: string }>('kpi');
   const load = await run<{ name: string; hours: string; capacity_hours: number }>('master_load');
   const top = await run<{ name: string; count: number; revenue: string }>('top_works');
 
-  const [y, m] = months[months.length - 1].month.split('-').map(Number);
+  // The report month is the last full one (kpi.month); the chart's last point is the current month to date.
+  const [y, m] = kpi.month.split('-').map(Number);
+  if (months.at(-2)?.month !== kpi.month) throw new Error(`dashboard: report month ${kpi.month} is not the chart's second-to-last`);
   const revenue = round2(Number(kpi.revenue));
   const prev = Number(kpi.prev_revenue);
   return {
@@ -218,6 +220,7 @@ async function buildDashboard(db: pg.Client, demoNow: Date): Promise<DashboardDa
       revenueDeltaPct: prev > 0 ? round1(((revenue - prev) / prev) * 100) : 0,
     },
     revenueByMonth: months.map((r) => ({ month: MONTH_SHORT[Number(r.month.slice(5, 7)) - 1], revenue: round2(Number(r.revenue)) })),
+    partialLast: true,
     masterLoad: load.map((r) => ({ name: r.name, hours: round1(Number(r.hours)), capacityHours: r.capacity_hours })),
     topWorks: top.map((r) => ({ name: r.name, count: r.count, revenue: round2(Number(r.revenue)) })),
   };

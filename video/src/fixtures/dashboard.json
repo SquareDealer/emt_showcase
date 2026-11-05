@@ -1,10 +1,10 @@
 {
-  "month": "ноябрь 2026",
+  "month": "октябрь 2026",
   "kpi": {
-    "revenue": 882303.9,
-    "orders": 81,
-    "avgTicket": 10893,
-    "revenueDeltaPct": -2.3
+    "revenue": 1739653.9,
+    "orders": 160,
+    "avgTicket": 10873,
+    "revenueDeltaPct": 37.2
   },
   "revenueByMonth": [
     {
@@ -32,48 +32,49 @@
       "revenue": 882303.9
     }
   ],
+  "partialLast": true,
   "masterLoad": [
     {
       "name": "Лебедев Роман Игоревич",
-      "hours": 19,
-      "capacityHours": 60
+      "hours": 94.5,
+      "capacityHours": 264
     },
     {
       "name": "Морозов Илья Николаевич",
-      "hours": 36.5,
-      "capacityHours": 60
+      "hours": 105,
+      "capacityHours": 264
     },
     {
       "name": "Соколов Денис Александрович",
-      "hours": 28.5,
-      "capacityHours": 60
+      "hours": 99,
+      "capacityHours": 264
     }
   ],
   "topWorks": [
     {
-      "name": "Диагностика двигателя",
-      "count": 20,
-      "revenue": 44000
-    },
-    {
       "name": "Шиномонтаж (сезонная замена)",
-      "count": 12,
-      "revenue": 38400
-    },
-    {
-      "name": "ТО (регламент)",
-      "count": 5,
-      "revenue": 27500
+      "count": 26,
+      "revenue": 82880
     },
     {
       "name": "Хранение комплекта колёс (сезон)",
-      "count": 7,
-      "revenue": 24500
+      "count": 20,
+      "revenue": 70000
     },
     {
-      "name": "Развал-схождение",
-      "count": 8,
-      "revenue": 23700
+      "name": "Диагностика двигателя",
+      "count": 24,
+      "revenue": 52580
+    },
+    {
+      "name": "Балансировка колёс",
+      "count": 33,
+      "revenue": 52320
+    },
+    {
+      "name": "ТО (регламент)",
+      "count": 9,
+      "revenue": 48950
     }
   ]
 }

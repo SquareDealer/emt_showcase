@@ -40,7 +40,7 @@ export const defaultProps: ShowcaseProps = {
     vin: 'Любая машина по VIN — за секунду',
     dashboard: 'Владелец видит выручку и загрузку',
   },
-  dashboardDeltaLabel: 'к тому же периоду прошлого месяца',
+  dashboardDeltaLabel: 'к прошлому месяцу',
   outro: { title: 'NestJS · React · PostgreSQL', subtitle: '', cta: '' },
   musicOffsetFrames: 0,
 };

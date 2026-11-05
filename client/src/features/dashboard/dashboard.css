@@ -52,6 +52,10 @@
 .dash-bars { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .dash-bar { fill: var(--primary); opacity: 0.85; }
 .dash-bar.current { fill: var(--accent); opacity: 1; }
+.dash-bar.partial {
+  fill: var(--primary); opacity: 1; fill-opacity: 0.22;
+  stroke: var(--primary); stroke-width: 1.5px; stroke-dasharray: 4 3;
+}
 .dash-val {
   position: absolute; transform: translateX(-50%); white-space: nowrap;
   font-size: 13px; color: var(--ink-soft);
@@ -60,6 +64,8 @@
 .dash-val.current { color: var(--ink); font-weight: 600; }
 .dash-ticks { display: flex; padding-top: 8px; }
 .dash-tick { flex: 1; text-align: center; font-size: 13px; color: var(--muted); }
+.dash-val.partial, .dash-tick.partial { color: var(--muted); }
+.dash-note { margin: var(--sp-2) 0 0; font-size: var(--text-xs); color: var(--muted); }
 
 .dash-rows { list-style: none; margin: 0; padding: 0; flex: 1; display: flex; flex-direction: column; justify-content: space-around; gap: var(--sp-3); }
 .dash-row { display: flex; flex-direction: column; gap: 6px; }

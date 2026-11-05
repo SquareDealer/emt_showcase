@@ -102,4 +102,36 @@ describe('DashboardView', () => {
     expect(labels).toHaveLength(6);
     expect(new Set(labels).size).toBe(6);
   });
+
+  it('по умолчанию подпись динамики «к прошлому месяцу», deltaLabel её заменяет', () => {
+    expect(render()).toContain('% к прошлому месяцу');
+    expect(renderToStaticMarkup(<DashboardView data={data} deltaLabel="к сентябрю" />)).toContain('% к сентябрю');
+  });
+
+  describe('partialLast: текущий месяц неполный', () => {
+    const partial = { ...data, partialLast: true };
+    const html = renderToStaticMarkup(<DashboardView data={partial} />);
+    const barClasses = [...html.matchAll(/<rect[^>]*class="([^"]+)"/g)].map((m) => m[1]);
+
+    it('последний столбец partial, отчётный (предпоследний) — current', () => {
+      expect(barClasses).toEqual(['dash-bar', 'dash-bar', 'dash-bar', 'dash-bar', 'dash-bar current', 'dash-bar partial']);
+    });
+
+    it('метка месяца со «*» и сноска под графиком', () => {
+      expect(html).toContain('ноя*');
+      expect(html).toContain('* текущий месяц, по сегодняшний день');
+    });
+
+    it('без флага: акцент на последнем, без сноски и «*»', () => {
+      const plain = render();
+      expect([...plain.matchAll(/<rect[^>]*class="([^"]+)"/g)].map((m) => m[1]).at(-1)).toBe('dash-bar current');
+      expect(plain).not.toContain('dash-note');
+      expect(plain).not.toContain('ноя*');
+    });
+
+    it('progress масштабирует и неполный столбец', () => {
+      const h = (x: string) => barHeights(x).at(-1)!;
+      expect(h(renderToStaticMarkup(<DashboardView data={partial} progress={0.5} />))).toBeCloseTo(h(html) / 2, 1);
+    });
+  });
 });

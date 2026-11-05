@@ -9,6 +9,8 @@ export interface DashboardViewProps {
   progress?: number;
   /** Demo: marks the block with data-highlight. */
   highlight?: 'revenue' | 'load' | 'top';
+  /** Подпись динамики выручки после процента. */
+  deltaLabel?: string;
 }
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
@@ -19,7 +21,7 @@ function compact(n: number): string {
   return `${num(Math.round(n / 1000))} тыс`;
 }
 
-export function DashboardView({ data, progress = 1, highlight }: DashboardViewProps) {
+export function DashboardView({ data, progress = 1, highlight, deltaLabel = 'к прошлому месяцу' }: DashboardViewProps) {
   const p = clamp01(progress);
   const { kpi, revenueByMonth: rev, masterLoad, topWorks: topRaw } = data;
   const topWorks = [...topRaw].sort((x, y) => y.revenue - x.revenue);
@@ -30,6 +32,13 @@ export function DashboardView({ data, progress = 1, highlight }: DashboardViewPr
   const n = Math.max(rev.length, 1);
   const slot = 100 / n;
   const barW = slot * 0.58;
+  /** Неполный (текущий) месяц — последняя точка; отчётный месяц KPI выделен акцентом. */
+  const partialIdx = data.partialLast ? rev.length - 1 : -1;
+  const reportIdx = data.partialLast ? rev.length - 2 : rev.length - 1;
+  const barClass = (i: number) =>
+    i === partialIdx ? 'dash-bar partial' : i === reportIdx ? 'dash-bar current' : 'dash-bar';
+  const valClass = (i: number) =>
+    `dash-val mono${i === reportIdx ? ' current' : i === partialIdx ? ' partial' : ''}`;
 
   return (
     <div className="page dash" data-demo="dashboard">
@@ -45,7 +54,7 @@ export function DashboardView({ data, progress = 1, highlight }: DashboardViewPr
           <span className={`dash-delta mono ${up ? 'up' : 'down'}`}>
             {up ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
             {up ? '+' : '−'}
-            {num(Math.abs(kpi.revenueDeltaPct))}% к прошлому месяцу
+            {num(Math.abs(kpi.revenueDeltaPct))}% {deltaLabel}
           </span>
         </div>
         <div className="dash-kpi">
@@ -78,7 +87,8 @@ export function DashboardView({ data, progress = 1, highlight }: DashboardViewPr
                     <rect
                       key={r.month + i}
                       data-demo="rev-bar"
-                      className={i === rev.length - 1 ? 'dash-bar current' : 'dash-bar'}
+                      className={barClass(i)}
+                      vectorEffect={i === partialIdx ? 'non-scaling-stroke' : undefined}
                       x={slot * i + (slot - barW) / 2}
                       y={100 - h}
                       width={barW}
@@ -90,7 +100,7 @@ export function DashboardView({ data, progress = 1, highlight }: DashboardViewPr
               {rev.map((r, i) => (
                 <span
                   key={r.month + i}
-                  className={`dash-val mono${i === rev.length - 1 ? ' current' : ''}`}
+                  className={valClass(i)}
                   style={{
                     left: `${slot * i + slot / 2}%`,
                     bottom: `calc(${(r.revenue / max) * 100 * p}% + 6px)`,
@@ -103,11 +113,17 @@ export function DashboardView({ data, progress = 1, highlight }: DashboardViewPr
             </div>
             <div className="dash-ticks">
               {rev.map((r, i) => (
-                <span key={r.month + i} className="dash-tick">
+                <span key={r.month + i} className={i === partialIdx ? 'dash-tick partial' : 'dash-tick'}>
                   {r.month}
+                  {i === partialIdx ? '*' : ''}
                 </span>
               ))}
             </div>
+            {partialIdx >= 0 ? (
+              <p className="dash-note" data-demo="rev-note">
+                * текущий месяц, по сегодняшний день
+              </p>
+            ) : null}
           </div>
         </section>
 

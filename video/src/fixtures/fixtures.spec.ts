@@ -110,20 +110,23 @@ describe('fixtures: calendar week', () => {
 });
 
 describe('fixtures: dashboard', () => {
-  it('6 месяцев выручки', () => {
+  it('6 месяцев выручки, последний — текущий неполный', () => {
     expect(dashboard.revenueByMonth.length).toBe(6);
+    expect(dashboard.partialLast).toBe(true);
   });
 
-  it('выручка растёт минимум в 4 из 5 переходов', () => {
-    const r = dashboard.revenueByMonth.map((m) => m.revenue);
-    const ups = r.slice(1).filter((v, i) => v > r[i]).length;
-    expect(ups).toBeGreaterThanOrEqual(4);
+  it('выручка полных месяцев растёт в каждом переходе, динамика отчётного месяца положительная', () => {
+    const r = dashboard.revenueByMonth.slice(0, -1).map((m) => m.revenue);
+    r.slice(1).forEach((v, i) => expect(v).toBeGreaterThan(r[i]));
+    expect(dashboard.kpi.revenueDeltaPct).toBeGreaterThan(0);
+    const [prev, cur] = r.slice(-2);
+    expect(dashboard.kpi.revenueDeltaPct).toBe(Math.round(((cur - prev) / prev) * 100 * 10) / 10);
   });
 
-  it('KPI сходятся: средний чек = выручка / наряды', () => {
+  it('KPI сходятся: отчётный месяц = предпоследняя точка, средний чек = выручка / наряды', () => {
     const { revenue, orders, avgTicket } = dashboard.kpi;
     expect(avgTicket).toBe(Math.round(revenue / orders));
-    expect(dashboard.revenueByMonth.at(-1)!.revenue).toBe(revenue);
+    expect(dashboard.revenueByMonth.at(-2)!.revenue).toBe(revenue);
     expect(dashboard.topWorks.length).toBe(5);
   });
 });
