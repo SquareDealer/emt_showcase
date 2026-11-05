@@ -66,6 +66,9 @@ const CALLOUT_FADE = 6;
 export const SCROLL = { wide: 40, social: 157 } as const;
 
 export const QUERY = HERO.r56.vin.slice(0, 7);
+/** Scene-local frames where `typed(frame, TYPE_FROM, QUERY, FRAMES_PER_CHAR)` gains a character —
+ *  the Hero's key sounds (one per character). */
+export const TYPE_KEY_FRAMES: readonly number[] = Array.from({ length: QUERY.length }, (_, i) => TYPE_FROM + (i + 1) * FRAMES_PER_CHAR);
 
 const brandFor = (name: string): Brand => ({
   name,
