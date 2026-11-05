@@ -1,3 +1,4 @@
+import { isUUID } from 'class-validator';
 import { execFile } from 'child_process';
 import { createHash } from 'crypto';
 import { join } from 'path';
@@ -12,6 +13,14 @@ const now = mskAt('2026-11-04', 12);
 const plan = buildDemoPlan(now);
 
 it('is deterministic', () => expect(buildDemoPlan(now)).toEqual(plan));
+// The API validates some ids with IsUUID('4') (apply-template's part_template_ids): a v5-shaped
+// demoId was rejected there with 400. Every uuid the plan writes must pass the same validator.
+it('every uuid in the plan is version 4 (class-validator isUUID(…, "4"))', () => {
+  const ids = [...new Set(JSON.stringify(plan).match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi) ?? [])];
+  expect(ids.length).toBeGreaterThan(1000);
+  expect(ids).toContain(HERO.parts.oil5w30);
+  expect(ids.filter((id) => !isUUID(id, '4'))).toEqual([]);
+});
 it('does not depend on the host time zone', () => {
   const saved = process.env.TZ;
   try {
