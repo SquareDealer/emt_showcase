@@ -18,7 +18,8 @@ import { WorkOrdersModule } from '../../src/work-orders/work-orders.module';
  */
 @Module({})
 export class DemoSeedModule {
-  static forUrl(url: string): DynamicModule {
+  /** `migrationsRun: false` for verify: a reader must not migrate the database it checks. */
+  static forUrl(url: string, opts: { migrationsRun?: boolean } = {}): DynamicModule {
     return {
       module: DemoSeedModule,
       imports: [
@@ -27,7 +28,7 @@ export class DemoSeedModule {
           url,
           entities,
           migrations,
-          migrationsRun: true,
+          migrationsRun: opts.migrationsRun ?? true,
           synchronize: false,
           logging: false,
         }),
