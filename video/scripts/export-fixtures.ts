@@ -345,7 +345,7 @@ async function main(): Promise<void> {
       };
 
       await call(owner, 'PATCH', path, {
-        title: 'Замена цепи ГРМ + ТО',
+        title: 'Замена цепи ГРМ',
         scheduled_at: freeSlot.startsAt.toISOString(),
         scheduled_duration_min: freeSlot.durationMin,
         assigned_master_id: HERO.masterId,

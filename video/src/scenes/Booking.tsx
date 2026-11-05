@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, type CSSProperties } from 'react';
 import { AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
-import { addDays, startOfWeek } from 'date-fns';
+import { addDays, setHours, startOfWeek } from 'date-fns';
 import { AppShellView } from '@crm/components/AppShellView';
 import { CalendarView } from '@crm/features/calendar/CalendarView';
 import { SlotMenu } from '@crm/features/calendar/SlotMenu';
@@ -66,6 +66,15 @@ const CFG: TimelineCfg = {
   pxPerMin: 0.8,
 };
 const { freeSlot } = heroSchedule(DEMO_NOW);
+// SLOT / MENU / BOOKING above were measured for Thursday 14:00–16:00 MSK of DEMO_NOW's week; any other
+// free slot (seed change, re-export) would put the cursor and the callout on the wrong cell.
+const EXPECTED_SLOT = setHours(addDays(WEEK_START, 3), 14);
+if (freeSlot.startsAt.getTime() !== EXPECTED_SLOT.getTime() || freeSlot.durationMin !== 120) {
+  throw new Error(
+    `Booking: pixel constants assume the free slot Thu ${EXPECTED_SLOT.toISOString()} (14:00 MSK, 120 min), ` +
+      `got ${freeSlot.startsAt.toISOString()} (${freeSlot.durationMin} min) — re-measure SLOT/MENU/BOOKING`,
+  );
+}
 const HERO_WO = woHero[0];
 const BASE_EVENTS: TimelineEvent[] = [
   ...calendarWeek.flatMap((w) => workOrderToEvent(w, DEFAULT_DUR, { showMaster: true }) ?? []),
