@@ -90,16 +90,32 @@ const TASK_ROWS: T[] = [
   ['polish-headlights', 'Полировка фар', 'other', 1.5, 3500, 1],
 ];
 
+/**
+ * Mutually exclusive works: each group's works overlap in labor and parts, so an order holds one of
+ * them (ТО or an oil change, discs-with-pads or pads). Generated orders also never repeat a part.
+ */
+const EXCLUSIVE_GROUPS: Record<string, string[]> = {
+  'engine-oil': ['service-regular', 'service-major', 'oil-change'],
+  'brakes-front': ['brake-pads-front', 'brake-discs-front'],
+  'brakes-rear': ['brake-pads-rear', 'brake-discs-rear'],
+  'timing-chain': ['timing-chain-n14', 'timing-tensioner'],
+};
+const exclusiveOf = (key: string): string | undefined => Object.keys(EXCLUSIVE_GROUPS).find((g) => EXCLUSIVE_GROUPS[g].includes(key));
+
 export const TASK_SPECS: TaskSpec[] = TASK_ROWS.map(
-  ([key, name, category, default_hours, default_price, weight, perGeneration]) => ({
-    key,
-    name,
-    category,
-    default_hours,
-    default_price,
-    weight,
-    ...(perGeneration ? { perGeneration: true } : {}),
-  }),
+  ([key, name, category, default_hours, default_price, weight, perGeneration]) => {
+    const exclusive = exclusiveOf(key);
+    return {
+      key,
+      name,
+      category,
+      default_hours,
+      default_price,
+      weight,
+      ...(perGeneration ? { perGeneration: true } : {}),
+      ...(exclusive ? { exclusive } : {}),
+    };
+  },
 );
 
 // ───────────────────────────── Parts ─────────────────────────────
@@ -314,19 +330,25 @@ const LINK_ROWS: Record<string, L[]> = {
     ['oil-5w30-1l', 'oil', 4.5],
     ['oil-filter-n14', 'filter', 1],
     ['oil-filter-b38', 'filter', 1, true, 'F56'],
+    ['oil-filter-b38', 'filter', 1, true, 'F60'],
     ['cabin-filter', 'cabin', 1],
     ['cabin-filter-f56', 'cabin', 1, true, 'F56'],
+    ['cabin-filter-f60-carbon', 'cabin', 1, true, 'F60'],
     ['oil-drain-washer', null, 1],
   ],
   'service-major': [
     ['oil-5w30-1l', 'oil', 4.5],
     ['oil-filter-n14', 'filter', 1],
     ['oil-filter-b38', 'filter', 1, true, 'F56'],
+    ['oil-filter-b38', 'filter', 1, true, 'F60'],
     ['air-filter-r56', 'air', 1],
     ['air-filter-f56', 'air', 1, true, 'F56'],
+    ['air-filter-f60', 'air', 1, true, 'F60'],
     ['cabin-filter', 'cabin', 1],
+    ['cabin-filter-f60-carbon', 'cabin', 1, true, 'F60'],
     ['spark-plug-n14', 'plugs', 4],
     ['spark-plug-b38', 'plugs', 3, true, 'F56'],
+    ['spark-plug-b38', 'plugs', 4, true, 'F60'],
     ['oil-drain-washer', null, 1],
   ],
   'air-filter': [

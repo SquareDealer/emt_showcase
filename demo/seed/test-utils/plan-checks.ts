@@ -57,6 +57,10 @@ export function planViolations(plan: DemoPlan): string[] {
       if (l.rate_snapshot !== (l.created_at < change ? LABOR_RATE_OLD : LABOR_RATE_NEW)) bad(w, 'rate snapshot');
     }
     if (w.labor.length + w.parts.length === 0) bad(w, 'no lines');
+    const partIds = w.parts.map((p) => p.part_template_id).filter((id) => id !== null);
+    if (new Set(partIds).size !== partIds.length) bad(w, 'same catalog part twice');
+    const groups = w.labor.map((l) => plan.catalog.tasks.find((t) => t.id === l.template_id)?.exclusive).filter((g) => g !== undefined);
+    if (new Set(groups).size !== groups.length) bad(w, 'two alternative works');
     const v = vehicles.get(w.vehicle_id);
     const c = clients.get(w.client_id);
     if (!v || !c || v.client_id !== c.id) bad(w, 'vehicle/client mismatch');

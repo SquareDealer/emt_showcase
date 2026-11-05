@@ -337,7 +337,8 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
       masterId: HERO.masterId,
       start: mskAt(busyDay, 9),
       duration: 360,
-      works: [{ taskKey: 'service-regular' }, { taskKey: 'brake-pads-front', laborDiscountPct: 10 }, { taskKey: 'brake-discs-front' }, { taskKey: 'stab-links-front' }],
+      // Discs come with pads (one block), so no separate pads work; 6.2 h of catalog work in the 6-hour slot.
+      works: [{ taskKey: 'service-regular' }, { taskKey: 'brake-discs-front', laborDiscountPct: 10 }, { taskKey: 'stab-links-front' }, { taskKey: 'brake-fluid' }],
       free: [{ name: 'Мойка двигателя', hours: 0.5 }],
       discount: { type: 'percent', value: 5 },
       hero: { status: 'in_progress', texts: { complaint: 'Плановое ТО; скрип при торможении и стук спереди на неровностях', recommendation: null } },
@@ -453,6 +454,20 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
   for (const w of out) if (w.closed_at) owed.set(monthKeyOf(w.closed_at), (owed.get(monthKeyOf(w.closed_at)) ?? 0) - w.total_cached);
 
   const pickable = (gen: string | null) => catalog.tasks.filter((t) => !R_SERIES_ONLY.has(t.key) || (gen ?? '').startsWith('R'));
+  // The default parts a work brings for a generation (memoised): an order never lists a part twice.
+  const partsCache = new Map<string, string[]>();
+  const defaultParts = (t: TaskPlan, gen: string | null): string[] => {
+    const k = `${t.key}|${gen ?? '-'}`;
+    let v = partsCache.get(k);
+    if (!v) {
+      v = resolveTemplatePartsPlan(catalog, t.key, gen).filter((c) => c.is_default).map((c) => c.part.id);
+      partsCache.set(k, v);
+    }
+    return v;
+  };
+  /** `t` can join `picks`: not an alternative of a picked work and no part in common with one. */
+  const compatible = (t: TaskPlan, picks: TaskPlan[], gen: string | null): boolean =>
+    picks.every((p) => p !== t && (!t.exclusive || p.exclusive !== t.exclusive) && !defaultParts(p, gen).some((id) => defaultParts(t, gen).includes(id)));
   const bulkClients = clients.filter((c) => c.id !== HERO.client.id);
   const firstCar = new Map(bulkClients.map((c) => [c.id, Math.min(...(carsOf.get(c.id) ?? []).map((v) => v.created_at.getTime()))]));
 
@@ -494,7 +509,7 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
       let sum = 0;
       while (sum < 0.9 * target && picks.length < MAX_PICKS) {
         const room = (target - sum) * 1.5 + 1000;
-        const options = pickable(gen).filter((t) => !picks.includes(t) && estimate(t, gen, rate) <= room);
+        const options = pickable(gen).filter((t) => compatible(t, picks, gen) && estimate(t, gen, rate) <= room);
         if (!options.length) break;
         const hasTires = picks.some((x) => x.category === 'tires');
         const t = options[weightedIndex(f, options.map((o) => o.weight * seasonFactor(o, month, hasTires)))];

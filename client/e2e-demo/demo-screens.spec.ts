@@ -27,7 +27,7 @@ const shots: [string, string, (p: Page) => Promise<void>][] = [
   ['hero-order', `/work-orders/${HERO.bigOrder.id}`, async (p) => {
     // The first text match is a hidden <option> of the template picker; wait for a priced row instead.
     await expect(p.getByRole('heading', { name: 'Работы' })).toBeVisible();
-    await expect(p.getByText('Замена передних тормозных колодок', { exact: false }).locator('visible=true').first()).toBeVisible();
+    await expect(p.getByText('Замена передних тормозных дисков и колодок', { exact: false }).locator('visible=true').first()).toBeVisible();
   }],
 ];
 for (const [name, url, check] of shots) {

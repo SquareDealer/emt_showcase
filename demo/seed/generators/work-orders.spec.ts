@@ -85,7 +85,16 @@ it('hero orders', () => {
   expect(mskDay(big.scheduled_at)).toBe('2026-11-04');
   expect(big.labor.length + big.parts.length).toBeGreaterThanOrEqual(15);
   expect(new Set(big.labor.map((l) => l.group_key).filter(Boolean)).size).toBeGreaterThanOrEqual(4);
-  expect(big.labor.some((l) => l.discount_type === 'percent' && l.discount_value === 10)).toBe(true);
+  expect(big.labor.filter((l) => l.discount_type === 'percent' && l.discount_value === 10).map((l) => l.name)).toEqual(['Замена передних тормозных дисков и колодок']);
+  // discs come with pads: no separate pads work, every catalog part once
+  expect(big.labor.map((l) => l.name)).toEqual([
+    'ТО (регламент)', 'Замена передних тормозных дисков и колодок', 'Замена передних стоек стабилизатора', 'Замена тормозной жидкости', 'Мойка двигателя',
+  ]);
+  const ids = big.parts.map((p) => p.part_template_id);
+  expect(new Set(ids).size).toBe(ids.length);
+  // catalog work fits the 6-hour slot (± half an hour); the engine wash is on top
+  const hours = big.labor.filter((l) => l.template_id).reduce((s, l) => s + (l.hours ?? 0), 0);
+  expect(Math.abs(hours * 60 - big.scheduled_duration_min)).toBeLessThanOrEqual(30);
   expect(wos.find((w) => w.id === HERO.diagnosticsOrderId)).toMatchObject({ status: 'closed', vehicle_id: HERO.r56.vehicleId, recommendation: expect.stringContaining('цеп') });
   expect(wos.find((w) => w.id === HERO.pdfOrderId)).toMatchObject({ status: 'closed', discount_type: null });
   expect(wos.filter((w) => w.client_id === HERO.client.id)).toHaveLength(12);

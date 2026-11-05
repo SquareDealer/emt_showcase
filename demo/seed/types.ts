@@ -21,6 +21,8 @@ export interface TaskSpec {
   weight: number;
   /** Gets a price-override row for each generation in GENERATION_FACTORS. */
   perGeneration?: boolean;
+  /** Works of one group are alternatives (ТО already changes the oil, discs come with pads): an order holds at most one. */
+  exclusive?: string;
 }
 
 export interface PartSpec {
