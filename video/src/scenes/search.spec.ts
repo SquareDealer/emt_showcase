@@ -4,7 +4,11 @@ import { HERO } from '../../../demo/seed/hero';
 import { clientHero, searchByPrefix, woHero } from '../fixtures';
 import { SCENE_CLICKS } from '../timing';
 import {
+  CALLOUT_AT,
   CLICK_POINT,
+  CURSOR_GONE,
+  CURSOR_PARK,
+  calloutOpacity,
   GRID_TOP,
   HIT,
   MOVE_TO,
@@ -99,6 +103,35 @@ describe('search scene state', () => {
     expect(v.t).toBeGreaterThanOrEqual(0);
     expect(v.b).toBeLessThanOrEqual(900);
     expect(ROW_Y0 + ROW_H * ORDERS.length - SCROLL.social).toBeLessThanOrEqual(v.b);
+  });
+
+  it('callout window: from 45 (on the beat, one hit left) through the switch; wide gone by 75, social by 90', () => {
+    expect(CALLOUT_AT).toBe(45);
+    expect((720 + CALLOUT_AT) % 15).toBe(0);
+    expect(at(CALLOUT_AT).hits).toHaveLength(1);
+    expect(calloutOpacity(44, false)).toBe(0);
+    for (const f of [45, 60, 63, 69]) expect(calloutOpacity(f, false)).toBe(1);
+    expect(calloutOpacity(75, false)).toBe(0);
+    expect(calloutOpacity(84, true)).toBe(1);
+    expect(calloutOpacity(90, true)).toBe(0);
+    expect(calloutOpacity(44, true)).toBe(0);
+  });
+
+  it('cursor: leaves the hit from the switch (63), never rests on the card, out of every view by 84', () => {
+    expect(at(63).cursor).toEqual(CLICK_POINT);
+    const p = at(70).cursor;
+    expect(p.x).toBeLessThan(CLICK_POINT.x);
+    expect(p.y).toBeGreaterThan(CLICK_POINT.y);
+    expect(at(CURSOR_GONE).cursor).toEqual(CURSOR_PARK);
+    for (const social of [false, true]) {
+      for (let f = CURSOR_GONE; f < 150; f++) {
+        const v = view(f, social);
+        const c = at(f, social).cursor;
+        expect(c.x < v.l || c.x > v.r || c.y < v.t || c.y > v.b).toBe(true);
+      }
+    }
+    // Past the vehicles panel (x 274–694, y 280–461) by 75: in the empty page under it or beyond.
+    expect(at(75).cursor.y).toBeGreaterThan(461);
   });
 
   it('wide callout: right of the palette at the hit, then in the empty stats row, riding with the scroll', () => {

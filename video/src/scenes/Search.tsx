@@ -55,8 +55,12 @@ export const MOVE_FROM = 75;
 export const MOVE_TO = 135;
 /** Social: the camera holds on the whole card until the callout is gone (the pill is above the window). */
 export const SOCIAL_MOVE_FROM = 90;
-/** The callout leaves before the camera moves off it (social: before its camera starts to move). */
-const CALLOUT_OUT = { wide: 102, social: SOCIAL_MOVE_FROM - 6 };
+/** «Любая машина по VIN — за секунду» appears beside the hit as the hits narrow to the hero (45: «WMWSV3»,
+ *  one hit) and stays through the switch; wide: gone by 75, before the camera moves; social: the pill is
+ *  above the window, gone by 90, before its camera moves. */
+export const CALLOUT_AT = 45;
+const CALLOUT_OUT = { wide: 69, social: SOCIAL_MOVE_FROM - 6 };
+const CALLOUT_FADE = 6;
 /** `.content` scroll at the end (UI px): wide — just enough for row 10 to clear the window's bottom
  *  edge; social — the page's end (1057 − 900), the whole orders panel in the window. */
 export const SCROLL = { wide: 40, social: 157 } as const;
@@ -105,14 +109,18 @@ const CAM_EASE = Easing.bezier(0.65, 0, 0.35, 1);
 /** Click point on the hero hit: its vertical centre (between the VIN and the owner's name), left of its middle. */
 export const CLICK_POINT = { x: HIT.x + 190, y: HIT.y + HIT.h / 2 };
 // Rests below the window (out of view) while the first characters are typed, comes up from 34 as the
-// hits narrow to the hero and rests on it from 52 (hover), presses at 60, then leaves below-right of
-// the card (out of every view by 95).
+// hits narrow to the hero and rests on it from 52 (hover), presses at 60; from the switch (63) it heads
+// down-left — past the vehicles panel, through the empty page under it — and is out of every view (left
+// of x 264, below the window) by 84, so it never rests on the card's text.
+export const CURSOR_GONE = 84;
+/** Window px left of every view (wide ≥ 264, social ≥ 266) and below the window. */
+export const CURSOR_PARK = { x: 200, y: 1000 };
 const CURSOR: CursorPoint[] = [
   { at: 0, x: 1180, y: 1000 },
   { at: s(34), x: 1180, y: 1000 },
   { at: s(CLICK_HIT - 8), ...CLICK_POINT },
-  { at: s(CLICK_HIT + 6), ...CLICK_POINT },
-  { at: s(95), x: 1300, y: 1010 },
+  { at: s(SWITCH_AT), ...CLICK_POINT },
+  { at: s(CURSOR_GONE), ...CURSOR_PARK },
 ];
 
 /** Scene-local state: a pure function of the frame. */
@@ -263,31 +271,34 @@ export const calloutAnchor = (social: boolean, scroll: number) =>
       // the page's scroll, so it never slides over the panels.
       { x: HIT.x + HIT.w + 9, y: META_Y - scroll };
 
-/** 1 → 0 over `dur` frames from `from`. */
-const fadeOut = (frame: number, from: number, dur = 6) => interpolate(frame, [from, from + dur], [1, 0], clamp);
+/** The callout's opacity on top of its own spring-in (0 before CALLOUT_AT, fades out by CALLOUT_OUT + 6). */
+export const calloutOpacity = (frame: number, social: boolean) => {
+  const out = social ? CALLOUT_OUT.social : CALLOUT_OUT.wide;
+  return frame < CALLOUT_AT ? 0 : interpolate(frame, [out, out + CALLOUT_FADE], [1, 0], clamp);
+};
 
 /**
  * Search (150 f): ⌘K palette opens over the board (0) → «WMWSV32» typed 15–50, the hits narrow with
- * each prefix to the hero R56 → click on it (60; effects 63): the palette closes, the client's card
- * opens — callout «Любая машина по VIN — за секунду» (60) → 75–135 down the order history: the timing
- * chain in progress on top, the R56's diagnostics and the past visits under it.
+ * each prefix to the hero R56 — callout «Любая машина по VIN — за секунду» beside the hit from 45 →
+ * click on it (60; effects 63): the palette closes, the client's card opens → 75–135 down the order
+ * history: the timing chain in progress on top, the R56's diagnostics and the past visits under it.
  */
 export function SearchScene({ theme, brand, callouts, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
   const state = searchState(frame, fps, social);
-  const calloutOpacity = fadeOut(frame, social ? CALLOUT_OUT.social : CALLOUT_OUT.wide);
+  const callout = calloutOpacity(frame, social);
   return (
     <AbsoluteFill>
       <Background theme={theme} />
       <Camera keys={cameraKeys(social)}>
         <SearchWindow theme={theme} brandName={brand.name} state={state} />
-        {calloutOpacity > 0 ? (
-          <div style={{ position: 'absolute', left: 0, top: 0, opacity: calloutOpacity, zIndex: 90 }}>
+        {callout > 0 ? (
+          <div style={{ position: 'absolute', left: 0, top: 0, opacity: callout, zIndex: 90 }}>
             <Callout
               text={callouts.vin}
-              at={CLICK_HIT}
+              at={CALLOUT_AT}
               anchor={calloutAnchor(social, state.scroll)}
               side={social ? 'top' : 'right'}
               accent={accent}
