@@ -17,6 +17,8 @@ export async function runDemoSeed(args: SeedArgs & SafeEnv): Promise<void> {
     logger: ['error', 'warn'],
   });
   try {
+    // Migrations have already run (migrationsRun: true) before assertCanSeed: the row counts need the
+    // schema, and the guards let only a database named *demo* this far.
     const ds = app.get(DataSource);
     const [row] = (await ds.query(
       `SELECT (SELECT count(*) FROM clients)::int AS clients, (SELECT count(*) FROM work_orders)::int AS work_orders`,

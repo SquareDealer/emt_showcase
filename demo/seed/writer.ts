@@ -101,7 +101,8 @@ export async function writeDemoPlan(
 
   const templates = app.get(TaskTemplatesService);
   for (const t of plan.catalog.tasks) {
-    await templates.create({ id: t.id, name: t.name, default_hours: t.default_hours, default_price: t.default_price, active: true });
+    const saved = await templates.create({ id: t.id, name: t.name, default_hours: t.default_hours, default_price: t.default_price, active: true });
+    if (saved.id !== t.id) throw new Error(`task_templates: создан ${saved.id}, по плану ${t.id}`);
   }
   const partTemplates = app.get(PartTemplatesService);
   for (const p of plan.catalog.parts) {
