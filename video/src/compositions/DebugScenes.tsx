@@ -4,6 +4,7 @@ import type { ShowcaseProps } from '../schema';
 import { IntroScene } from '../scenes/Intro';
 import { BookingScene } from '../scenes/Booking';
 import { EstimateScene } from '../scenes/Estimate';
+import { BoardScene } from '../scenes/Board';
 import { OutroScene } from '../scenes/Outro';
 
 export const DebugIntro = (p: ShowcaseProps) => (
@@ -24,5 +25,10 @@ export const DebugBooking = (p: ShowcaseProps) => (
 export const DebugEstimate = (p: ShowcaseProps) => (
   <VideoProviders theme={p.theme}>
     <EstimateScene {...p} />
+  </VideoProviders>
+);
+export const DebugBoardScene = (p: ShowcaseProps) => (
+  <VideoProviders theme={p.theme}>
+    <BoardScene {...p} />
   </VideoProviders>
 );

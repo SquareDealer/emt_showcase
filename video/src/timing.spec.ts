@@ -29,6 +29,11 @@ describe('timing', () => {
     expect(sceneStart('estimate')).toBe(225);
     expect(SCENE_CLICKS.estimate.map((f) => f + sceneStart('estimate'))).toEqual([270, 300, 345, 375, 435]);
   });
+  it('board clicks: press 30, drop 75 (absolute 510/555, on the beat)', () => {
+    expect(SCENE_CLICKS.board).toEqual([30, 75]);
+    expect(sceneStart('board')).toBe(480);
+    expect(SCENE_CLICKS.board.map((f) => f + sceneStart('board'))).toEqual([510, 555]);
+  });
   it('offBeatClicks detects off-grid clicks in an injected table', () => {
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [20] })).toEqual([80]);
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [15] })).toEqual([]);

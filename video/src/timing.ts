@@ -40,7 +40,7 @@ export const SCENE_CLICKS: Record<SceneId, number[]> = {
   intro: [],
   booking: [75, 105],
   estimate: [45, 75, 120, 150, 210],
-  board: [],
+  board: [30, 75],
   docs: [],
   search: [],
   dashboard: [],
