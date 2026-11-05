@@ -1,8 +1,35 @@
 import { Composition, Folder } from 'remotion';
+import { Hero, HeroSocial } from './compositions/Hero';
+import { defaultProps, showcaseSchema } from './schema';
+import { FPS, SCENES, SCENES_SOCIAL, totalDuration } from './timing';
 import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugLoop, DebugWorkOrder } from './compositions/Debug';
 
 export const RemotionRoot = () => {
   return (
+    <>
+      <Composition
+        id="Hero"
+        component={Hero}
+        schema={showcaseSchema}
+        defaultProps={defaultProps}
+        width={1920}
+        height={1080}
+        fps={FPS}
+        durationInFrames={totalDuration(SCENES)}
+        calculateMetadata={() => ({ durationInFrames: totalDuration(SCENES) })}
+      />
+      <Composition
+        id="HeroSocial"
+        component={HeroSocial}
+        schema={showcaseSchema}
+        defaultProps={defaultProps}
+        width={1080}
+        height={1350}
+        fps={FPS}
+        durationInFrames={totalDuration(SCENES_SOCIAL)}
+        calculateMetadata={() => ({ durationInFrames: totalDuration(SCENES_SOCIAL) })}
+      />
+      {/* TODO: Loop* (1600x1000), MobileMaster (390x844) and Stills are registered by their tasks. */}
     <Folder name="Debug">
       <Composition
         id="Debug-Board"
@@ -51,5 +78,6 @@ export const RemotionRoot = () => {
       />
       <Composition id="Debug-Loop" component={DebugLoop} durationInFrames={60} fps={30} width={1920} height={1080} />
     </Folder>
+    </>
   );
 };
