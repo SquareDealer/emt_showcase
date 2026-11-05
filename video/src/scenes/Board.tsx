@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useId, type CSSProperties, type ReactNode } from 'react';
 import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { AppShellView } from '@crm/components/AppShellView';
 import { BoardCard, BoardView, type Columns } from '@crm/features/board/BoardView';
@@ -190,13 +190,16 @@ export function BoardWindow({
   const { float } = state;
   // rowStyle is per column position; resolve the column from the id.
   const statusOf = new Map(STATUS_ORDER.flatMap((s) => state.columns[s].map((w) => [w.id, s] as const)));
+  // Scope the per-frame pan rule to this window: two live BoardWindows (a loop's cross-fade, the
+  // board → search fade) must not pan each other through one global selector.
+  const panId = useId();
   return (
     <AppWindow theme={theme} route="/board">
       {/* The board's horizontal pan (the app's grab-pan scrolls `.board`). Chrome measures a scrollLeft
           set here but the still doesn't paint it, so the columns slide by the same amount inside the
           `.board` clip instead — the same picture. */}
-      <style>{`[data-demo="board-pan"] .board-col { transform: translateX(${-state.scroll}px); }`}</style>
-      <div data-demo="board-pan" style={{ display: 'contents' }}>
+      <style>{`[data-board-pan="${panId}"] .board-col { transform: translateX(${-state.scroll}px); }`}</style>
+      <div data-demo="board-pan" data-board-pan={panId} style={{ display: 'contents' }}>
         <AppShellView
           userName={owner!.name}
           nav={navForRole('owner')}
