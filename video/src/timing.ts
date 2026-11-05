@@ -47,6 +47,13 @@ export const SCENE_CLICKS: Record<SceneId, number[]> = {
   outro: [],
 };
 
-export function clicksAbsolute(scenes: readonly SceneDef[] = SCENES): number[] {
-  return scenes.flatMap((s) => SCENE_CLICKS[s.id].map((f) => sceneStart(s.id, scenes) + f));
+export type ClickTable = Record<SceneId, number[]>;
+
+export function clicksAbsolute(scenes: readonly SceneDef[] = SCENES, clicks: ClickTable = SCENE_CLICKS): number[] {
+  return scenes.flatMap((s) => clicks[s.id].map((f) => sceneStart(s.id, scenes) + f));
+}
+
+/** Absolute clicks that are not on the beat grid (must be empty). */
+export function offBeatClicks(scenes: readonly SceneDef[] = SCENES, clicks: ClickTable = SCENE_CLICKS): number[] {
+  return clicksAbsolute(scenes, clicks).filter((c) => c % FRAMES_PER_BEAT !== 0);
 }

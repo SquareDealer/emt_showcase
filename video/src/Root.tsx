@@ -1,8 +1,11 @@
 import { Composition, Folder } from 'remotion';
+import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugLoop, DebugWorkOrder } from './compositions/Debug';
 import { Hero, HeroSocial } from './compositions/Hero';
 import { defaultProps, showcaseSchema } from './schema';
 import { FPS, SCENES, SCENES_SOCIAL, totalDuration } from './timing';
-import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugLoop, DebugWorkOrder } from './compositions/Debug';
+
+const HERO_FRAMES = totalDuration(SCENES);
+const SOCIAL_FRAMES = totalDuration(SCENES_SOCIAL);
 
 export const RemotionRoot = () => {
   return (
@@ -15,8 +18,8 @@ export const RemotionRoot = () => {
         width={1920}
         height={1080}
         fps={FPS}
-        durationInFrames={totalDuration(SCENES)}
-        calculateMetadata={() => ({ durationInFrames: totalDuration(SCENES) })}
+        durationInFrames={HERO_FRAMES}
+        calculateMetadata={() => ({ durationInFrames: HERO_FRAMES })}
       />
       <Composition
         id="HeroSocial"
@@ -26,58 +29,18 @@ export const RemotionRoot = () => {
         width={1080}
         height={1350}
         fps={FPS}
-        durationInFrames={totalDuration(SCENES_SOCIAL)}
-        calculateMetadata={() => ({ durationInFrames: totalDuration(SCENES_SOCIAL) })}
+        durationInFrames={SOCIAL_FRAMES}
+        calculateMetadata={() => ({ durationInFrames: SOCIAL_FRAMES })}
       />
       {/* TODO: Loop* (1600x1000), MobileMaster (390x844) and Stills are registered by their tasks. */}
-    <Folder name="Debug">
-      <Composition
-        id="Debug-Board"
-        component={DebugBoard}
-        durationInFrames={1}
-        fps={30}
-        width={1920}
-        height={1080}
-        defaultProps={{ theme: 'light' as const }}
-      />
-      <Composition
-        id="Debug-WorkOrder"
-        component={DebugWorkOrder}
-        durationInFrames={1}
-        fps={30}
-        width={1920}
-        height={1080}
-        defaultProps={{ theme: 'light' as const }}
-      />
-      <Composition
-        id="Debug-Calendar"
-        component={DebugCalendar}
-        durationInFrames={1}
-        fps={30}
-        width={1920}
-        height={1080}
-        defaultProps={{ theme: 'light' as const }}
-      />
-      <Composition
-        id="Debug-Dashboard"
-        component={DebugDashboard}
-        durationInFrames={1}
-        fps={30}
-        width={1920}
-        height={1080}
-        defaultProps={{ theme: 'light' as const }}
-      />
-      <Composition
-        id="Debug-Kit"
-        component={DebugKit}
-        durationInFrames={90}
-        fps={30}
-        width={1920}
-        height={1080}
-        defaultProps={{ theme: 'light' as const }}
-      />
-      <Composition id="Debug-Loop" component={DebugLoop} durationInFrames={60} fps={30} width={1920} height={1080} />
-    </Folder>
+      <Folder name="Debug">
+        <Composition id="Debug-Board" component={DebugBoard} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
+        <Composition id="Debug-WorkOrder" component={DebugWorkOrder} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
+        <Composition id="Debug-Calendar" component={DebugCalendar} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
+        <Composition id="Debug-Dashboard" component={DebugDashboard} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
+        <Composition id="Debug-Kit" component={DebugKit} durationInFrames={90} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
+        <Composition id="Debug-Loop" component={DebugLoop} durationInFrames={60} fps={30} width={1920} height={1080} />
+      </Folder>
     </>
   );
 };
