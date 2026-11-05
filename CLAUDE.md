@@ -276,3 +276,27 @@ guard'а (любой мастер мог снести каталог).
 
 **Dev-база сейчас почти пуста:** 1 клиент, 0 нарядов, 3 засеянных шаблона работ, каталог запчастей
 пуст. Прежнего импорта ~339 клиентов больше нет — если нужны реальные данные, импортировать заново.
+
+## Video (шоукейс-репозиторий)
+
+`emt_showcase` — приватное зеркало `emt_service` + аддитивные добавки: `demo/` (демо-сид), `video/`
+(Remotion), `.claude/skills/` (skill `remotion-best-practices` и др., исключение в `.gitignore`).
+Логотип PDF (`assets/emt-logo-light-theme.png`) подменён на нейтральный «Гараж CRM»
+(исходник — `assets/brand/garage-crm-logo.svg`, лого для видео — `video/public/brand/`).
+
+- **Бренд:** в кадре и в PDF только «Гараж CRM» и демо-данные сида; **EMT/заказчика не показывать**.
+- **Синк с upstream:** `git fetch upstream && git merge upstream/main`, затем перегенерировать
+  фикстуры (`npm run fixtures` в `video/`) и проверить `git diff video/src/fixtures`. Конфликт
+  `package.json`/`package-lock.json` — рецепт в `demo/README.md` («Обновление из upstream»);
+  `assets/emt-logo-light-theme.png` при конфликте оставляем нашим.
+- **Команды** (корень): `npm run seed:demo -- --force --now=2026-11-18`, `npm run seed:demo:verify`.
+  В `video/`: `npm run fixtures` (экспорт API демо-базы в `src/fixtures`, нужен запущенный API
+  и `DEMO_API_URL`), `npm run studio`, `npm run render:*` (hero/social/лупы/mobile).
+  Демо-API: `DATABASE_URL=…/tatarin_demo JWT_SECRET=… SEED_OWNER_PASSWORD=$DEMO_PASSWORD node dist/main.js`.
+- **Детерминизм:** анимация только от `useCurrentFrame()` (30 fps, 120 BPM → 15 кадров на удар);
+  никаких CSS `transition/animation`, `setTimeout`, `Math.random()`, `Date.now()`, `new Date()` без
+  аргумента — «сейчас» это `DEMO_NOW` из `fixtures/meta.json`, случайность — `random('seed')`.
+  Скрипты рендера задают `TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru`. Сцены не импортируют `lib/api`.
+- **Песочницы без скачивания Chrome:** путь к браузеру через env `REMOTION_BROWSER`
+  (`--browser-executable`), в конфиг не вшивать.
+- `remotion` и все `@remotion/*` — одна точная версия без `^`.

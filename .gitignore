@@ -14,7 +14,8 @@ client/playwright-report
 
 # local tooling / vendored skills (not app code)
 .agents/
-.claude/
+.claude/*
+!.claude/skills/
 
 # generated / sample PDF artifacts + WSL zone metadata
 *.pdf
