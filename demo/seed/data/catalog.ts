@@ -123,7 +123,7 @@ const PART_ROWS: P[] = [
   ['brake-fluid-dot4-1l', 'Тормозная жидкость DOT 4, 1 л', 'Bosch', 'BOS-1987479107', 800, 'l'],
   ['brake-fluid-dot4-lv', 'Тормозная жидкость DOT 4 LV, 1 л', 'ATE', 'ATE-03990164022', 950, 'l'],
   ['engine-flush-300', 'Промывка масляной системы, 300 мл', 'Liqui Moly', 'LM-1990', 1500],
-  ['refrigerant-r134a', 'Хладагент R134a, 100 г', 'Mahle', 'MH-R134A', 90, 'l'],
+  ['refrigerant-r134a', 'Хладагент R134a, 100 г', 'Mahle', 'MH-R134A', 90],
   ['ac-compressor-oil', 'Масло компрессора кондиционера PAG 46', 'Mahle', 'MH-PAG46', 1400],
   ['washer-fluid-5l', 'Омыватель стекла, 5 л', 'Liqui Moly', 'LM-2678', 700],
   // filters
@@ -306,7 +306,7 @@ const LINK_ROWS: Record<string, L[]> = {
     ['oil-filter-n14', 'filter', 1],
     ['oil-filter-b38', 'filter', 1, true, 'F56'],
     ['oil-filter-b38', 'filter', 1, true, 'F60'],
-    ['oil-0w20-1l', 'oil', 4.5, false, 'F56'],
+    ['oil-0w20-1l', null, 4.5, false, 'F56'],
     ['oil-drain-washer', null, 1],
     ['oil-drain-plug', null, 1, false, 'F56'],
   ],
@@ -500,7 +500,7 @@ const LINK_ROWS: Record<string, L[]> = {
   ],
   'battery-replace': [
     ['battery-60ah', 'battery', 1],
-    ['battery-70ah', 'battery', 1, false, 'F60'],
+    ['battery-70ah', null, 1, false, 'F60'],
   ],
   'ignition-coil': [
     ['ignition-coil-n14', 'coil', 1],

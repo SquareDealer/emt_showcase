@@ -84,6 +84,17 @@ describe('catalog', () => {
     expect(new Set(cat.links.map((l) => l.id)).size).toBe(cat.links.length);
   });
 
+  it('a generation row never turns a default into a non-default', () => {
+    const key = (l: { slot: string | null; part: string }) => l.slot?.trim().toLowerCase() || `part:${l.part}`;
+    const bad = cat.links
+      .filter((g) => g.generation && !g.is_default)
+      .filter((g) => cat.links.some((u) => u.task === g.task && u.generation === null && u.is_default && key(u) === key(g)))
+      .map((g) => `${g.task}:${g.part}:${g.generation}`);
+    expect(bad).toEqual([]);
+  });
+
+  it('refrigerant is counted in pieces of 100 g', () => expect(partByKey(cat, 'refrigerant-r134a').unit).toBe('pcs'));
+
   it('R56 swaps the tensioner by slot and keeps the rest', () => {
     const keys = (g: string | null) => resolveTemplatePartsPlan(cat, 'timing-chain-n14', g).map((c) => c.part.key).sort();
     expect(keys('R56')).toEqual(['chain-kit-n14', 'chain-tensioner-r56', 'crank-seal-front', 'oil-5w30-1l', 'valve-cover-gasket-n14']);
