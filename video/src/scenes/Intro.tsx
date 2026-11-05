@@ -25,7 +25,7 @@ export function IntroScene({ brand, callouts, accent }: ShowcaseProps) {
               transform: `scale(${interpolate(mark, [0, 1], [0.94, 1])})`,
             }}
           >
-            <BrandMark name={brand.name} theme="dark" size={social ? 96 : 128} />
+            <BrandMark name={brand.name} theme="dark" size={social ? 170 : 230} />
           </div>
           {frame >= 15 && (
             <div

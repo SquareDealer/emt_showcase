@@ -29,7 +29,7 @@ export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
               marginBottom: 10,
             }}
           >
-            <BrandMark name={brand.name} theme="dark" size={social ? 120 : 168} />
+            <BrandMark name={brand.name} theme="dark" size={social ? 210 : 300} />
           </div>
           {frame >= 15 && (
             <div
