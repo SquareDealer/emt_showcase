@@ -29,11 +29,13 @@ export function importClosure(entry: string): string[] {
       else {
         out.add(spec);
         if (/^src[\\/]/.test(spec)) {
+          let target: string | null = null;
           try {
-            walk(resolveRelative(resolve(REPO_ROOT, 'x'), `./${spec}`));
+            target = resolveRelative(resolve(REPO_ROOT, 'x'), `./${spec}`);
           } catch {
-            // unresolved baseUrl import: the bare specifier is already recorded
+            // unresolved baseUrl import: the bare specifier is already recorded and gets flagged
           }
+          if (target) walk(target);
         }
       }
     }

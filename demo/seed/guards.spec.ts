@@ -57,7 +57,7 @@ describe('parseArgs', () => {
   });
   it('parses --force and --now=', () =>
     expect(parseArgs(['--now=2026-11-04', '--force'], new Date())).toMatchObject({ force: true, demoDay: '2026-11-04' }));
-  it.each([['--froce'], ['--now'], ['--now=2026-13-01'], ['--now=2026-02-30'], ['--now', '2026-11-04'], ['extra'], ['--now='], ['--now=A'.replace('A', '2026-11-04'), '--now=2026-11-05'], ['--force', '--force']])(
+  it.each([['--froce'], ['--now'], ['--now=2026-13-01'], ['--now=2026-02-30'], ['--now', '2026-11-04'], ['extra'], ['--now='], ['--now=2026-11-04', '--now=2026-11-05'], ['--force', '--force']])(
     'rejects %p',
     (...argv) => expect(() => parseArgs(argv, new Date())).toThrow(DemoSeedRefusal),
   );
