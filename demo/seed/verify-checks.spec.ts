@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { checkClosedTotals, checkDates, checkDocNumbers, diffPartSets, formatDistribution } from './verify-checks';
+import { OCCUPIED_SLOT_SQL, checkClosedTotals, checkDates, checkDocNumbers, diffPartSets, formatDistribution } from './verify-checks';
 
 it('doc numbers must be contiguous and follow closed_at', () => {
   const c = (n: number, t: number) => ({ status: 'closed', doc_number: n, closed_at: new Date(t) });
@@ -54,4 +54,9 @@ it('verify.ts imports only ./guards statically', () => {
   const statics = [...src.matchAll(/^import\s[^;]*?from\s+'([^']+)'/gm)].map((m) => m[1]);
   expect(statics).toEqual(['./guards']);
   expect(src).toMatch(/await import\('\.\/verify-checks'\)/);
+});
+
+it('free-slot query: order without a duration occupies default_appointment_min, not an empty range', () => {
+  expect(OCCUPIED_SLOT_SQL).toMatch(/coalesce\(scheduled_duration_min,\s*\(SELECT value::int FROM settings WHERE key = 'default_appointment_min'/);
+  expect(OCCUPIED_SLOT_SQL).not.toMatch(/coalesce\(scheduled_duration_min, 0\)/);
 });

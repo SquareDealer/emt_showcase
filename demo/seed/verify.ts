@@ -9,8 +9,8 @@ async function main() {
   const { databaseUrl } = assertSafeEnv(process.env, { requirePassword: false });
   await import('reflect-metadata');
   const { NestFactory } = await import('@nestjs/core');
-  const { DemoSeedModule } = await import('./demo-seed.module');
-  const { runVerify } = await import('./verify-checks'); // src/ (и dotenv) грузятся только здесь
+  const { DemoSeedModule } = await import('./demo-seed.module'); // src/ (и dotenv) грузятся только здесь
+  const { runVerify } = await import('./verify-checks');
   // migrationsRun: false — a reader never migrates the database it checks.
   const app = await NestFactory.createApplicationContext(DemoSeedModule.forUrl(databaseUrl, { migrationsRun: false }), {
     logger: ['error', 'warn'],

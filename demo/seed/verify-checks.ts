@@ -372,10 +372,7 @@ async function runChecks(app: INestApplicationContext, ds: DataSource, errors: s
   const slotEnd = new Date(freeSlot.startsAt.getTime() + freeSlot.durationMin * 60_000);
   const inSlot = (
     (await ds.query(
-      `SELECT id FROM work_orders WHERE scheduled_at IS NOT NULL
-          AND tstzrange(scheduled_at, scheduled_at + coalesce(scheduled_duration_min, 0) * interval '1 minute') && tstzrange($1, $2)
-       UNION ALL
-       SELECT id FROM calendar_blocks WHERE tstzrange(starts_at, starts_at + duration_min * interval '1 minute') && tstzrange($1, $2)`,
+      OCCUPIED_SLOT_SQL,
       [freeSlot.startsAt, slotEnd],
     )) as { id: string }[]
   ).map((r) => r.id);
@@ -395,6 +392,16 @@ async function runChecks(app: INestApplicationContext, ds: DataSource, errors: s
   out(formatDistribution(byStatus, months.map((m) => ({ month: m, orders: ordersByMonth.get(m) ?? 0, revenue: revenue.get(m) ?? 0 }))));
   errors.push(...(await checkStats(ds, plan, orders, scheduled, demoNow, nowRow.value, out)));
 }
+
+/**
+ * Orders with NULL scheduled_duration_min occupy default_appointment_min (as in the app's calendar),
+ * not an empty range: otherwise they would be invisible to the free-slot check.
+ */
+export const OCCUPIED_SLOT_SQL = `SELECT id FROM work_orders WHERE scheduled_at IS NOT NULL
+          AND tstzrange(scheduled_at, scheduled_at + coalesce(scheduled_duration_min,
+                (SELECT value::int FROM settings WHERE key = 'default_appointment_min' AND value ~ '^[0-9]+$'), 60) * interval '1 minute') && tstzrange($1, $2)
+       UNION ALL
+       SELECT id FROM calendar_blocks WHERE tstzrange(starts_at, starts_at + duration_min * interval '1 minute') && tstzrange($1, $2)`;
 
 /**
  * A throwaway client, car and order made through the app's services; the car's generation_id is
