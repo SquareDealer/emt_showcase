@@ -50,3 +50,17 @@ it('imported deals are consistent with the source', () => {
 it('nobody is created after DEMO_NOW', () => expect(clients.every((c) => c.created_at <= now)).toBe(true));
 
 it('is deterministic', () => expect(planClients(makeFaker('clients', now), now)).toEqual(clients));
+
+describe('company names', () => {
+  const names = clients.filter((c) => c.kind === 'company').map((c) => c.full_name);
+  it('are hand-written ООО «…» or ИП Фамилия И. О., without state/housing forms', () => {
+    for (const n of names) {
+      expect(n).toMatch(/^(ООО «[^«»]+»|ИП [А-ЯЁ][а-яё]+ [А-ЯЁ]\. [А-ЯЁ]\.)$/);
+      expect(n).not.toMatch(/ГУП|МУП|ФГУП|ТСЖ|ЗАО|ОАО/);
+    }
+  });
+  it('are unique and include the hero fleet once', () => {
+    expect(new Set(names).size).toBe(names.length);
+    expect(names.filter((n) => n === 'ООО «Северный ветер»')).toHaveLength(1);
+  });
+});

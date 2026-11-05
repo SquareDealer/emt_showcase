@@ -1,7 +1,7 @@
 import { HERO } from '../hero';
 import { MINI_GENERATIONS } from '../data/generations';
 import { makeFaker } from '../rng';
-import { mskAt } from '../time';
+import { mskAt, mskDay } from '../time';
 import { planClients } from './people';
 import { odometerAt, planVehicles } from './vehicles';
 
@@ -34,7 +34,7 @@ it('MINI years fall inside the generation range; others 2008–2024', () => {
       const gen = MINI_GENERATIONS.find((g) => g.code === v.generationCode)!;
       const [a, b] = gen.years.split('–');
       expect(v.year).toBeGreaterThanOrEqual(Number(a));
-      expect(v.year).toBeLessThanOrEqual(b ? Number(b) : 2026);
+      expect(v.year).toBeLessThanOrEqual(b ? Number(b) : Number(mskDay(now).slice(0, 4)));
     } else {
       expect(v.generationCode).toBeNull();
       expect(v.model).not.toBeNull();
@@ -82,7 +82,7 @@ it('vehicle is created after its client and mileage is plausible', () => {
     expect(dt).toBeGreaterThanOrEqual(0);
     expect(v.created_at <= now).toBe(true);
     expect(v.mileage).toBe(odometerAt(v, now, now));
-    expect(v.mileage / Math.max(1, 2026 - v.year + 1)).toBeLessThanOrEqual(40000);
+    expect(v.mileage / Math.max(1, Number(mskDay(now).slice(0, 4)) - v.year + 1)).toBeLessThanOrEqual(40000);
   }
 });
 

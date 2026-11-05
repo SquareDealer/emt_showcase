@@ -1,5 +1,6 @@
 import type { Faker } from '@faker-js/faker';
 import { CLIENTS_TOTAL, COMPANIES_TOTAL, HISTORY_DAYS, REGULAR_SHARE, TICKET_MEDIAN } from '../config';
+import { COMPANY_POOL } from '../data/companies';
 import { CLIENT_NOTES } from '../data/vehicles';
 import { HERO } from '../hero';
 import { demoId } from '../ids';
@@ -47,6 +48,20 @@ export function planClients(f: Faker, demoNow: Date): ClientPlan[] {
     .slice(0, COMPANIES_TOTAL - 1 - 8);
   const companyAt = new Set<number>([1, ...inRegular, ...inOccasional]);
 
+  // 2 sole proprietors + ООО from the hand-written pool, in a seeded order.
+  const surname = (): string => {
+    for (;;) {
+      const n = f.person.lastName('male');
+      if (/^[А-ЯЁ][а-яё]+$/.test(n)) return n;
+    }
+  };
+  const ip = (): string => `ИП ${surname()} ${f.person.firstName('male')[0]}. ${f.person.middleName('male')[0]}.`;
+  const companyNames = f.helpers.shuffle([
+    ...f.helpers.shuffle(COMPANY_POOL.filter((n) => n !== FLEET_NAME)).slice(0, COMPANIES_TOTAL - 1 - 2),
+    ip(),
+    ip(),
+  ]);
+
   const tickets = stratifiedLognormal(f, CLIENTS_TOTAL, TICKET_MEDIAN, 0.5);
   const phones = new Set<string>([HERO.client.phone]);
   const names = new Set<string>([HERO.client.name, FLEET_NAME]);
@@ -88,7 +103,7 @@ export function planClients(f: Faker, demoNow: Date): ClientPlan[] {
       phone = unique(phones, () => makePhone(f));
       if (i === 1) full_name = FLEET_NAME;
       else if (i === 2) full_name = unique(names, () => personName(f, 'male'));
-      else if (company) full_name = unique(names, () => f.company.name().replace(/^AO /, 'АО '));
+      else if (company) full_name = unique(names, () => companyNames.shift() ?? ip());
       else full_name = unique(names, () => personName(f, f.person.sex() === 'female' ? 'female' : 'male'));
     }
 
