@@ -8,6 +8,13 @@ export type CursorPoint = { at: number; x: number; y: number };
 const CAM_EASE = Easing.bezier(0.65, 0, 0.35, 1);
 const CURSOR_EASE = Easing.inOut(Easing.cubic);
 
+/** Round to kopecks via decimal-string shift (binary-float safe for x.xx5), symmetric for negatives. */
+function round2(v: number): number {
+  const a = Math.abs(v);
+  const r = Number(Math.round(Number(a + 'e2')) + 'e-2');
+  return v < 0 ? -r : r;
+}
+
 function along<T extends { at: number }>(
   t: number,
   keys: T[],
@@ -20,7 +27,9 @@ function along<T extends { at: number }>(
     for (const f of fields) out[f] = keys[0][f] as number;
     return out;
   }
-  // interpolate needs strictly increasing inputs: nudge duplicate/unsorted times apart (a step).
+  // Keys may be listed loosely: stable-sort by time, then nudge duplicates 1e-6 apart (a step),
+  // because interpolate needs strictly increasing inputs.
+  keys = [...keys].sort((a, b) => a.at - b.at);
   const times: number[] = [];
   for (const k of keys) times.push(times.length && k.at <= times[times.length - 1] ? times[times.length - 1] + 1e-6 : k.at);
   for (const f of fields) {
@@ -72,12 +81,12 @@ export function typed(frame: number, startFrame: number, text: string, framesPer
 }
 
 export function countUp(frame: number, fromFrame: number, toFrame: number, from: number, to: number): number {
-  if (toFrame <= fromFrame) return Math.round((frame < fromFrame ? from : to + Number.EPSILON) * 100) / 100;
+  if (toFrame <= fromFrame) return round2(frame < fromFrame ? from : to);
   const v = interpolate(frame, [fromFrame, toFrame], [from, to], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  return Math.round((v + Number.EPSILON) * 100) / 100;
+  return round2(v);
 }
 
 /**

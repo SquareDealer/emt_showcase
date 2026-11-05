@@ -86,3 +86,31 @@ describe('loopLayers', () => {
   it('mid blend', () => expect(loopLayers(5, 60, 10)[1]).toEqual({ clipFrame: 65, opacity: 0.5 }));
   it('last frame is clip(D-1) only', () => expect(loopLayers(59, 60, 10)).toEqual([{ clipFrame: 59, opacity: 1 }]));
 });
+
+describe('round-2 fixes', () => {
+  it('unsorted camera keys are sorted, not shifted', () => {
+    const k = [
+      { at: 0, x: 0, y: 0, zoom: 1 },
+      { at: 2, x: 200, y: 0, zoom: 1 },
+      { at: 1, x: 100, y: 0, zoom: 1 },
+    ];
+    expect(cameraAt(30, 30, k).x).toBe(100);
+    expect(cameraAt(60, 30, k).x).toBe(200);
+  });
+  it('kopeck rounding', () => {
+    const r = (v: number) => countUp(1, 0, 1, 0, v);
+    expect(r(2.135)).toBe(2.14);
+    expect(r(4.015)).toBe(4.02);
+    expect(r(1.005)).toBe(1.01);
+    expect(r(-2.135)).toBe(-2.14);
+  });
+  it('x.xx5 sweep 0..1000', () => {
+    for (let i = 0; i < 1000; i++) {
+      for (let c = 0; c < 100; c++) {
+        const lit = `${i}.${String(c).padStart(2, '0')}5`;
+        const expected = Number(`${i * 100 + c + 1}e-2`);
+        expect(countUp(1, 0, 1, 0, Number(lit))).toBe(expected);
+      }
+    }
+  });
+});
