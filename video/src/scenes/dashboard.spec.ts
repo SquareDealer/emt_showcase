@@ -111,6 +111,11 @@ describe('dashboard scene state', () => {
     it('every social key is at least 1.7×', () => {
       for (const k of CAM.social) expect(k.zoom).toBeGreaterThanOrEqual(1.7);
     });
+    it('no \'revenue\' ring in social (its shot crops the panel\'s sides); \'load\' from 90 as in wide', () => {
+      for (const f of [0, REVENUE_AT, 60, LOAD_AT - 1]) expect(dashboardState(f, 30, true).highlight).toBeUndefined();
+      for (const f of [LOAD_AT, 134]) expect(dashboardState(f, 30, true).highlight).toBe('load');
+      expect(dashboardState(REVENUE_AT, 30).highlight).toBe('revenue');
+    });
     it('0–45: the revenue KPI card whole while it counts up', () => {
       for (let f = 0; f <= REVENUE_AT; f++) expect(inside(view(f), SOCIAL_ZONES.kpi)).toBe(true);
     });

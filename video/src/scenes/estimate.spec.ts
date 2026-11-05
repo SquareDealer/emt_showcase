@@ -110,5 +110,9 @@ describe('estimate social camera and captions', () => {
       if (next) expect(c.out! + 6).toBeLessThanOrEqual(next.at);
     });
     expect(SOCIAL_CALLOUTS[2].out).toBeNull();
+    // «block» leaves with the camera's move off the landed block (180 → summary at 198), on the beat.
+    expect(SOCIAL_CALLOUTS[1].out).toBe(180);
+    expect((start + SOCIAL_CALLOUTS[1].out!) % 15).toBe(0);
+    expect(SOCIAL_CALLOUTS[1].out! + 6).toBeLessThan(198);
   });
 });

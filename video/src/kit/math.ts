@@ -81,6 +81,18 @@ export function frameToUi(
   return { x: cam.x + (fx - centre.x) / cam.zoom, y: cam.y + (fy - centre.y) / cam.zoom };
 }
 
+/** The social stage (between the bands) in frame px: 1080×970. */
+export const SOCIAL_STAGE = {
+  width: SOCIAL_FRAME.width,
+  height: SOCIAL_FRAME.height - SOCIAL_FRAME.brandH - SOCIAL_FRAME.captionH,
+} as const;
+
+/** The social camera (x, y, zoom) whose stage view (`stageView`) starts at (left, top) — its inverse:
+ *  scenes state a view by its edges instead of the stage's half sizes. Spread it into a CamKey. */
+export function socialKeyForView(left: number, top: number, zoom: number): Omit<CamKey, 'at'> {
+  return { x: left + SOCIAL_STAGE.width / 2 / zoom, y: top + SOCIAL_STAGE.height / 2 / zoom, zoom };
+}
+
 /** UI-px rect the camera shows on the stage: the whole frame (wide), between the bands (social). */
 export function stageView(cam: { x: number; y: number; zoom: number }, layout: Layout, width: number, height: number): View {
   const c = cameraCentre(layout, width, height);

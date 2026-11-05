@@ -35,7 +35,7 @@ export const RemotionRoot = () => {
         durationInFrames={SOCIAL_FRAMES}
         calculateMetadata={() => ({ durationInFrames: SOCIAL_FRAMES })}
       />
-      {/* Pre-rendered by `npm run prerender` → public/prerender/mobile-master.mp4 (PhoneFrame plays it). */}
+      {/* Pre-rendered by `npm run prerender:mobile` → public/prerender/mobile-master.mp4 (PhoneFrame plays it). */}
       <Composition
         id="MobileMaster"
         component={MobileMaster}

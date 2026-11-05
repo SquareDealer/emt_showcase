@@ -48,6 +48,6 @@ export REMOTION_BROWSER=/path/to/chrome-headless-shell  # скрипты пер�
 - Шрифты — `@fontsource` (Inter, JetBrains Mono с кириллицей) из бандла, без сети.
 - id композиций — только `a-z A-Z 0-9 -` (Remotion запрещает `_`): `Debug-Board`, не `Debug_Board`.
 - Лого сайдбара — обрезанные `public/brand/garage-crm-logo-{light,dark}-sidebar.png`.
-- `npm run prerender` — композиция `MobileMaster` (390×844, 6 с, h264 без звука) →
+- `npm run prerender:mobile` — композиция `MobileMaster` (390×844, 6 с, h264 без звука) →
   `public/prerender/mobile-master.mp4`; её проигрывает `PhoneFrame` (луп `LoopMasterMobile`). Файл
   закоммичен (~0,8 МБ): после правок `MobileMaster`, доски или фикстур — перегенерировать.

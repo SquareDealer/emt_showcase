@@ -10,7 +10,7 @@
     "studio": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion studio ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
     "still": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion still ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
     "render": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion render ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
-    "prerender": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion render ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER} MobileMaster public/prerender/mobile-master.mp4 --codec=h264 --muted",
+    "prerender:mobile": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion render ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER} MobileMaster public/prerender/mobile-master.mp4 --codec=h264 --muted",
     "compositions": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion compositions ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}"
   },
   "devDependencies": {

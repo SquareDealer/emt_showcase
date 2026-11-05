@@ -19,7 +19,7 @@ import { Cursor } from '../kit/Cursor';
 import { Callout } from '../kit/Callout';
 import { FakeSelect } from '../kit/FakeSelect';
 import { Highlight } from '../kit/Highlight';
-import { countUp, typed, type CamKey, type CursorPoint } from '../kit/math';
+import { SOCIAL_STAGE, countUp, socialKeyForView, typed, type CamKey, type CursorPoint } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS, SCENE_CLICKS } from '../timing';
 
@@ -364,10 +364,12 @@ export const SOCIAL_ZONES = {
   block: { x: NEW_HEADERS[0].x, y: NEW_HEADERS[0].y, w: 822 - NEW_HEADERS[0].x, h: 876 - NEW_HEADERS[0].y },
   summary: { x: KIT_DISC_CELL.x, y: DISC_TYPE.y - 10, w: 1416 - KIT_DISC_CELL.x, h: 790 - (DISC_TYPE.y - 10) },
 };
-const SOCIAL_SELECT_IN = { x: 770, y: 190 + 485 / 1.7, zoom: 1.7 };
-const SOCIAL_SELECT = { x: 788, y: 190 + 485 / 1.8, zoom: 1.8 };
+// Views stated by their edges (kit socialKeyForView); the select views' tops sit under the vehicle line.
+const SOCIAL_SELECT_IN = socialKeyForView(770 - SOCIAL_STAGE.width / 2 / 1.7, 190, 1.7);
+const SOCIAL_SELECT = socialKeyForView(488, 190, 1.8);
 const SOCIAL_MODAL = { x: DIALOG.x + DIALOG.w / 2, y: 450, zoom: 1.7 };
-const SOCIAL_BLOCK = { x: 830 - 540 / 1.9, y: 627, zoom: 1.9 };
+/** Right edge 830 (toast whole, before the discount column), centred on y 627. */
+const SOCIAL_BLOCK = socialKeyForView(830 - SOCIAL_STAGE.width / 1.9, 627 - SOCIAL_STAGE.height / 2 / 1.9, 1.9);
 const SOCIAL_SUMMARY = { x: 1107, y: 614.7, zoom: 1.7 };
 export const CAM: { wide: CamKey[]; social: CamKey[] } = {
   wide: WIDE_KEYS,
@@ -385,10 +387,11 @@ export const CAM: { wide: CamKey[]; social: CamKey[] } = {
 };
 
 /** Social captions (the bottom plaque): one at a time, `out` = start of a 6-frame fade (null: to the
- *  end). «block» is one plaque from the sheet through the landing (the wide cut re-anchors it). */
+ *  end). «block» is one plaque from the sheet through the landing (the wide cut re-anchors it); it leaves
+ *  with the camera's move to the summary (180, on the beat — the wide cut's own «block» out), gone by 186. */
 export const SOCIAL_CALLOUTS: readonly { key: 'generation' | 'block' | 'discounts'; at: number; out: number | null }[] = [
   { key: 'generation', at: GEN_AT, out: 126 },
-  { key: 'block', at: BLOCK_AT, out: 213 },
+  { key: 'block', at: BLOCK_AT, out: 180 },
   { key: 'discounts', at: SNAP3_AT, out: null },
 ];
 
@@ -467,7 +470,7 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
           // One plaque at a time, from SOCIAL_CALLOUTS.
           SOCIAL_CALLOUTS.map((c) => (
             <Fade key={c.key} opacity={c.out === null ? 1 : fadeOut(frame, c.out, 6)} z={90}>
-              <Callout text={callouts[c.key]} at={c.at} anchor={{ x: 0, y: 0 }} side="bottom" accent={accent} />
+              <Callout text={callouts[c.key]} at={c.at} accent={accent} />
             </Fade>
           ))
         ) : (

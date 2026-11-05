@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SOCIAL_FRAME, cameraAt, cameraCentre, clickState, countUp, cursorAt, frameToUi, loopLayers, pingPong, stageView, typed } from './math';
+import { SOCIAL_FRAME, SOCIAL_STAGE, cameraAt, cameraCentre, clickState, countUp, cursorAt, frameToUi, loopLayers, pingPong, socialKeyForView, stageView, typed } from './math';
 
 const keys = [
   { at: 0, x: 100, y: 200, zoom: 1 },
@@ -176,5 +176,32 @@ describe('social stage geometry', () => {
     expect(frameToUi(540, 605, cam, c)).toEqual({ x: 1000, y: 500 });
     expect(frameToUi(0, 1090, cam, c)).toEqual({ x: 1000 - 270, y: 500 + 242.5 });
     expect(frameToUi(0, 120, cam, c)).toEqual({ x: 730, y: 257.5 });
+  });
+});
+
+describe('socialKeyForView', () => {
+  it('is the inverse of stageView in the social frame (round trip, both ways)', () => {
+    for (const [l, t, z] of [[488, 190, 1.8], [704, 263.2, 1080 / 554], [261.6, 371.7, 1.9], [0, 0, 1.7]]) {
+      const key = socialKeyForView(l, t, z);
+      const v = stageView(key, 'social', 1080, 1350);
+      expect(v.l).toBeCloseTo(l, 9);
+      expect(v.t).toBeCloseTo(t, 9);
+      expect(v.r - v.l).toBeCloseTo(SOCIAL_STAGE.width / z, 9);
+      expect(v.b - v.t).toBeCloseTo(SOCIAL_STAGE.height / z, 9);
+      expect(key.zoom).toBe(z);
+    }
+    const cam = { x: 1107, y: 614.7, zoom: 1.7 };
+    const v = stageView(cam, 'social', 1080, 1350);
+    const back = socialKeyForView(v.l, v.t, cam.zoom);
+    expect(back.x).toBeCloseTo(cam.x, 9);
+    expect(back.y).toBeCloseTo(cam.y, 9);
+  });
+  it('the stage is 1080×970 (the frame minus the two bands) and the key carries no `at`', () => {
+    expect(SOCIAL_STAGE).toEqual({ width: 1080, height: 970 });
+    expect('at' in socialKeyForView(0, 0, 2)).toBe(false);
+  });
+  it('keeps the stated edges exact (the scenes\' views did not move)', () => {
+    expect(socialKeyForView(488, 190, 1.8)).toEqual({ x: 788, y: 190 + 485 / 1.8, zoom: 1.8 });
+    expect(socialKeyForView(770 - 540 / 1.7, 190, 1.7).x).toBe(770);
   });
 });

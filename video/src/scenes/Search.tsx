@@ -12,7 +12,7 @@ import { Background } from '../kit/Background';
 import { Camera } from '../kit/Camera';
 import { Callout } from '../kit/Callout';
 import { Cursor } from '../kit/Cursor';
-import { cursorAt, typed, type CamKey, type CursorPoint } from '../kit/math';
+import { SOCIAL_STAGE, cursorAt, socialKeyForView, typed, type CamKey, type CursorPoint } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS, SCENE_CLICKS } from '../timing';
 import { BOARD_LAST_FRAME, BoardWindow, boardState } from './Board';
@@ -265,7 +265,7 @@ export const ORDER_CHIPS_END = 1251;
 export const ORDER_AMOUNTS_X = 1267;
 const ORDERS_ZOOM = 1080 / (1258 - 704);
 const ORDERS_BOTTOM = ROW_Y0 + ROW_H * 8;
-const SOCIAL_ORDERS = { x: 704 + 540 / ORDERS_ZOOM, y: ORDERS_BOTTOM - 485 / ORDERS_ZOOM, zoom: ORDERS_ZOOM };
+const SOCIAL_ORDERS = socialKeyForView(704, ORDERS_BOTTOM - SOCIAL_STAGE.height / ORDERS_ZOOM, ORDERS_ZOOM);
 export const SOCIAL_ZONES = {
   palette: { x: 410, y: 108, w: 620, h: HIT.y + HIT.h - 108 },
   head: { x: 274, y: 81, w: 694 - 274, h: 461 - 81 },

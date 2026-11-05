@@ -80,8 +80,10 @@ const PILL_CLEAR = 8;
 const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 const s = (f: number) => f / FPS;
 
-/** Scene-local state: a pure function of the frame. */
-export function dashboardState(frame: number, fps: number) {
+/** Scene-local state: a pure function of the frame. Social: no 'revenue' ring — the chart shot crops the
+ *  panel's sides, the ring would show as two stray stripes; the camera carries the emphasis. The load
+ *  panel is whole in its shot, so 'load' stays. */
+export function dashboardState(frame: number, fps: number, social = false) {
   // Exactly 1 from GROW on: the numbers at rest are the fixture's, not a spring's 0.9999.
   const progress = frame >= GROW ? 1 : spring({ frame, fps, config: { damping: 200 }, durationInFrames: GROW });
   // The KPIs follow the bars' curve: kit countUp over a virtual frame GROW·progress (exact at GROW).
@@ -96,7 +98,8 @@ export function dashboardState(frame: number, fps: number) {
       avgTicket: Math.round(count(k.avgTicket)),
     },
   };
-  const highlight: 'revenue' | 'load' | undefined = frame >= LOAD_AT ? 'load' : frame >= REVENUE_AT ? 'revenue' : undefined;
+  const highlight: 'revenue' | 'load' | undefined =
+    frame >= LOAD_AT ? 'load' : frame >= REVENUE_AT && !social ? 'revenue' : undefined;
   return { progress, data, highlight };
 }
 
@@ -204,7 +207,7 @@ export function DashboardScene({ theme, brand, callouts, accent, dashboardDeltaL
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
-  const state = dashboardState(frame, fps);
+  const state = dashboardState(frame, fps, social);
   const callout = calloutOpacity(frame, social);
   return (
     <AbsoluteFill>

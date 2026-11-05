@@ -7,7 +7,7 @@ import { clickState, pingPong } from '../kit/math';
 // ---------------------------------------------------------------------------------------------
 // MobileMaster (390×844, 180 f): the master's phone. The CRM's own ≤900 px / ≤560 px breakpoints
 // switch on because the composition (= the browser viewport) is 390 px wide — no video CSS fakes
-// the mobile layout. Pre-rendered by `npm run prerender` to public/prerender/mobile-master.mp4,
+// the mobile layout. Pre-rendered by `npm run prerender:mobile` to public/prerender/mobile-master.mp4,
 // which PhoneFrame plays inside the bezel (LoopMasterMobile).
 //
 // Geometry at 390 px (app-shell.css @media ≤900 px, index.css tokens, 1rem = 16 px):

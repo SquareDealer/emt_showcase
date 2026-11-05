@@ -12,7 +12,7 @@ export const PLAQUE_FONT = 54;
 /**
  * Wide: brass dot at `anchor` (UI pixels) and a caption pill on `side`.
  * Social: the caption is the bottom plaque — the frame's lowest SOCIAL_FRAME.captionH px, pinned to the
- * frame whatever the camera does (`anchor`/`side` are not used); scenes frame their zone above it.
+ * frame whatever the camera does (`anchor`/`side` are optional there and unused); scenes frame their zone above it.
  */
 export function Callout({
   text,
@@ -23,8 +23,9 @@ export function Callout({
 }: {
   text: string;
   at: number;
-  anchor: { x: number; y: number };
-  side: Side;
+  /** Wide only (required there); the social plaque doesn't point at anything. */
+  anchor?: { x: number; y: number };
+  side?: Side;
   accent?: string;
 }) {
   const frame = useCurrentFrame();
@@ -34,6 +35,7 @@ export function Callout({
   if (frame < at) return null;
   const p = spring({ frame: frame - at, fps, config: { damping: 200 }, durationInFrames: 12 });
   if (layout === 'social') return <Plaque text={text} p={p} accent={accent} />;
+  if (!anchor || !side) throw new Error(`Callout «${text}»: the wide layout needs anchor and side`);
   const fontSize = 30;
   const gap = 18;
   const dot = 14;
