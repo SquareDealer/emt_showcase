@@ -1,0 +1,68 @@
+{
+  "template_id": "d8ed88a0-2843-503c-ba4f-c56c5d80025f",
+  "group_name": "Замена цепи ГРМ (R56/N14)",
+  "labor": {
+    "name": "Замена цепи ГРМ (R56/N14)",
+    "hours": 7,
+    "rate_snapshot": 2200,
+    "price_override": 18500
+  },
+  "price_source": "generation",
+  "parts": [
+    {
+      "part_template_id": "60f53037-7828-57a1-8653-549f3e6c4a47",
+      "name": "Комплект цепи ГРМ N14",
+      "manufacturer": "INA",
+      "catalog_number": "INA-559028110",
+      "unit": "pcs",
+      "qty": 1,
+      "unit_price": 14900,
+      "is_default": true,
+      "generation_specific": false
+    },
+    {
+      "part_template_id": "7feaf7a6-3fbd-5cd4-87f7-d239e602df2a",
+      "name": "Натяжитель цепи ГРМ, усиленный",
+      "manufacturer": "INA",
+      "catalog_number": "INA-551021110",
+      "unit": "pcs",
+      "qty": 1,
+      "unit_price": 5600,
+      "is_default": true,
+      "generation_specific": true
+    },
+    {
+      "part_template_id": "46b4c2da-ebb0-5fef-8aca-7dedcbccc154",
+      "name": "Прокладка клапанной крышки",
+      "manufacturer": "Elring",
+      "catalog_number": "EL-454440",
+      "unit": "pcs",
+      "qty": 1,
+      "unit_price": 2300,
+      "is_default": true,
+      "generation_specific": false
+    },
+    {
+      "part_template_id": "1e7caa23-4a16-5551-985c-5ac359e6af51",
+      "name": "Сальник коленвала передний",
+      "manufacturer": "Elring",
+      "catalog_number": "EL-458210",
+      "unit": "pcs",
+      "qty": 1,
+      "unit_price": 900,
+      "is_default": true,
+      "generation_specific": false
+    },
+    {
+      "part_template_id": "7d05ea43-cac0-571f-807e-67d59d0fc30a",
+      "name": "Масло моторное 5W-30, 1 л",
+      "manufacturer": "Liqui Moly",
+      "catalog_number": "LM-3865",
+      "unit": "l",
+      "qty": 4.5,
+      "unit_price": 1200,
+      "is_default": true,
+      "generation_specific": false
+    }
+  ]
+}

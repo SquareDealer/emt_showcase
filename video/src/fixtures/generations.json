@@ -1,0 +1,173 @@
+[
+  {
+    "id": "e81f7a78-b178-44c8-a354-23e8a087cc18",
+    "make": "MINI",
+    "model": "Hatch",
+    "code": "R50",
+    "years": "2001–2006",
+    "sort": 10,
+    "active": true
+  },
+  {
+    "id": "d5f65cf6-bd74-4d0e-ae44-56c11590a320",
+    "make": "MINI",
+    "model": "Hatch",
+    "code": "R53",
+    "years": "2002–2006",
+    "sort": 11,
+    "active": true
+  },
+  {
+    "id": "0a6286e5-ba35-47c1-a49b-b075ddf1d8cf",
+    "make": "MINI",
+    "model": "Cabrio",
+    "code": "R52",
+    "years": "2004–2008",
+    "sort": 12,
+    "active": true
+  },
+  {
+    "id": "c85ff453-b274-460d-9715-9096cecff445",
+    "make": "MINI",
+    "model": "Hatch",
+    "code": "R56",
+    "years": "2006–2013",
+    "sort": 20,
+    "active": true
+  },
+  {
+    "id": "dbf60d08-3992-4ad5-9047-3f72e364d4ba",
+    "make": "MINI",
+    "model": "Clubman",
+    "code": "R55",
+    "years": "2007–2014",
+    "sort": 21,
+    "active": true
+  },
+  {
+    "id": "ad67ae45-1192-49b1-a2c2-787d3165a4b5",
+    "make": "MINI",
+    "model": "Cabrio",
+    "code": "R57",
+    "years": "2008–2015",
+    "sort": 22,
+    "active": true
+  },
+  {
+    "id": "b8ddef4c-fe36-4afe-822d-e9087ccd7e36",
+    "make": "MINI",
+    "model": "Countryman",
+    "code": "R60",
+    "years": "2010–2016",
+    "sort": 23,
+    "active": true
+  },
+  {
+    "id": "90526971-4ddd-432d-b8f3-8e968d3fe4cf",
+    "make": "MINI",
+    "model": "Coupe",
+    "code": "R58",
+    "years": "2011–2015",
+    "sort": 24,
+    "active": true
+  },
+  {
+    "id": "d8cc0937-50f6-498b-8f8a-7cba4f017841",
+    "make": "MINI",
+    "model": "Roadster",
+    "code": "R59",
+    "years": "2012–2015",
+    "sort": 25,
+    "active": true
+  },
+  {
+    "id": "79293331-ac00-4980-9062-27099e3c4917",
+    "make": "MINI",
+    "model": "Paceman",
+    "code": "R61",
+    "years": "2012–2016",
+    "sort": 26,
+    "active": true
+  },
+  {
+    "id": "af2bfb23-11bf-46ff-932e-ba0c21eb84d4",
+    "make": "MINI",
+    "model": "Hatch",
+    "code": "F56",
+    "years": "2013–2024",
+    "sort": 30,
+    "active": true
+  },
+  {
+    "id": "e28cb805-0fe3-4502-ac54-a0a553d4c114",
+    "make": "MINI",
+    "model": "Hatch 5D",
+    "code": "F55",
+    "years": "2014–2024",
+    "sort": 31,
+    "active": true
+  },
+  {
+    "id": "ed41a917-8975-4b42-8550-9936a00064ca",
+    "make": "MINI",
+    "model": "Clubman",
+    "code": "F54",
+    "years": "2015–2024",
+    "sort": 32,
+    "active": true
+  },
+  {
+    "id": "5e0c09bd-0b47-4887-a950-2b0616e4ca0a",
+    "make": "MINI",
+    "model": "Cabrio",
+    "code": "F57",
+    "years": "2015–2024",
+    "sort": 33,
+    "active": true
+  },
+  {
+    "id": "1bf4da03-e696-44e2-8813-2aee6793a723",
+    "make": "MINI",
+    "model": "Countryman",
+    "code": "F60",
+    "years": "2017–2024",
+    "sort": 34,
+    "active": true
+  },
+  {
+    "id": "e653d732-6618-43ba-9618-af2dd72c6973",
+    "make": "MINI",
+    "model": "Cooper SE",
+    "code": "J01",
+    "years": "2024–",
+    "sort": 40,
+    "active": true
+  },
+  {
+    "id": "28ec20eb-99a9-4c20-b69a-cb32458daacb",
+    "make": "MINI",
+    "model": "Countryman",
+    "code": "U25",
+    "years": "2024–",
+    "sort": 41,
+    "active": true
+  },
+  {
+    "id": "2970cefc-7bb5-4165-9dde-8f3482921f31",
+    "make": "MINI",
+    "model": "Cooper",
+    "code": "F66",
+    "years": "2024–",
+    "sort": 42,
+    "active": true
+  },
+  {
+    "id": "e07ba34a-3c75-48b8-bb54-f901973b7e07",
+    "make": "MINI",
+    "model": "Cooper 5D",
+    "code": "F65",
+    "years": "2024–",
+    "sort": 43,
+    "active": true
+  }
+]

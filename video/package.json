@@ -1,0 +1,19 @@
+{
+  "name": "showcase-video",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "fixtures": "TZ=Europe/Moscow tsx scripts/export-fixtures.ts",
+    "fixtures:check": "npm --prefix .. run seed:demo -- --force --now=2026-11-18 && npm run fixtures && git add -A src/fixtures public/docs && npm --prefix .. run seed:demo -- --force --now=2026-11-18 && npm run fixtures && git diff --exit-code src/fixtures public/docs",
+    "test": "TZ=Europe/Moscow vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/pg": "8.11.10",
+    "pg": "8.13.1",
+    "tsx": "4.19.2",
+    "typescript": "5.9.3",
+    "vitest": "2.1.9"
+  }
+}

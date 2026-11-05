@@ -1,0 +1,72 @@
+{
+  "id": "hero-copy",
+  "vehicle_id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
+  "assigned_master_id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+  "status": "scheduled",
+  "title": "Замена цепи ГРМ + ТО",
+  "notes": "Пробег при приёме: 125 240 км",
+  "complaint": "Треск двигателя на холодную",
+  "recommendation": "Растяжение цепи ГРМ (N14) — рекомендована замена цепи и натяжителя",
+  "scheduled_at": "2026-11-19T11:00:00.000Z",
+  "scheduled_duration_min": 120,
+  "discount_type": null,
+  "discount_value": null,
+  "total_cached": 2200,
+  "total_frozen": null,
+  "created_at": "2026-11-18T09:00:00.000Z",
+  "updated_at": "2026-11-18T09:00:00.000Z",
+  "closed_at": null,
+  "doc_number": null,
+  "order_doc_number": null,
+  "paid_amount": 0,
+  "labor_lines": [
+    {
+      "id": "hero-line-1",
+      "work_order_id": "hero-copy",
+      "template_id": "71c9ed38-ef30-5bf3-9f22-08d9004680ed",
+      "name": "Диагностика двигателя",
+      "hours": 1,
+      "rate_snapshot": 2200,
+      "price_override": null,
+      "discount_type": null,
+      "discount_value": null,
+      "group_key": "hero-group-1",
+      "group_name": "Диагностика двигателя",
+      "group_sort": 1,
+      "sort": 0,
+      "created_at": "2026-11-18T09:00:00.000Z"
+    }
+  ],
+  "part_lines": [],
+  "vehicle": {
+    "id": "884787df-de44-5f5e-9433-faaec4bc7aa7",
+    "client_id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+    "vin": "WMWSV32050TZ56421",
+    "make": "MINI",
+    "model": "Cooper S",
+    "generation_code": "R56",
+    "generation_id": "c85ff453-b274-460d-9715-9096cecff445",
+    "plate": "М056РК 77",
+    "year": 2011,
+    "mileage": 125400,
+    "notes": null,
+    "created_at": "2025-03-26T07:20:00.000Z",
+    "updated_at": "2025-03-26T07:20:00.000Z",
+    "client": {
+      "id": "c42601d6-92c3-57bd-bc73-fcdad7897046",
+      "full_name": "Ковалёв Артём Сергеевич",
+      "phone": "+75550105656",
+      "source": "csv_import",
+      "discount_default_pct": null,
+      "imported_deals_count": 14,
+      "imported_deals_sum": 186400,
+      "notes": null,
+      "created_at": "2025-03-26T07:15:00.000Z",
+      "updated_at": "2025-03-26T07:15:00.000Z"
+    }
+  },
+  "assigned_master": {
+    "id": "c8c535e3-52bd-5960-b6f1-ea4d14ff119b",
+    "name": "Соколов Денис Александрович"
+  }
+}

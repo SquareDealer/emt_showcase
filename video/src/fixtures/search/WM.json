@@ -1,0 +1,702 @@
+[
+  {
+    "id": "0ddc7072-2ee7-571e-99dd-58850979ba5a",
+    "type": "vehicle",
+    "vin": "WMW5477Z1A11J8XFV",
+    "plate": "Т256СА 77",
+    "make": "MINI",
+    "model": "Clubman",
+    "generation_code": "F54",
+    "client": {
+      "id": "07d63066-a200-5f03-8e20-08484c41658d",
+      "full_name": "Игнатов Олег Анатольевич",
+      "phone": "+75552092673"
+    }
+  },
+  {
+    "id": "129756b9-4ba4-579a-8b5a-c315e69c836e",
+    "type": "vehicle",
+    "vin": "WMW77ZX0YG9HAMNA9",
+    "plate": "Т968КУ 750",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "F56",
+    "client": {
+      "id": "d711df13-d2ab-562c-8068-7126db31e72d",
+      "full_name": "ООО «Курьер-Экспресс Плюс»",
+      "phone": "+75558589738"
+    }
+  },
+  {
+    "id": "4d9c24e1-322c-5db0-b769-469dd4fc6e03",
+    "type": "vehicle",
+    "vin": "WMWF3RRX7BSUD2F83",
+    "plate": "В415ВВ 150",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "F56",
+    "client": {
+      "id": "d711df13-d2ab-562c-8068-7126db31e72d",
+      "full_name": "ООО «Курьер-Экспресс Плюс»",
+      "phone": "+75558589738"
+    }
+  },
+  {
+    "id": "2d2dca50-cb3a-55ad-8491-3e81c9a6760a",
+    "type": "vehicle",
+    "vin": "WMW8HKL3ADE5LH6S7",
+    "plate": "В250УА 97",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "F60",
+    "client": {
+      "id": "29c93b51-0a61-5475-8a37-1d9b595aa726",
+      "full_name": "Журавлев Даниил Петрович",
+      "phone": "+75551761065"
+    }
+  },
+  {
+    "id": "293b9965-8c06-58f3-94db-5ba304df618a",
+    "type": "vehicle",
+    "vin": "WMWLD1M81E27CKW7H",
+    "plate": "Т271СО 777",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "F60",
+    "client": {
+      "id": "0b95a5f2-d673-5110-93a6-73d4b0e536fc",
+      "full_name": "Семенов Григорий Фёдорович",
+      "phone": "+75554981720"
+    }
+  },
+  {
+    "id": "28d16a45-af72-5d0e-9ba1-db08351f706e",
+    "type": "vehicle",
+    "vin": "WMWS6EKSEPR9WF957",
+    "plate": "О657МК 197",
+    "make": "MINI",
+    "model": "One",
+    "generation_code": "F55",
+    "client": {
+      "id": "28d154ed-49ee-565f-ba86-f863f4158faf",
+      "full_name": "Шаров Илья Иванович",
+      "phone": "+75553032934"
+    }
+  },
+  {
+    "id": "0dc9d28c-93f1-54b5-a6fc-2c373ab1c225",
+    "type": "vehicle",
+    "vin": "WMWNAAMDKM42DSJ0U",
+    "plate": "Т814КМ 50",
+    "make": "MINI",
+    "model": "John Cooper Works",
+    "generation_code": "F56",
+    "client": {
+      "id": "d5b19afd-b152-587a-9948-424a4840960d",
+      "full_name": "Калинин Николай Константинович",
+      "phone": "+75557059953"
+    }
+  },
+  {
+    "id": "5efc6495-fc96-5c61-8bab-ee4201b63b38",
+    "type": "vehicle",
+    "vin": "TMB8HMBDNYFWDWMTE",
+    "plate": "М890МУ 77",
+    "make": "Skoda",
+    "model": "Octavia",
+    "generation_code": null,
+    "client": {
+      "id": "3ba3db3c-4fb9-5b23-9940-1b797b03de4c",
+      "full_name": "Колобова Алла Андреевна",
+      "phone": "+75551836822"
+    }
+  },
+  {
+    "id": "c11166ef-10c0-5c82-96fc-e6ae4e8e7fd4",
+    "type": "vehicle",
+    "vin": "WMWSJLD4XZJE5SKWH",
+    "plate": "М569ХА 97",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "F60",
+    "client": {
+      "id": "2491c02b-9f32-53f0-a122-cc82ca3815dd",
+      "full_name": "Фокин Алексей Анатольевич",
+      "phone": "+75553520366"
+    }
+  },
+  {
+    "id": "054f0b6c-8421-5131-ae67-d7ea003ff631",
+    "type": "vehicle",
+    "vin": "WMW2C34CNEX0JELNH",
+    "plate": "Т479АХ 50",
+    "make": "MINI",
+    "model": "Clubman",
+    "generation_code": "R55",
+    "client": {
+      "id": "7ab667c2-c243-583d-b575-25894fff66c0",
+      "full_name": "Борисов Олег Константинович",
+      "phone": "+75551501310"
+    }
+  },
+  {
+    "id": "9c8e4115-a2c9-51eb-bebb-3e6fe253ff50",
+    "type": "vehicle",
+    "vin": "WMW0873PZ3THAHJHF",
+    "plate": "Р933НР 97",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "F56",
+    "client": {
+      "id": "d1d40801-63aa-5868-b75e-fcb196e00dc6",
+      "full_name": "Панова Галина Павловна",
+      "phone": "+75551420457"
+    }
+  },
+  {
+    "id": "a88ac2d2-13a3-5f93-b79d-9b5a0d8f34e3",
+    "type": "vehicle",
+    "vin": "WMWH0KHY4717NBK01",
+    "plate": "С882УН 78",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "R56",
+    "client": {
+      "id": "3a396c60-bb6b-5d8e-9904-80c264de40fb",
+      "full_name": "Сазонова Алёна Анатольевна",
+      "phone": "+75555932168"
+    }
+  },
+  {
+    "id": "a6330584-359e-53f7-8370-e2c235b7a35e",
+    "type": "vehicle",
+    "vin": "WMW4SF111YAEJENLK",
+    "plate": "К364ОА 50",
+    "make": "MINI",
+    "model": "One",
+    "generation_code": "F55",
+    "client": {
+      "id": "f8518eee-5e4a-5f46-b3fd-9caee6f550a3",
+      "full_name": "Трофимова Надежда Романовна",
+      "phone": "+75557972365"
+    }
+  },
+  {
+    "id": "aae0f5a1-11d8-59fd-9d6b-708506f1047a",
+    "type": "vehicle",
+    "vin": "WMWVFWPJVE49FJ7WG",
+    "plate": "Т099ОН 777",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "F60",
+    "client": {
+      "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+      "full_name": "ООО «Кедровый Двор»",
+      "phone": "+75557316967"
+    }
+  },
+  {
+    "id": "42252b84-b728-5d42-bb27-b5461cfeee1c",
+    "type": "vehicle",
+    "vin": "WMWGZGS055NSN3572",
+    "plate": "О296ХН 77",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "F56",
+    "client": {
+      "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+      "full_name": "ООО «Кедровый Двор»",
+      "phone": "+75557316967"
+    }
+  },
+  {
+    "id": "2516df96-bd54-5b78-909b-75d8d7b281d3",
+    "type": "vehicle",
+    "vin": "WMWLWWAJJMG31DBSB",
+    "plate": "В127НА 197",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "R60",
+    "client": {
+      "id": "0d4a25c0-90f7-5cf1-ae06-10eeaf856aca",
+      "full_name": "ООО «Кедровый Двор»",
+      "phone": "+75557316967"
+    }
+  },
+  {
+    "id": "f199bcf4-7424-59da-b154-638813b112b9",
+    "type": "vehicle",
+    "vin": "WMW08WB3K94G1YY7Z",
+    "plate": "Е390УО 197",
+    "make": "MINI",
+    "model": "Cabrio",
+    "generation_code": "F57",
+    "client": {
+      "id": "5000c629-55ac-5d7a-a395-152470a9c2ed",
+      "full_name": "Мишин Владимир Викторович",
+      "phone": "+75555353746"
+    }
+  },
+  {
+    "id": "b42b4325-2a8f-52fb-9b41-917525117457",
+    "type": "vehicle",
+    "vin": "WMW090893YPTWJV15",
+    "plate": "Х423МВ 99",
+    "make": "MINI",
+    "model": "John Cooper Works",
+    "generation_code": "R50",
+    "client": {
+      "id": "6335a72b-b282-5c24-a776-67615f830027",
+      "full_name": "ООО «Румяный Каравай Пекарня»",
+      "phone": "+75556485050"
+    }
+  },
+  {
+    "id": "c5ce9761-dcf6-5e5c-b867-b8502dacdf06",
+    "type": "vehicle",
+    "vin": "WMWXLAR0ZJ49XK783",
+    "plate": "Е599ХР 177",
+    "make": "MINI",
+    "model": "Cooper",
+    "generation_code": "F55",
+    "client": {
+      "id": "603a18df-ad88-52cf-ae17-4e29bc57fc41",
+      "full_name": "Гущин Вадим Фёдорович",
+      "phone": "+75553263890"
+    }
+  },
+  {
+    "id": "6b3fa391-fc1b-5323-8293-6ab71e9baa45",
+    "type": "vehicle",
+    "vin": "WMWNRVYAYCHTW087T",
+    "plate": "Е696КВ 99",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "R53",
+    "client": {
+      "id": "beb3ea8e-7339-50d7-b129-cc03e9284be4",
+      "full_name": "Некрасова Ксения Николаевна",
+      "phone": "+75558616453"
+    }
+  },
+  {
+    "id": "625708f5-b8bf-5cb8-a2eb-726c921ad783",
+    "type": "vehicle",
+    "vin": "WMWZG23459AKEHCMF",
+    "plate": "А399АТ 750",
+    "make": "MINI",
+    "model": "Hatch 5D",
+    "generation_code": "F55",
+    "client": {
+      "id": "597d7404-a8ea-50e7-9306-2378bfc58cb4",
+      "full_name": "Виноградов Игорь Николаевич",
+      "phone": "+75555390865"
+    }
+  },
+  {
+    "id": "4fb16a22-ef64-5e6c-88d0-62f8319621c4",
+    "type": "vehicle",
+    "vin": "WMWCMJLW5LW7EKAS9",
+    "plate": "С813ТР 78",
+    "make": "MINI",
+    "model": "Cooper S",
+    "generation_code": "R53",
+    "client": {
+      "id": "597d7404-a8ea-50e7-9306-2378bfc58cb4",
+      "full_name": "Виноградов Игорь Николаевич",
+      "phone": "+75555390865"
+    }
+  },
+  {
+    "id": "5befed85-df89-5241-bb11-d8387d801da1",
+    "type": "vehicle",
+    "vin": "WMWMBSK2Y79L0KZGZ",
+    "plate": "Х325АУ 750",
+    "make": "MINI",
+    "model": "Cooper S",
+    "generation_code": "F55",
+    "client": {
+      "id": "fcc0f757-5d95-5211-987e-5292b58373b8",
+      "full_name": "Гущина Анастасия Алексеевна",
+      "phone": "+75558196525"
+    }
+  },
+  {
+    "id": "37530049-ec7e-5bac-ac06-444bce2fa09f",
+    "type": "vehicle",
+    "vin": "WMWXZB3ZLBYND2GNG",
+    "plate": "О877УХ 78",
+    "make": "MINI",
+    "model": "John Cooper Works",
+    "generation_code": "R56",
+    "client": {
+      "id": "4dcd6f00-42ca-59de-a3ba-7a2ebdf9c351",
+      "full_name": "Бобылева Евгения Викторовна",
+      "phone": "+75559628392"
+    }
+  },
+  {
+    "id": "3a6ea738-8568-5b39-981d-06a352bd43a6",
+    "type": "vehicle",
+    "vin": "WMWKMAXCMLZ7Y9544",
+    "plate": "Е762ВО 177",
+    "make": "MINI",
+    "model": "Cooper",
+    "generation_code": "R56",
+    "client": {
+      "id": "961335d3-5a73-5a78-b134-ed753fe6e8b0",
+      "full_name": "Овчинникова Галина Михайловна",
+      "phone": "+75556834999"
+    }
+  },
+  {
+    "id": "1b6f9d16-e842-5804-a569-b81d08535e79",
+    "type": "vehicle",
+    "vin": "WMW5DN2Z7AYBR5A20",
+    "plate": "М197КА 197",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "F56",
+    "client": {
+      "id": "2e260ed0-4acb-58e2-b057-75f646185cb5",
+      "full_name": "Зимин Евгений Михайлович",
+      "phone": "+75557401981"
+    }
+  },
+  {
+    "id": "36815ab9-b75d-58a1-878f-acad2fcb11ed",
+    "type": "vehicle",
+    "vin": "WMWPM82G66F76930Y",
+    "plate": "У252РВ 150",
+    "make": "MINI",
+    "model": "Cooper S",
+    "generation_code": "R53",
+    "client": {
+      "id": "61e09cda-67c7-55e3-a342-1391d69bfe3f",
+      "full_name": "Панфилова Галина Андреевна",
+      "phone": "+75551590241"
+    }
+  },
+  {
+    "id": "c631d734-6cfa-5aca-99b8-350462f90104",
+    "type": "vehicle",
+    "vin": "WMW8HJ6LRYAXL65CN",
+    "plate": "Е271НУ 78",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "F60",
+    "client": {
+      "id": "1cabebfe-35f3-5a30-ae75-a63b1f726ce7",
+      "full_name": "Калашников Александр Павлович",
+      "phone": "+75552450446"
+    }
+  },
+  {
+    "id": "4e81398c-66c7-5ae2-882c-b9e2c5f5f89e",
+    "type": "vehicle",
+    "vin": "WMWYB7F5SN783XBL7",
+    "plate": "О274МН 77",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "F56",
+    "client": {
+      "id": "3bad0fe3-aeef-52a9-aa5b-f12c56e8eefe",
+      "full_name": "Уварова Светлана Павловна",
+      "phone": "+75551229379"
+    }
+  },
+  {
+    "id": "2b112e29-21f0-50aa-892b-a6852b36a04c",
+    "type": "vehicle",
+    "vin": "WMWFYAG3MS0956CL4",
+    "plate": "Т363ЕА 97",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "R60",
+    "client": {
+      "id": "15fa92b7-25f1-5b4a-8d1a-e89352e9fba4",
+      "full_name": "Силина Инна Александровна",
+      "phone": "+75556603160"
+    }
+  },
+  {
+    "id": "004f69b8-32c7-558d-8431-9eb5dd1fd5ea",
+    "type": "vehicle",
+    "vin": "WMW6WXG1LB0MWMC15",
+    "plate": "С859РО 197",
+    "make": "MINI",
+    "model": "Clubman",
+    "generation_code": "F54",
+    "client": {
+      "id": "62a8fab4-d743-5cea-9493-4317a8769dd5",
+      "full_name": "Маркова Ирина Михайловна",
+      "phone": "+75558799470"
+    }
+  },
+  {
+    "id": "7b1a8853-140d-582f-bf1a-543780f44ea5",
+    "type": "vehicle",
+    "vin": "WMW94T6K634XUAXL9",
+    "plate": "К364УА 197",
+    "make": "MINI",
+    "model": "Cooper S",
+    "generation_code": "F55",
+    "client": {
+      "id": "11dcc268-3bfb-5d6b-8dfa-75ab041cf003",
+      "full_name": "Журавлева Людмила Фёдоровна",
+      "phone": "+75555527244"
+    }
+  },
+  {
+    "id": "b01a7b31-961d-50ad-bb15-ea1398539a5a",
+    "type": "vehicle",
+    "vin": "WMW6SZUEKSRKK4YZD",
+    "plate": "О256ТМ 77",
+    "make": "MINI",
+    "model": "Cooper",
+    "generation_code": "R56",
+    "client": {
+      "id": "c0f1161c-72df-55a5-8972-dd67e5d0a83a",
+      "full_name": "ООО «СтройРесурс Монтаж»",
+      "phone": "+75555963143"
+    }
+  },
+  {
+    "id": "d9961295-d8fd-53bd-bb5f-d976d1082f67",
+    "type": "vehicle",
+    "vin": "WMWEH4HPKF21E5WAM",
+    "plate": "У276НМ 750",
+    "make": "MINI",
+    "model": "Cooper",
+    "generation_code": "R56",
+    "client": {
+      "id": "c0f1161c-72df-55a5-8972-dd67e5d0a83a",
+      "full_name": "ООО «СтройРесурс Монтаж»",
+      "phone": "+75555963143"
+    }
+  },
+  {
+    "id": "2f2f501a-70ef-52fb-a2a3-bd55cd4ba724",
+    "type": "vehicle",
+    "vin": "WMWC0GDAW75PMJA8C",
+    "plate": "М041МА 78",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "R60",
+    "client": {
+      "id": "2e10f538-d216-5821-b5fc-90c0b9ea5beb",
+      "full_name": "Муравьев Артём Геннадьевич",
+      "phone": "+75552220476"
+    }
+  },
+  {
+    "id": "cdec65d6-6139-53bf-bb54-c4ede33b846d",
+    "type": "vehicle",
+    "vin": "WMWG9YSHU2USSAK2N",
+    "plate": "Т408ВХ 750",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "R60",
+    "client": {
+      "id": "b6905407-b560-516a-9806-b6f612c0d018",
+      "full_name": "Захарова Татьяна Николаевна",
+      "phone": "+75559329061"
+    }
+  },
+  {
+    "id": "856ed6e0-85f1-5019-ac91-e9a9acf4fc0a",
+    "type": "vehicle",
+    "vin": "WMW6X8S0N227HLK2A",
+    "plate": "А329РО 150",
+    "make": "MINI",
+    "model": "Clubman",
+    "generation_code": "F54",
+    "client": {
+      "id": "72e0f2de-23e0-5496-8d45-f37dafcf6742",
+      "full_name": "Федосеева Елизавета Михайловна",
+      "phone": "+75558666065"
+    }
+  },
+  {
+    "id": "efaec364-af5a-5ea4-bd2b-3bcf7bbd9c87",
+    "type": "vehicle",
+    "vin": "WMWC2AH9FTUCXD4V3",
+    "plate": "В106КХ 750",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "F60",
+    "client": {
+      "id": "cff9500e-2d21-5077-b2c7-6c5032b1c4d1",
+      "full_name": "Авдеев Фёдор Валерьевич",
+      "phone": "+75554010785"
+    }
+  },
+  {
+    "id": "f0f899bd-3398-5ce2-8668-b99994eff2d2",
+    "type": "vehicle",
+    "vin": "WMWNJCF37KZWLN2NR",
+    "plate": "С886КЕ 99",
+    "make": "MINI",
+    "model": "John Cooper Works",
+    "generation_code": "R56",
+    "client": {
+      "id": "6ba80648-b2f1-53ce-8d52-cb2042645057",
+      "full_name": "Рогов Артём Игоревич",
+      "phone": "+75559929052"
+    }
+  },
+  {
+    "id": "c59b567d-c106-5583-bdd2-68271188b044",
+    "type": "vehicle",
+    "vin": "WMWAZV698XAU6CHAD",
+    "plate": "А052ВО 97",
+    "make": "MINI",
+    "model": "Clubman",
+    "generation_code": "R55",
+    "client": {
+      "id": "953f77d4-7ea9-55b2-8008-a92c01c463c6",
+      "full_name": "Белова Марина Дмитриевна",
+      "phone": "+75551619891"
+    }
+  },
+  {
+    "id": "3a9b96ff-b3e1-5bd7-96cc-506991a0c756",
+    "type": "vehicle",
+    "vin": "WMWW0R5DHFDBHU94A",
+    "plate": "Е324ХС 50",
+    "make": "MINI",
+    "model": "One",
+    "generation_code": "R53",
+    "client": {
+      "id": "8e0f27f5-a4de-59c8-85e8-2794e00d7a58",
+      "full_name": "ИП Пахомов И. Б.",
+      "phone": "+75554339070"
+    }
+  },
+  {
+    "id": "bb07bfeb-8b05-51e4-9f28-42f4787b2bd2",
+    "type": "vehicle",
+    "vin": "WMW4A2RU00P65BGY6",
+    "plate": "К130УВ 50",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "F60",
+    "client": {
+      "id": "8e0f27f5-a4de-59c8-85e8-2794e00d7a58",
+      "full_name": "ИП Пахомов И. Б.",
+      "phone": "+75554339070"
+    }
+  },
+  {
+    "id": "52e5611b-302c-57ba-b6fa-0eba42b041f8",
+    "type": "vehicle",
+    "vin": "WMWZATV8XHC816L7F",
+    "plate": "Н978КХ 99",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "R56",
+    "client": {
+      "id": "8e0f27f5-a4de-59c8-85e8-2794e00d7a58",
+      "full_name": "ИП Пахомов И. Б.",
+      "phone": "+75554339070"
+    }
+  },
+  {
+    "id": "ba8b5e2b-2026-5f31-946b-fd8eed864d3c",
+    "type": "vehicle",
+    "vin": "WMW5KXXB1D342H2K3",
+    "plate": "Н827ВТ 78",
+    "make": "MINI",
+    "model": "Clubman",
+    "generation_code": "F54",
+    "client": {
+      "id": "8e0f27f5-a4de-59c8-85e8-2794e00d7a58",
+      "full_name": "ИП Пахомов И. Б.",
+      "phone": "+75554339070"
+    }
+  },
+  {
+    "id": "89ded127-5e49-5006-b357-3bfcb9b2cf97",
+    "type": "vehicle",
+    "vin": "WMWC7GL6ALZTDK5SB",
+    "plate": "Х342ХА 99",
+    "make": "MINI",
+    "model": "Cabrio",
+    "generation_code": "R57",
+    "client": {
+      "id": "81f5bae2-e1fe-5144-8ac7-a697b014c607",
+      "full_name": "Борисов Никита Сергеевич",
+      "phone": "+75559665186"
+    }
+  },
+  {
+    "id": "21b5659c-e77a-5598-a531-eb7c5e28a35d",
+    "type": "vehicle",
+    "vin": "WMWRY9KXA74PL4LA0",
+    "plate": "А617СС 78",
+    "make": "MINI",
+    "model": "Cabrio",
+    "generation_code": "R52",
+    "client": {
+      "id": "8a6703fc-a112-5b27-bca9-bf93efc0a44b",
+      "full_name": "Ефремова Валерия Ивановна",
+      "phone": "+75552469974"
+    }
+  },
+  {
+    "id": "cee0a73e-d124-5916-a4a2-4ab6517d160c",
+    "type": "vehicle",
+    "vin": "WMWY4A5NW7F8TDYXS",
+    "plate": "С231ЕА 99",
+    "make": "MINI",
+    "model": "Countryman",
+    "generation_code": "R60",
+    "client": {
+      "id": "6e3b9b7c-e42f-58ad-b0c1-03e75cbe0bf7",
+      "full_name": "Кириллова Елизавета Анатольевна",
+      "phone": "+75557861231"
+    }
+  },
+  {
+    "id": "be557e57-5605-5daa-b2d5-8f3ae2954c55",
+    "type": "vehicle",
+    "vin": "WMWNUDCCKKCX2FXSR",
+    "plate": "С619СХ 97",
+    "make": "MINI",
+    "model": "Hatch",
+    "generation_code": "R50",
+    "client": {
+      "id": "6e3b9b7c-e42f-58ad-b0c1-03e75cbe0bf7",
+      "full_name": "Кириллова Елизавета Анатольевна",
+      "phone": "+75557861231"
+    }
+  },
+  {
+    "id": "3e237452-7d43-571c-9082-dca32ad93bfe",
+    "type": "vehicle",
+    "vin": "WMWHY5SPGXWGMHXLL",
+    "plate": "С366СУ 99",
+    "make": "MINI",
+    "model": "Hatch 5D",
+    "generation_code": "F55",
+    "client": {
+      "id": "78119fbf-eecf-582f-bd54-ea87a9010a64",
+      "full_name": "Ильин Андрей Иванович",
+      "phone": "+75556267205"
+    }
+  },
+  {
+    "id": "7313fb10-baa2-5598-8616-fb198930d847",
+    "type": "vehicle",
+    "vin": "WMWVNDSWK63BWZTY2",
+    "plate": "В994КС 177",
+    "make": "MINI",
+    "model": "John Cooper Works",
+    "generation_code": "F56",
+    "client": {
+      "id": "77e9479b-09ca-5d51-af2d-e7c5d8a1f37f",
+      "full_name": "ИП Цветков В. П.",
+      "phone": "+75559193164"
+    }
+  }
+]

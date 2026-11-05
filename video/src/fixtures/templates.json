@@ -1,0 +1,436 @@
+[
+  {
+    "id": "ff67e1a6-5b35-5dea-8dcc-d24889f149b5",
+    "name": "Балансировка колёс",
+    "default_hours": 0.5,
+    "default_price": 1600,
+    "active": true
+  },
+  {
+    "id": "71c9ed38-ef30-5bf3-9f22-08d9004680ed",
+    "name": "Диагностика двигателя",
+    "default_hours": 1,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "fdc55f47-2f19-57ce-93e9-988f10640456",
+    "name": "Диагностика кондиционера",
+    "default_hours": 0.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "eafd8dc0-5e8c-5012-93ff-56595f0d83cb",
+    "name": "Диагностика ходовой части",
+    "default_hours": 0.7,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "5cc1eb33-4588-50d8-aed7-f8b2ab5cbb35",
+    "name": "Замена аккумулятора с регистрацией",
+    "default_hours": 0.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "e079253b-64bd-5899-81a6-7f98eedebc4b",
+    "name": "Замена водяного насоса (помпы)",
+    "default_hours": 2.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "50a205da-c4ad-5a00-a9f1-004d26fed291",
+    "name": "Замена воздушного фильтра",
+    "default_hours": 0.3,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "d4c0b393-1304-5a50-8e87-ff19d4f35b53",
+    "name": "Замена генератора",
+    "default_hours": 1.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "2bf639b1-df63-5f41-a0d9-394b0ade6cc3",
+    "name": "Замена задних амортизаторов",
+    "default_hours": 1.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "38afc2c6-118f-58ab-bd13-d55b93fdd876",
+    "name": "Замена задних тормозных дисков и колодок",
+    "default_hours": 1.6,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "790671dd-0e76-55c1-ad57-3f0025299044",
+    "name": "Замена задних тормозных колодок",
+    "default_hours": 1,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "40e51e91-b6cf-5e39-9f3e-311842bcc64c",
+    "name": "Замена катушки зажигания",
+    "default_hours": 0.4,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "434dd4b6-59ff-57f6-9da2-02e3ce49aa84",
+    "name": "Замена клапана вентиляции картера",
+    "default_hours": 1,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "461883f1-ac1a-5d9a-979d-af4ae7b00678",
+    "name": "Замена лампы головного света",
+    "default_hours": 0.4,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "80e7a3f6-fbc4-5bf3-8043-4ccf8b0c2e58",
+    "name": "Замена масла в АКПП",
+    "default_hours": 1.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "88dc9efb-ab12-525b-8fe6-a636a9bed9bf",
+    "name": "Замена масла в МКПП",
+    "default_hours": 1,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "b41eb56c-8288-588b-b404-426e9c0ea61d",
+    "name": "Замена масла в двигателе",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "79e42435-59c4-562c-be16-b31393a82b39",
+    "name": "Замена масла в раздаточной коробке и редукторе",
+    "default_hours": 1.2,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "32d1df93-ec60-51ed-8299-7de81eb588de",
+    "name": "Замена маховика",
+    "default_hours": 1.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "90027b5b-1bcb-512f-a48f-1dbe77ea8146",
+    "name": "Замена натяжителя цепи ГРМ",
+    "default_hours": 2.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "9f7a8b62-5c99-55e9-ad29-eb622fa4e663",
+    "name": "Замена опоры КПП",
+    "default_hours": 1,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "fb9de759-b6aa-55dd-99f5-e1eb006bba6e",
+    "name": "Замена опоры двигателя",
+    "default_hours": 1.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "95f3a61f-3595-51ec-a2d5-d8679c827a28",
+    "name": "Замена охлаждающей жидкости",
+    "default_hours": 1,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "36f899aa-2f51-5df4-82ef-f0fab9a61683",
+    "name": "Замена патрубка турбины",
+    "default_hours": 1.2,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "0ceb5ba7-09ce-592e-b810-35fb5c7e059c",
+    "name": "Замена переднего рычага",
+    "default_hours": 1.4,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "5cda668a-4579-5dc5-bc97-998961659865",
+    "name": "Замена переднего сальника коленвала",
+    "default_hours": 2.2,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "8754c4bc-78ef-52a7-b45b-c3ca505704b2",
+    "name": "Замена передних амортизаторов",
+    "default_hours": 2,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "829ee2b0-e121-52d3-9bf4-a8b47e5925cd",
+    "name": "Замена передних стоек стабилизатора",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "e4d4ef0c-4f1a-543a-9f4c-f962a91dd489",
+    "name": "Замена передних тормозных дисков и колодок",
+    "default_hours": 1.6,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "42522f35-4945-50e1-9c9d-394147576c1e",
+    "name": "Замена передних тормозных колодок",
+    "default_hours": 1,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "f0cde0fe-77bf-5a70-b5c2-f617de0ab043",
+    "name": "Замена прокладки клапанной крышки",
+    "default_hours": 1.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "85a6488e-207d-544c-994d-071831706e4f",
+    "name": "Замена прокладки приёмной трубы",
+    "default_hours": 1.3,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "31be6ef5-0d8b-5a0b-bef9-efad523971c6",
+    "name": "Замена рабочего цилиндра сцепления",
+    "default_hours": 1.2,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "56981f6c-e908-519e-a927-2ba41e03cf9a",
+    "name": "Замена радиатора охлаждения",
+    "default_hours": 3,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "b860d531-e044-5a60-a262-39e97bf9b3b2",
+    "name": "Замена расширительного бачка",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "a2a8f8c4-cbb9-5790-a8dc-8799e0961bce",
+    "name": "Замена рулевого наконечника",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "6357edd2-14c9-504a-b57b-4139196e3f5b",
+    "name": "Замена сайлентблоков подрамника",
+    "default_hours": 3,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "29009473-9e45-5393-9760-e3df3eca6f2b",
+    "name": "Замена салонного фильтра",
+    "default_hours": 0.4,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "9ff51d46-1789-5543-bcca-eb0c64c91074",
+    "name": "Замена свечей зажигания",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "f491b453-bfcc-5cc8-892f-e391fcf942f6",
+    "name": "Замена стартера",
+    "default_hours": 1.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "d439fac8-e3e4-50f3-9a45-1b4d02e274e5",
+    "name": "Замена ступичного подшипника (передний)",
+    "default_hours": 1.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "fc4d725e-eb50-59f4-8f90-0247c517c593",
+    "name": "Замена сцепления",
+    "default_hours": 5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "074a8a57-c5ea-5768-98e9-ab75d46cb229",
+    "name": "Замена термостата",
+    "default_hours": 1.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "1808ce50-aaa1-5227-b448-86565b43f117",
+    "name": "Замена топливного фильтра",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "11c5f40b-aaa6-5623-ab6d-759d4be1030c",
+    "name": "Замена тормозного шланга",
+    "default_hours": 0.7,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "a41f9e0d-0d35-58dd-b2f7-74c28e167cf6",
+    "name": "Замена тормозной жидкости",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "d8ed88a0-2843-503c-ba4f-c56c5d80025f",
+    "name": "Замена цепи ГРМ (R56/N14)",
+    "default_hours": 6,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "a52185bd-d54f-5177-8bb4-cfa867405245",
+    "name": "Замена щёток стеклоочистителя",
+    "default_hours": 0.2,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "d26fcc0c-ca56-53f6-b62a-f87e623aff1f",
+    "name": "Заправка кондиционера",
+    "default_hours": 0.8,
+    "default_price": 2400,
+    "active": true
+  },
+  {
+    "id": "229e4896-3853-56e3-b653-85916af6850b",
+    "name": "Компьютерная диагностика всех систем",
+    "default_hours": 1,
+    "default_price": 2200,
+    "active": true
+  },
+  {
+    "id": "3c4e6c7f-6a1e-5cb7-bb51-e7963109560e",
+    "name": "Поиск течей и утечек масла",
+    "default_hours": 0.8,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "2bd52098-be33-5cec-af49-f20a7d313bc0",
+    "name": "Полировка фар",
+    "default_hours": 1.5,
+    "default_price": 3500,
+    "active": true
+  },
+  {
+    "id": "7773b4eb-8176-553e-8cdd-61346c4053a9",
+    "name": "Правка литого диска",
+    "default_hours": null,
+    "default_price": 2500,
+    "active": true
+  },
+  {
+    "id": "bb873703-5347-5237-a9ac-555a7471718f",
+    "name": "Предпродажная проверка автомобиля",
+    "default_hours": 1.5,
+    "default_price": 3000,
+    "active": true
+  },
+  {
+    "id": "cfa09b9e-c03a-5073-948c-39c2f4f86523",
+    "name": "Промывка масляной системы двигателя",
+    "default_hours": 0.7,
+    "default_price": 1500,
+    "active": true
+  },
+  {
+    "id": "e0ac6ed1-616c-5b3f-8d81-3000d911f153",
+    "name": "Развал-схождение",
+    "default_hours": 1,
+    "default_price": 3000,
+    "active": true
+  },
+  {
+    "id": "28500103-ac41-5638-aec7-dd2b67cb8832",
+    "name": "Ремонт прокола",
+    "default_hours": 0.3,
+    "default_price": 700,
+    "active": true
+  },
+  {
+    "id": "e95213eb-4c47-510d-a534-db6703e60f30",
+    "name": "Ремонт суппорта (чистка, смазка направляющих)",
+    "default_hours": 1.2,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "0ad224c1-9dd8-5742-81b8-a5b4819ff727",
+    "name": "ТО (регламент)",
+    "default_hours": 2.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "fe64956a-4f27-519b-a021-23f1adabf289",
+    "name": "ТО расширенное (масло, фильтры, свечи)",
+    "default_hours": 3.5,
+    "default_price": null,
+    "active": true
+  },
+  {
+    "id": "5dae9135-4963-5fd3-813b-b9c9989a3043",
+    "name": "Хранение комплекта колёс (сезон)",
+    "default_hours": null,
+    "default_price": 3500,
+    "active": true
+  },
+  {
+    "id": "a53dd643-3ed8-5022-8313-8472fb7bfbf8",
+    "name": "Шиномонтаж (сезонная замена)",
+    "default_hours": 1,
+    "default_price": 3200,
+    "active": true
+  }
+]
