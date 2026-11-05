@@ -26,3 +26,25 @@ npm run fixtures:check   # детерминизм: сид → экспорт →
 - `apply-template` — с явным `part_template_ids` (детали по умолчанию без масла), как шлёт модалка.
 - Экспорт прерван посреди героя (kill) — в базе может остаться копия: `npm run seed:demo -- --force --now=…`.
 - Доска: колонка «Выдана» — 6 последних по `closed_at`. Дашборд — `scripts/dashboard.sql`.
+
+## Рендер (Remotion 4.0.541)
+
+```bash
+npm run studio                                          # превью
+npm run still -- Debug-WorkOrder out/check/wo.png       # один кадр
+npm run compositions                                    # список композиций
+# песочница без скачивания Chrome:
+export REMOTION_BROWSER=/path/to/chrome-headless-shell  # скрипты передают --browser-executable
+```
+
+- Скрипты задают `TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru` (`cross-env`): от `TZ` зависит
+  время событий календаря (под UTC они съезжают на 3 ч), от `LANG` — формат нативного
+  `datetime-local` (`19.11.2026, 14:00`, а не `11/19/2026, 02:00 PM`).
+- Сцены рендерят настоящие View из `client/src` через алиас `@crm`; React, роутер, query, dnd-kit,
+  lucide и date-fns — одна копия из `video/node_modules` (алиасы в `remotion.config.ts`);
+  `lib/api` подменён заглушкой `src/providers/mockApi.ts`, которая бросает при вызове.
+- Глобально подключены все CSS фич CRM в порядке приложения (`src/providers/crm-styles.ts`) —
+  в приложении они глобальные (`.back-link` наряда живёт в `clients/card.css`).
+- Шрифты — `@fontsource` (Inter, JetBrains Mono с кириллицей) из бандла, без сети.
+- id композиций — только `a-z A-Z 0-9 -` (Remotion запрещает `_`): `Debug-Board`, не `Debug_Board`.
+- Лого сайдбара — обрезанные `public/brand/garage-crm-logo-{light,dark}-sidebar.png`.

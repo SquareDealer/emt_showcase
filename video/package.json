@@ -6,14 +6,42 @@
     "fixtures": "TZ=Europe/Moscow tsx scripts/export-fixtures.ts",
     "fixtures:check": "npm --prefix .. run seed:demo -- --force --now=2026-11-18 && npm run fixtures && git add -A src/fixtures public/docs && npm --prefix .. run seed:demo -- --force --now=2026-11-18 && npm run fixtures && git diff --exit-code src/fixtures public/docs",
     "test": "TZ=Europe/Moscow vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "studio": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion studio ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
+    "still": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion still ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
+    "render": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion render ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
+    "compositions": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion compositions ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
     "@types/pg": "8.11.10",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "cross-env": "7.0.3",
     "pg": "8.13.1",
     "tsx": "4.19.2",
     "typescript": "5.9.3",
     "vitest": "2.1.9"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "6.3.1",
+    "@dnd-kit/sortable": "8.0.0",
+    "@dnd-kit/utilities": "3.2.2",
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@remotion/bundler": "4.0.541",
+    "@remotion/cli": "4.0.541",
+    "@remotion/google-fonts": "4.0.541",
+    "@remotion/media": "4.0.541",
+    "@remotion/transitions": "4.0.541",
+    "@remotion/zod-types": "4.0.541",
+    "@tanstack/react-query": "5.101.0",
+    "date-fns": "3.6.0",
+    "lucide-react": "0.454.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.4",
+    "remotion": "4.0.541",
+    "zod": "4.6.7"
   }
 }

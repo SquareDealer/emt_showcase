@@ -13,8 +13,8 @@ import type {
   VehicleGeneration,
   WorkOrder,
   WorkOrderStatus,
-} from '../../../client/src/lib/types';
-import type { DashboardData } from '../../../client/src/features/dashboard/types';
+} from '@crm/lib/types';
+import type { DashboardData } from '@crm/features/dashboard/types';
 
 import metaJson from './meta.json';
 import settingsJson from './settings.json';

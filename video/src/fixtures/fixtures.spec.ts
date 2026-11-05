@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { HERO, heroSchedule } from '../../../demo/seed/hero';
-import { orderTotal } from '../../../client/src/lib/format';
+import { orderTotal } from '@crm/lib/format';
 import {
   DEMO_NOW,
   blocksWeek,
