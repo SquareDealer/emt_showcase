@@ -10,6 +10,11 @@
     "studio": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion studio ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
     "still": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion still ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
     "render": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion render ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}",
+    "render:all": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru tsx scripts/render-all.ts",
+    "render:hero": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru tsx scripts/render-all.ts hero",
+    "render:social": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru tsx scripts/render-all.ts social",
+    "render:loops": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru tsx scripts/render-all.ts loops",
+    "render:stills": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru tsx scripts/render-all.ts stills",
     "prerender:mobile": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion render ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER} MobileMaster public/prerender/mobile-master.mp4 --codec=h264 --muted",
     "loops:check": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru tsx scripts/loop-diff.ts",
     "compositions": "cross-env TZ=Europe/Moscow LANG=ru_RU.UTF-8 LANGUAGE=ru remotion compositions ${REMOTION_BROWSER:+--browser-executable=$REMOTION_BROWSER}"

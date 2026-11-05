@@ -56,3 +56,31 @@ export REMOTION_BROWSER=/path/to/chrome-headless-shell  # скрипты пер�
   `LoopCrossfade` лишь страхует. Проверка — `npm run loops:check` (`scripts/loop-diff.ts`: still
   кадров 0 и `dur−1`, доля пикселей с разницей > 16 в любом канале ≤ 1 %). Рендер:
   `npm run render -- LoopBoard out/loops/board.webm --codec=vp9 --muted` (и `.mp4 --codec=h264`).
+- Стиллы (`src/compositions/Stills.tsx`, папка `Stills` в Studio): `Cover` 1920×1080 (рендер в `--scale=2`,
+  наклонённое окно сметы + телефон с кадром 0 пререндера + лого), `OG` 1200×630 (лого, строка intro,
+  карточка итогов сметы ×1.85 — читается в ширину 600 px), `ReadmeEstimate` и `ReadmeBoard` 1600×1000
+  (окно 1:1, без подписей и курсора). Состояния — финал истории героя из тех же фикстур.
+
+## Финальный рендер
+
+```bash
+npm run render:all -- --concurrency=3     # всё: hero, social, лупы, стиллы → out/ (gitignored)
+npm run render:hero                       # или по группе: render:social / render:loops / render:stills
+```
+
+`scripts/render-all.ts` собирает бандл один раз (`out/bundle`) и гонит `remotion render|still` по списку
+`scripts/render-jobs.ts` (проверяется `render-jobs.spec.ts`); флаги после `--` уходят в каждый вызов.
+
+| Выход | Композиция | Флаги |
+|---|---|---|
+| `out/hero.mp4` | `Hero` | h264, `--crf=16 --image-format=png` |
+| `out/social.mp4` | `HeroSocial` | h264, `--image-format=png` |
+| `out/loops/<луп>.webm` / `.mp4` | `Loop*` | vp9 / h264, `--muted` |
+| `out/cover.png` | `Cover` | `--scale=2` (3840×2160) |
+| `out/og.png`, `out/readme-estimate.png`, `out/readme-board.png` | `OG`, `ReadmeEstimate`, `ReadmeBoard` | — |
+
+- Ни у одного `render*`/`still` нет npm-хука `pre…`: `prerender:mobile` запускается только руками, а
+  `public/` после `render:all` остаётся чистым (`git status public`). Скрипта `render:mobile` нет нарочно —
+  npm счёл бы `prerender:mobile` его pre-хуком.
+- Длительность проверять по видеопотоку, не по контейнеру (AAC добавляет ~16 мс):
+  `ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames,duration out/hero.mp4`.
