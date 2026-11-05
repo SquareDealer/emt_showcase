@@ -8,9 +8,11 @@ import { LoopBoard, LoopBooking, LoopDiscounts, LoopEstimate, LoopMasterMobile, 
 import { Cover, OG, ReadmeBoard, ReadmeEstimate, STILLS } from './compositions/Stills';
 import { LOOP_DEFS, LOOP_H, LOOP_W, type LoopId } from './compositions/loop-defs';
 import { defaultProps, showcaseSchema, type ShowcaseProps } from './schema';
-import { FPS, SCENES, SCENES_SOCIAL, totalDuration } from './timing';
+import { FPS, SCENES, SCENES_SOCIAL, totalDuration, type SceneId } from './timing';
 
 const HERO_FRAMES = totalDuration(SCENES);
+/** A debug scene runs as long as the scene does in the hero. */
+const sceneDur = (id: SceneId) => SCENES.find((s) => s.id === id)!.dur;
 const SOCIAL_FRAMES = totalDuration(SCENES_SOCIAL);
 
 const LOOP_COMPONENTS: Record<LoopId, (p: ShowcaseProps) => JSX.Element> = {
@@ -87,14 +89,14 @@ export const RemotionRoot = () => {
         <Composition id="Debug-Calendar" component={DebugCalendar} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
         <Composition id="Debug-DashboardStatic" component={DebugDashboard} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
         <Composition id="Debug-Kit" component={DebugKit} durationInFrames={90} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
-        <Composition id="Debug-Intro" component={DebugIntro} durationInFrames={75} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
-        <Composition id="Debug-Booking" component={DebugBooking} durationInFrames={180} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
-        <Composition id="Debug-Estimate" component={DebugEstimate} durationInFrames={270} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
-        <Composition id="Debug-Board" component={DebugBoardScene} durationInFrames={150} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
-        <Composition id="Debug-Docs" component={DebugDocsScene} durationInFrames={120} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
-        <Composition id="Debug-Search" component={DebugSearchScene} durationInFrames={150} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
-        <Composition id="Debug-Dashboard" component={DebugDashboardScene} durationInFrames={150} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
-        <Composition id="Debug-Outro" component={DebugOutro} durationInFrames={120} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Intro" component={DebugIntro} durationInFrames={sceneDur('intro')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Booking" component={DebugBooking} durationInFrames={sceneDur('booking')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Estimate" component={DebugEstimate} durationInFrames={sceneDur('estimate')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Board" component={DebugBoardScene} durationInFrames={sceneDur('board')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Docs" component={DebugDocsScene} durationInFrames={sceneDur('docs')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Search" component={DebugSearchScene} durationInFrames={sceneDur('search')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Dashboard" component={DebugDashboardScene} durationInFrames={sceneDur('dashboard')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Outro" component={DebugOutro} durationInFrames={sceneDur('outro')} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
         <Composition id="Debug-Loop" component={DebugLoop} durationInFrames={60} fps={30} width={1920} height={1080} />
       </Folder>
     </>

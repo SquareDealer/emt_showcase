@@ -17,12 +17,12 @@ describe('render jobs', () => {
     expect(social.flags).toContain('--image-format=png');
   });
 
-  it('every loop as a muted webm (vp9) and mp4 (h264) under out/loops/', () => {
+  it('every loop as a muted webm (vp9) and mp4 (h264) under out/loops/, png frames', () => {
     for (const d of LOOP_DEFS) {
       const jobs = RENDER_JOBS.filter((j) => j.id === d.id);
       expect(jobs.map((j) => j.out)).toEqual([`out/loops/${d.file}.webm`, `out/loops/${d.file}.mp4`]);
-      expect(jobs[0].flags).toEqual(['--codec=vp9', '--muted']);
-      expect(jobs[1].flags).toEqual(['--codec=h264', '--muted']);
+      expect(jobs[0].flags).toEqual(['--codec=vp9', '--muted', '--image-format=png']);
+      expect(jobs[1].flags).toEqual(['--codec=h264', '--muted', '--image-format=png']);
     }
   });
 
@@ -71,5 +71,17 @@ describe('package.json render scripts', () => {
 
   it('render scripts pin the time zone and locale', () => {
     for (const s of render) expect(scripts[s]).toMatch(/TZ=Europe\/Moscow LANG=ru_RU\.UTF-8 LANGUAGE=ru/);
+  });
+
+  it('the browser path is quoted (a path with spaces stays one argument)', () => {
+    const uses = Object.entries(scripts).filter(([, cmd]) => cmd.includes('REMOTION_BROWSER'));
+    expect(uses.length).toBeGreaterThan(0);
+    for (const [name, cmd] of uses) {
+      expect(cmd, name).toContain('${REMOTION_BROWSER:+"--browser-executable=$REMOTION_BROWSER"}');
+    }
+  });
+
+  it('prerender:mobile feeds the encoder png frames, like every deliverable', () => {
+    expect(scripts['prerender:mobile']).toContain('--image-format=png');
   });
 });

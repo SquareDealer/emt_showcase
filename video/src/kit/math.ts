@@ -5,7 +5,8 @@ import { Easing, interpolate, spring } from 'remotion';
 export type CamKey = { at: number; x: number; y: number; zoom: number };
 export type CursorPoint = { at: number; x: number; y: number };
 
-const CAM_EASE = Easing.bezier(0.65, 0, 0.35, 1);
+/** The camera's curve; scenes that move something with the camera (a board pan, a loop reset) share it. */
+export const CAM_EASE = Easing.bezier(0.65, 0, 0.35, 1);
 const CURSOR_EASE = Easing.inOut(Easing.cubic);
 
 /** Round to kopecks via decimal-string shift (binary-float safe for x.xx5), symmetric for negatives. */

@@ -3,7 +3,7 @@
  * `still --frame=0` and `--frame=<dur-1>` and compare them pixel by pixel. A pixel differs when a
  * channel moves by more than 16; the check fails when more than 1 % of the pixels differ.
  *
- *   tsx scripts/loop-diff.ts                     all loops (bundles once into out/loops/check)
+ *   tsx scripts/loop-diff.ts                     all loops (bundles once into out/check/loops)
  *   tsx scripts/loop-diff.ts LoopBoard …         only these
  *   tsx scripts/loop-diff.ts a.png b.png         just compare two PNGs
  *
@@ -39,7 +39,8 @@ function main(argv: string[]) {
   const unknown = wanted.filter((id) => !LOOP_DEFS.some((d) => d.id === id));
   if (unknown.length) throw new Error(`unknown loop(s): ${unknown.join(', ')}`);
 
-  const dir = path.join('out', 'loops', 'check');
+  // Not under out/loops/: that folder holds the deliverables only.
+  const dir = path.join('out', 'check', 'loops');
   const bundle = path.join(dir, 'bundle');
   mkdirSync(dir, { recursive: true });
   console.log(`bundling → ${bundle}`);

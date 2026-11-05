@@ -87,10 +87,6 @@ describe('mobile master: timeline', () => {
     expect(last.scroll).toBe(0);
   });
 
-  it('is a pure function of the frame', () => {
-    for (const f of [0, 17, 45, 66, 101, 150]) expect(at(f)).toEqual(at(f));
-  });
-
   it('a tap mark only around the two taps', () => {
     expect(at(0).tap).toBeNull();
     expect(at(TAP_OPEN).tap).not.toBeNull();

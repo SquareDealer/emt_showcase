@@ -15,13 +15,14 @@ export type RenderJob = {
 export const RENDER_GROUPS: readonly RenderGroup[] = ['hero', 'social', 'loops', 'stills'];
 
 export const RENDER_JOBS: readonly RenderJob[] = [
-  // Final cut: lossless PNG frames into the encoder (the config default, jpeg, is for drafts).
+  // Every video deliverable feeds the encoder lossless PNG frames; the config default (jpeg) is for
+  // drafts and Studio only. The hero also gets crf 16.
   { group: 'hero', kind: 'render', id: 'Hero', out: 'out/hero.mp4', flags: ['--codec=h264', '--crf=16', '--image-format=png'] },
   { group: 'social', kind: 'render', id: 'HeroSocial', out: 'out/social.mp4', flags: ['--codec=h264', '--image-format=png'] },
-  // Feature loops: webm (vp9) for the site, mp4 (h264) as the fallback; silent.
+  // Feature loops: webm (vp9) for the site, mp4 (h264) as the fallback; silent, png frames.
   ...LOOP_DEFS.flatMap((d): RenderJob[] => [
-    { group: 'loops', kind: 'render', id: d.id, out: `out/loops/${d.file}.webm`, flags: ['--codec=vp9', '--muted'] },
-    { group: 'loops', kind: 'render', id: d.id, out: `out/loops/${d.file}.mp4`, flags: ['--codec=h264', '--muted'] },
+    { group: 'loops', kind: 'render', id: d.id, out: `out/loops/${d.file}.webm`, flags: ['--codec=vp9', '--muted', '--image-format=png'] },
+    { group: 'loops', kind: 'render', id: d.id, out: `out/loops/${d.file}.mp4`, flags: ['--codec=h264', '--muted', '--image-format=png'] },
   ]),
   { group: 'stills', kind: 'still', id: 'Cover', out: 'out/cover.png', flags: ['--scale=2'] },
   { group: 'stills', kind: 'still', id: 'OG', out: 'out/og.png', flags: [] },

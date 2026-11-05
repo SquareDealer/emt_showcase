@@ -1,5 +1,5 @@
 import { useId, type CSSProperties, type ReactNode } from 'react';
-import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { AppShellView } from '@crm/components/AppShellView';
 import { BoardCard, BoardView, type Columns } from '@crm/features/board/BoardView';
 import { navForRole } from '@crm/lib/view-helpers';
@@ -13,7 +13,7 @@ import { Background } from '../kit/Background';
 import { Camera } from '../kit/Camera';
 import { Cursor } from '../kit/Cursor';
 import { Callout } from '../kit/Callout';
-import { cursorAt, type CamKey, type CursorPoint } from '../kit/math';
+import { CAM_EASE, cursorAt, type CamKey, type CursorPoint } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS, SCENE_CLICKS } from '../timing';
 
@@ -167,7 +167,7 @@ export function boardState(frame: number, fps: number, social = false) {
     scroll: social ? 0 : interpolate(frame, [PAN_FROM, PAN_TO], [0, PAN], {
       ...clamp,
       // The camera's own curve (kit/math CAM_EASE), so the pan and the camera slide move as one.
-      easing: Easing.bezier(0.65, 0, 0.35, 1),
+      easing: CAM_EASE,
     }),
   };
 }

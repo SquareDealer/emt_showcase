@@ -291,7 +291,8 @@ guard'а (любой мастер мог снести каталог).
   `assets/emt-logo-light-theme.png` при конфликте оставляем нашим.
 - **Команды** (корень): `npm run seed:demo -- --force --now=2026-11-18`, `npm run seed:demo:verify`.
   В `video/`: `npm run fixtures` (экспорт API демо-базы в `src/fixtures`, нужен запущенный API
-  и `DEMO_API_URL`), `npm run studio`, `npm run render:*` (hero/social/лупы/mobile).
+  и `DEMO_API_URL`), `npm run studio`, `npm run render:all|hero|social|loops|stills`; mobile —
+  `npm run prerender:mobile` (вручную, mp4 в `public/prerender/` — закоммиченный вход рендера).
   Демо-API: `DATABASE_URL=…/tatarin_demo JWT_SECRET=… SEED_OWNER_PASSWORD=$DEMO_PASSWORD node dist/main.js`.
 - **Детерминизм:** анимация только от `useCurrentFrame()` (30 fps, 120 BPM → 15 кадров на удар);
   никаких CSS `transition/animation`, `setTimeout`, `Math.random()`, `Date.now()`, `new Date()` без

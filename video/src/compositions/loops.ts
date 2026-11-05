@@ -1,9 +1,9 @@
 import type { CSSProperties } from 'react';
-import { Easing, interpolate } from 'remotion';
+import { interpolate } from 'remotion';
 import { orderTotal } from '@crm/lib/format';
 import type { PriceListRow, VehicleGeneration, WorkOrderStatus } from '@crm/lib/types';
 import { generations, priceList, woHero } from '../fixtures';
-import { countUp, typed, type CamKey, type CursorPoint } from '../kit/math';
+import { CAM_EASE, countUp, typed, type CamKey, type CursorPoint } from '../kit/math';
 import { FPS, SCENE_CLICKS } from '../timing';
 import { CALLOUT_AT as BOOKING_CALLOUT_AT, CAM as BOOKING_CAM, CURSOR as BOOKING_CURSOR } from '../scenes/Booking';
 import {
@@ -45,7 +45,6 @@ const toLoop = (k: CamKey): CamKey => ({ ...k, zoom: k.zoom * LOOP_SCALE });
 
 const s = (f: number) => f / FPS;
 const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
-const CAM_EASE = Easing.bezier(0.65, 0, 0.35, 1);
 /** 1 → 0 over `dur` frames from `from`. */
 const fadeOut = (t: number, from: number, dur = 6) => interpolate(t, [from, from + dur], [1, 0], clamp);
 /** Opacity of an overlay that appears at `at` and fades out from `out` (6 frames). */

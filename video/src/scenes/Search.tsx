@@ -1,4 +1,4 @@
-import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { AppShellView } from '@crm/components/AppShellView';
 import { SearchPaletteView } from '@crm/components/SearchPaletteView';
 import { ClientCardView } from '@crm/features/clients/ClientCardView';
@@ -12,7 +12,7 @@ import { Background } from '../kit/Background';
 import { Camera } from '../kit/Camera';
 import { Callout } from '../kit/Callout';
 import { Cursor } from '../kit/Cursor';
-import { SOCIAL_STAGE, cursorAt, socialKeyForView, typed, type CamKey, type CursorPoint } from '../kit/math';
+import { CAM_EASE, SOCIAL_STAGE, cursorAt, socialKeyForView, typed, type CamKey, type CursorPoint } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS, SCENE_CLICKS } from '../timing';
 import { BOARD_LAST_FRAME, BoardWindow, boardState } from './Board';
@@ -106,8 +106,6 @@ if (ORDERS.length !== 13) throw new Error(`Search: ${ORDERS.length} orders on th
 
 const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 const s = (f: number) => f / FPS;
-/** kit/math's camera curve, so the page scroll and the camera move as one. */
-const CAM_EASE = Easing.bezier(0.65, 0, 0.35, 1);
 
 // ---- cursor ----
 /** Click point on the hero hit: its vertical centre (between the VIN and the owner's name), left of its middle. */
@@ -139,6 +137,7 @@ export function searchState(frame: number, fps: number, social = false) {
     cursor: cursorAt(frame, fps, CURSOR),
     scroll: interpolate(frame, [social ? SOCIAL_MOVE_FROM : MOVE_FROM, MOVE_TO], [0, social ? SCROLL.social : SCROLL.wide], {
       ...clamp,
+      // kit/math's camera curve, so the page scroll and the camera move as one.
       easing: CAM_EASE,
     }),
     /** Behind the palette: the Board scene's last frame in the same layout. */
