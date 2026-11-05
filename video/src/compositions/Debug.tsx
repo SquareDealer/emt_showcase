@@ -185,7 +185,7 @@ export function DebugCalendar({ theme }: DebugProps) {
 export function DebugDashboard({ theme }: DebugProps) {
   // The dashboard is video-only and has no route in the CRM: no nav item is active.
   return (
-    <Stage theme={theme} route="/dashboard">
+    <Stage theme={theme} route="/overview">
       <DashboardView data={dashboard} />
     </Stage>
   );

@@ -7,6 +7,7 @@ import { EstimateScene } from '../scenes/Estimate';
 import { BoardScene } from '../scenes/Board';
 import { DocsScene } from '../scenes/Docs';
 import { SearchScene } from '../scenes/Search';
+import { DashboardScene } from '../scenes/Dashboard';
 import { OutroScene } from '../scenes/Outro';
 import type { ShowcaseProps } from '../schema';
 import { SCENES, SCENES_SOCIAL, sceneStart } from '../timing';
@@ -16,7 +17,7 @@ const Placeholder = ({ scenes, props }: { scenes: readonly SceneDef[]; props: Sh
   const frame = useCurrentFrame();
   const active = [...scenes].reverse().find((s) => frame >= sceneStart(s.id, scenes)) ?? scenes[0];
   const start = sceneStart(active.id, scenes);
-  const real = (id: 'intro' | 'booking' | 'estimate' | 'board' | 'docs' | 'search' | 'outro', Scene: typeof IntroScene) => {
+  const real = (id: 'intro' | 'booking' | 'estimate' | 'board' | 'docs' | 'search' | 'dashboard' | 'outro', Scene: typeof IntroScene) => {
     const def = scenes.find((s) => s.id === id);
     return def ? (
       <Sequence from={sceneStart(id, scenes)} durationInFrames={def.dur} layout="none">
@@ -37,6 +38,7 @@ const Placeholder = ({ scenes, props }: { scenes: readonly SceneDef[]; props: Sh
       {real('board', BoardScene)}
       {real('docs', DocsScene)}
       {real('search', SearchScene)}
+      {real('dashboard', DashboardScene)}
       {real('outro', OutroScene)}
     </VideoProviders>
   );

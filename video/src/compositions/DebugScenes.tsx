@@ -7,6 +7,7 @@ import { EstimateScene } from '../scenes/Estimate';
 import { BoardScene } from '../scenes/Board';
 import { DocsScene } from '../scenes/Docs';
 import { SearchScene } from '../scenes/Search';
+import { DashboardScene } from '../scenes/Dashboard';
 import { OutroScene } from '../scenes/Outro';
 
 export const DebugIntro = (p: ShowcaseProps) => (
@@ -42,5 +43,10 @@ export const DebugDocsScene = (p: ShowcaseProps) => (
 export const DebugSearchScene = (p: ShowcaseProps) => (
   <VideoProviders theme={p.theme}>
     <SearchScene {...p} />
+  </VideoProviders>
+);
+export const DebugDashboardScene = (p: ShowcaseProps) => (
+  <VideoProviders theme={p.theme}>
+    <DashboardScene {...p} />
   </VideoProviders>
 );
