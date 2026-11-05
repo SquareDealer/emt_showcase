@@ -300,3 +300,7 @@ guard'а (любой мастер мог снести каталог).
 - **Песочницы без скачивания Chrome:** путь к браузеру через env `REMOTION_BROWSER`
   (`--browser-executable`), в конфиг не вшивать.
 - `remotion` и все `@remotion/*` — одна точная версия без `^`.
+- Каркас `video/`: View из `client/src` через `@crm`, дедуп react/router/query/dnd-kit/lucide/date-fns
+  на `video/node_modules` и подмена `lib/api` — в `remotion.config.ts`; `VideoProviders` (now, CSS,
+  шрифты) без роутера — `MemoryRouter` у каждого `AppWindow` (роутеры не вкладываются). Шрифты —
+  `@fontsource` из бандла. id композиций без `_` (`Debug-Board`).
