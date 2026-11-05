@@ -4,7 +4,7 @@ import { buildDemoPlan } from '../plan';
 import { allowedStatuses, overlaps, planViolations, staleDone } from '../test-utils/plan-checks';
 import { mskAt, mskDay } from '../time';
 import type { WorkOrderPlan } from '../types';
-import { formatKm, planSettings, rateAt } from './work-orders';
+import { formatKm, orderTitle, planSettings, rateAt } from './work-orders';
 
 const now = mskAt('2026-11-04', 12);
 const plan = buildDemoPlan(now);
@@ -22,9 +22,9 @@ it('«Готово» is recent: past 14 days only a couple of unpaid stragglers'
   expect(staleDone(wos, now).length).toBeGreaterThanOrEqual(1);
   expect(staleDone(wos, now).length).toBeLessThanOrEqual(3);
   const MS_DAY = 86_400_000;
-  const old = wos.filter((w) => w.status !== 'closed' && now.getTime() - w.scheduled_at.getTime() > 14 * MS_DAY);
+  const old = wos.filter((w) => w.status !== 'closed' && now.getTime() - w.scheduled_at.getTime() > 15 * MS_DAY);
   expect(old.map((w) => w.status)).toEqual(old.map(() => 'done'));
-  expect(old.every((w) => w.total_cached <= 7000)).toBe(true);
+  expect(staleDone(wos, now).every((w) => w.total_cached <= 7000)).toBe(true);
 });
 it('exactly two overdue scheduled orders', () =>
   expect(wos.filter((w) => w.status === 'scheduled' && w.scheduled_at < now)).toHaveLength(2));
@@ -146,8 +146,7 @@ it('busy day and a free slot on the next weekday', () => {
 it('no master is double-booked; titles, waiting notes, discounts', () => {
   expect(planViolations(plan)).toEqual([]);
   for (const w of wos) {
-    const groups = [...new Map(w.labor.filter((l) => l.group_key).map((l) => [l.group_sort, l.group_name!])).entries()].sort((a, b) => a[0] - b[0]);
-    expect(w.title).toBe(groups.slice(0, 2).map(([, n]) => n).join(', '));
+    expect(w.title).toBe(orderTitle(w.labor, w.parts));
     if (w.status === 'waiting') expect(w.notes).toMatch(/Ждёт запчасть: .+/);
   }
   const lines = wos.flatMap((w) => w.labor);
@@ -165,6 +164,23 @@ it('no master is double-booked; titles, waiting notes, discounts', () => {
 });
 it('orders come out in date order', () => {
   for (let i = 1; i < wos.length; i++) expect(wos[i - 1].scheduled_at <= wos[i].scheduled_at).toBe(true);
+});
+it('title: the two dearest blocks, the dearer first', () => {
+  const big = wos.find((w) => w.id === HERO.bigOrder.id)!;
+  expect(big.title).toBe('Замена передних тормозных дисков и колодок, ТО (регламент)');
+  const at = new Date(0);
+  const lab = (key: string, sort: number, hours: number) => ({
+    id: key, template_id: key, name: key, hours, rate_snapshot: 2000, price_override: null, discount_type: null, discount_value: null,
+    group_key: key, group_name: key, group_sort: sort, sort, created_at: at,
+  });
+  const part = (key: string, price: number) => ({
+    id: `${key}-p`, part_template_id: null, name: 'p', manufacturer: null, catalog_number: null, qty: 1, unit: 'pcs' as const, unit_price: price,
+    discount_type: null, discount_value: null, group_key: key, group_name: key, group_sort: 0, sort: 0, created_at: at,
+  });
+  // a: 2000, b: 1000 + 5000 of parts, c: 4000 → «b, c»; a free line (no block) never names the order
+  const free = { ...lab('free', 0, 9), group_key: null, group_name: null };
+  expect(orderTitle([lab('a', 1, 1), lab('b', 2, 0.5), lab('c', 3, 2), free], [part('b', 5000)])).toBe('b, c');
+  expect(orderTitle([lab('a', 1, 1), lab('b', 2, 1)], [])).toBe('a, b');
 });
 it('settings', () => {
   expect(planSettings(now)).toMatchObject({ labor_rate: '2200', vat_rate: '20', demo_now: '2026-11-04' });

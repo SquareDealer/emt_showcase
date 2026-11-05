@@ -1,6 +1,6 @@
 import { HERO, heroSchedule } from './hero';
 import { buildDemoPlan } from './plan';
-import { deseasonalizedGrowth, fullMonthsInWindow, geoMean, monthlyRevenue } from './stats';
+import { categoryShare, deseasonalizedGrowth, fullMonthsInWindow, geoMean, monthlyRevenue, TIRE_PEAK_MIN_RATIO } from './stats';
 import { planViolations } from './test-utils/plan-checks';
 import { addDays, mskAt, mskDay } from './time';
 
@@ -20,6 +20,10 @@ it.each(days)('--now=%s', (day) => {
   expect(p.workOrders.filter((w) => mskDay(w.scheduled_at) === mskDay(freeSlot.startsAt)).length).toBeGreaterThanOrEqual(4);
   expect(p.workOrders.some((w) => w.status === 'waiting')).toBe(true);
   expect(p.workOrders.filter((w) => w.vehicle_id === HERO.bigOrder.vehicleId).length).toBeLessThanOrEqual(6);
+  const months = fullMonthsInWindow(now);
+  const oct = months.find((m) => m.endsWith('-10'));
+  const jul = months.find((m) => m.endsWith('-07'));
+  if (oct && jul) expect(categoryShare(p.workOrders, oct, 'tires', p.catalog)).toBeGreaterThanOrEqual(TIRE_PEAK_MIN_RATIO * categoryShare(p.workOrders, jul, 'tires', p.catalog));
   if (Number(day.slice(8, 10)) >= 5) {
     const g = deseasonalizedGrowth(monthlyRevenue(p.workOrders), fullMonthsInWindow(now));
     expect(geoMean(g)).toBeGreaterThanOrEqual(1.03);

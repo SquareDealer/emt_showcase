@@ -67,6 +67,12 @@ export function ticketStats(totals: number[]): { median: number; mean: number; p
   return { median: quantile(s, 0.5), mean: s.reduce((a, b) => a + b, 0) / s.length, p90: quantile(s, 0.9) };
 }
 
+/**
+ * October's tyre share of labor lines over July's. Measured over the 60-date sweep: 2.6–9.5 (median 3.8)
+ * with the ×2 autumn boost; the former 3× sat just under the minimum of the old ×6 boost (3.5).
+ */
+export const TIRE_PEAK_MIN_RATIO = 2;
+
 /** Share of catalog labor lines of one category among the catalog labor lines of orders scheduled in `month` (MSK). */
 export function categoryShare(orders: WorkOrderPlan[], month: string, category: TaskCategory, catalog: CatalogPlan): number {
   const cat = new Map(catalog.tasks.map((t) => [t.id, t.category]));

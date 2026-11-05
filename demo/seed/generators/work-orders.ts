@@ -23,6 +23,8 @@ import type {
   CatalogPlan,
   ClientPlan,
   FreeLabor,
+  LaborLinePlan,
+  PartLinePlan,
   StaffPlan,
   TaskPlan,
   VehiclePlan,
@@ -41,7 +43,8 @@ const MS_DAY = 86_400_000;
 const LEAD_WEIGHTS = [1.5, 5, 5, 4, 2, 1.2, 1, 0.8, 0.6, 0.5, 0.4];
 const MAX_PICKS = 6;
 const TIRE_PEAK_MONTHS = [10, 11];
-const TIRE_PEAK_FACTOR = 6;
+/** The autumn swap: a tyre work is twice as likely in October–November (plus SEASON_FACTOR's +30% volume). */
+const TIRE_PEAK_FACTOR = 2;
 /** The seasonal swap (with its balancing and wheel storage) belongs to the swap seasons; off-season only the odd straggler. */
 const SEASONAL_SWAP = new Set(['tire-change', 'wheel-balance', 'tire-storage']);
 const SWAP_MONTHS = [4, 5, 10, 11];
@@ -112,6 +115,24 @@ export function planSettings(demoNow: Date): Record<string, string> {
 /** 123450 → «123 450» with plain spaces (no Intl: its group separator differs between ICU builds). */
 export function formatKm(km: number): string {
   return String(km).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+/** The two most expensive blocks (labor + parts, before discounts), the dearer first; a tie goes to the earlier block. */
+export function orderTitle(labor: LaborLinePlan[], parts: PartLinePlan[]): string {
+  const blocks = new Map<string, { name: string; sort: number; cost: number }>();
+  const add = (l: { group_key: string | null; group_name: string | null; group_sort: number }, cost: number) => {
+    if (!l.group_key) return;
+    const b = blocks.get(l.group_key) ?? { name: l.group_name ?? '', sort: l.group_sort, cost: 0 };
+    b.cost += cost;
+    blocks.set(l.group_key, b);
+  };
+  for (const l of labor) add(l, l.price_override ?? (l.hours ?? 0) * l.rate_snapshot);
+  for (const p of parts) add(p, p.qty * p.unit_price);
+  return [...blocks.values()]
+    .sort((a, b) => b.cost - a.cost || a.sort - b.sort)
+    .slice(0, 2)
+    .map((b) => b.name)
+    .join(', ');
 }
 
 export interface WorkOrdersContext {
@@ -287,7 +308,7 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
     };
     const odometer = odometerAt(d.vehicle, new Date(Math.min(d.start.getTime(), nowMs)), demoNow);
     const waitingFor = status === 'waiting' ? (parts.length ? f.helpers.arrayElement(parts).name : f.helpers.arrayElement(WAITING_PARTS)) : null;
-    const groupNames = labor.filter((l) => l.group_key).sort((a, b) => a.group_sort - b.group_sort).map((l) => l.group_name as string);
+    const title = orderTitle(labor, parts);
 
     return {
       id: d.id,
@@ -295,7 +316,7 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
       client_id: d.client.id,
       assigned_master_id: d.masterId,
       status,
-      title: groupNames.slice(0, 2).join(', '),
+      title,
       notes: [`Пробег при приёме: ${formatKm(odometer)} км`, ...(waitingFor ? [`Ждёт запчасть: ${waitingFor}`] : [])].join('\n'),
       complaint: texts.complaint,
       recommendation: texts.recommendation,

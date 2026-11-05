@@ -13,7 +13,7 @@ import { DEMO_HOUR } from './config';
 import { resolveTemplatePartsPlan } from './generators/catalog';
 import { heroSchedule } from './hero';
 import { buildDemoPlan } from './plan';
-import { categoryShare, deseasonalizedGrowth, fullMonthsInWindow, geoMean, monthlyRevenue, paretoShare, ticketStats } from './stats';
+import { categoryShare, deseasonalizedGrowth, fullMonthsInWindow, geoMean, monthlyRevenue, paretoShare, ticketStats, TIRE_PEAK_MIN_RATIO } from './stats';
 import { monthKey, mskAt } from './time';
 import type { WorkOrderPlan, WorkOrderStatus } from './types';
 
@@ -503,7 +503,7 @@ async function checkStats(
     const so = categoryShare(withLabor, oct, 'tires', plan.catalog);
     const sj = categoryShare(withLabor, jul, 'tires', plan.catalog);
     out(`Шины: доля работ ${oct} ${f(so)}, ${jul} ${f(sj)}`);
-    if (!(so >= 3 * sj)) errors.push(`шины: ${oct} ${f(so)} < 3 × ${jul} ${f(sj)}`);
+    if (!(so >= TIRE_PEAK_MIN_RATIO * sj)) errors.push(`шины: ${oct} ${f(so)} < ${TIRE_PEAK_MIN_RATIO} × ${jul} ${f(sj)}`);
   }
   return errors;
 }
