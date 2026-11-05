@@ -147,7 +147,12 @@ it('no master is double-booked; titles, waiting notes, discounts', () => {
   expect(planViolations(plan)).toEqual([]);
   for (const w of wos) {
     expect(w.title).toBe(orderTitle(w.labor, w.parts));
-    if (w.status === 'waiting') expect(w.notes).toMatch(/Ждёт запчасть: .+/);
+    if (w.status === 'waiting') {
+      // the awaited part is on the order: its dearest line
+      const awaited = /Ждёт запчасть: (.+)$/m.exec(w.notes ?? '')?.[1];
+      const dearest = [...w.parts].sort((a, b) => b.qty * b.unit_price - a.qty * a.unit_price)[0];
+      expect(awaited).toBe(dearest?.name);
+    }
   }
   const lines = wos.flatMap((w) => w.labor);
   const discounted = lines.filter((l) => l.discount_type === 'percent' && l.discount_value === 10).length / lines.length;

@@ -3,7 +3,7 @@ import { MINI_GENERATIONS } from '../data/generations';
 import { makeFaker } from '../rng';
 import { mskAt, mskDay } from '../time';
 import { planClients } from './people';
-import { odometerAt, planVehicles } from './vehicles';
+import { MAX_KM, odometerAt, planVehicles } from './vehicles';
 
 const now = mskAt('2026-11-04', 12);
 const clients = planClients(makeFaker('clients', now), now);
@@ -55,7 +55,7 @@ it('hero cars', () => {
   expect(fleet.every((v) => v.make === 'MINI')).toBe(true);
   expect(fleet.map((v) => v.generationCode).sort()).toEqual(['F55', 'F55', 'F56', 'F56', 'F60', 'F60']);
   expect(vehicles.find((v) => v.id === HERO.bigOrder.vehicleId)).toMatchObject({
-    generationCode: 'F60', client_id: HERO.bigOrder.clientId, model: 'Cooper S', year: 2019,
+    generationCode: 'F60', client_id: HERO.bigOrder.clientId, model: 'Countryman', year: 2019,
   });
 });
 
@@ -83,6 +83,7 @@ it('vehicle is created after its client and mileage is plausible', () => {
     expect(v.created_at <= now).toBe(true);
     expect(v.mileage).toBe(odometerAt(v, now, now));
     expect(v.mileage / Math.max(1, Number(mskDay(now).slice(0, 4)) - v.year + 1)).toBeLessThanOrEqual(40000);
+    expect(v.mileage).toBeLessThanOrEqual(MAX_KM);
   }
 });
 

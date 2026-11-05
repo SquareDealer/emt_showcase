@@ -10,6 +10,8 @@ import type { ClientPlan, VehiclePlan } from '../types';
 
 const MS_YEAR = 365 * 86_400_000;
 const MS_MIN = 60_000;
+/** Odometer ceiling at DEMO_NOW. */
+export const MAX_KM = 300_000;
 
 function windowStart(demoNow: Date): Date {
   return mskAt(addDays(mskDay(demoNow), -HISTORY_DAYS), 0);
@@ -67,7 +69,7 @@ function slotsFor(c: ClientPlan): Slot[] {
       slots[i].fixed = { id: demoId('vehicle', `hero-fleet-${i + 1}`), mini: true, code };
     });
   } else if (c.id === HERO.bigOrder.clientId) {
-    slots[0].fixed = { id: HERO.bigOrder.vehicleId, mini: true, code: 'F60', model: 'Cooper S', year: 2019 };
+    slots[0].fixed = { id: HERO.bigOrder.vehicleId, mini: true, code: 'F60', model: 'Countryman', year: 2019 };
   }
   return slots;
 }
@@ -130,8 +132,11 @@ export function planVehicles(f: Faker, clients: ClientPlan[], demoNow: Date): Ve
       model = f.helpers.arrayElement(m.models);
       year = f.number.int({ min: 2008, max: Math.min(2024, demoYear) });
     }
-    const annualKm = fx.annual ?? Math.round(Math.min(22000, Math.max(4000, Math.exp(Math.log(12000) + 0.35 * f.number.float({ min: -2, max: 2 })))) / 100) * 100;
+    const drawnKm = Math.round(Math.min(22000, Math.max(4000, Math.exp(Math.log(12000) + 0.35 * f.number.float({ min: -2, max: 2 })))) / 100) * 100;
     const ageAtStart = Math.max(0.1, (wsStart.getTime() - mskAt(`${year}-07-01`, 0).getTime()) / MS_YEAR);
+    // An old car is driven less: the odometer at DEMO_NOW stays within MAX_KM.
+    const ageAtNow = ageAtStart + (demoNow.getTime() - wsStart.getTime()) / MS_YEAR;
+    const annualKm = fx.annual ?? Math.min(drawnKm, Math.floor(MAX_KM / ageAtNow / 100) * 100);
     const baseKm = fx.base ?? roundKm(annualKm * ageAtStart);
     const v: VehiclePlan = {
       id: fx.id,

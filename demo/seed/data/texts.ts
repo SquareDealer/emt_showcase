@@ -123,5 +123,4 @@ export const RECOMMENDATIONS: Record<TaskCategory, string[]> = {
 };
 
 /** Fallback for «Ждёт запчасть: …» when the order has no part lines. */
-export const WAITING_PARTS = ['Комплект прокладок', 'Датчик ABS', 'Опора двигателя', 'Патрубок системы охлаждения'];
 

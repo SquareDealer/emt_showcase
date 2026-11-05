@@ -123,6 +123,10 @@ export function planViolations(plan: DemoPlan): string[] {
   if (overdue.length !== 2) out.push(`overdue scheduled: ${overdue.length}`);
   for (const w of overdue) if (w.scheduled_at.getTime() + w.scheduled_duration_min * MS_MIN > now.getTime()) bad(w, 'overdue order is still running');
   if (!wos.some((w) => w.status === 'waiting')) out.push('no waiting order');
+  for (const w of wos.filter((x) => x.status === 'waiting')) {
+    const awaited = /^Ждёт запчасть: (.+)$/m.exec(w.notes ?? '')?.[1];
+    if (!awaited || !w.parts.some((p) => p.name === awaited)) bad(w, `waits for a part not on the order: ${awaited ?? '—'}`);
+  }
   const stale = staleDone(wos, now).length;
   if (stale < 1 || stale > 3) out.push(`stale done (> 14 days): ${stale}`);
 

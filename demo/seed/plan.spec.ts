@@ -71,8 +71,8 @@ it('settings values', () =>
   expect(plan.settings).toEqual({
     labor_rate: '2200',
     company_name: 'ООО «Гараж»',
-    company_inn: '0000000000',
-    company_address: 'г. Москва, ул. Примерная, д. 1',
+    company_inn: '',
+    company_address: 'г. Москва, Промышленный проезд, д. 12, стр. 3',
     company_phone: '+7 (555) 000-00-00',
     vat_rate: '20',
     working_hours_start: '8',
