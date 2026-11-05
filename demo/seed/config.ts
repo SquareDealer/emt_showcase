@@ -1,0 +1,25 @@
+export const DEMO_SEED = 42;
+export const DEMO_HOUR = 12;
+export const HISTORY_DAYS = 182;
+export const FUTURE_DAYS = 14;
+export const ORDERS_TARGET = 800;
+export const CLIENTS_TOTAL = 150;
+export const COMPANIES_TOTAL = 15;
+export const REGULAR_SHARE = 0.2;
+export const REGULAR_WEIGHT = 4;
+export const MINI_SHARE = 0.8;
+export const LABOR_RATE_OLD = 2000;
+export const LABOR_RATE_NEW = 2200;
+export const RATE_CHANGE_MONTHS_AGO = 3;
+export const SEASON_FACTOR: Record<number, number> = { 10: 1.3, 11: 1.3 };
+// вс..сб
+export const WEEKDAY_FACTOR = [0.2, 1, 1, 1, 1, 1, 0.5];
+export const MONTHLY_VOLUME_GROWTH = 0.03;
+export const MONTHLY_TICKET_GROWTH = 0.02;
+export const TICKET_MEDIAN = 7000;
+export const TICKET_SIGMA = 0.85;
+export const WORK_START_HOUR = 8;
+export const WORK_END_HOUR = 20;
+export const SLOT_MIN = 30;
+export const PLATE_LETTERS = 'АВЕКМНОРСТУХ';
+export const VIN_CHARS = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';
