@@ -51,7 +51,9 @@ const CHECKBOX = { x: 443, y0: 371.5, step: 62.5, size: 13 };
 const CONFIRM = { x: 823, y: 684, w: 190, h: 36 };
 /** FakeSelect list: 4 px below the control, 4 px padding, 36 px rows (kit/FakeSelect.tsx). */
 const optionY = (i: number) => ADD_FROM_PRICE.y + ADD_FROM_PRICE.h + 4 + 4 + 36 * i + 18;
-export const SUMMARY_X = 1096;
+const SUMMARY_X = 1096;
+/** The discounts caption's dot: the summary's left edge, level with «Скидка на наряд». */
+export const DISCOUNTS_ANCHOR = { x: SUMMARY_X, y: 540 };
 const NEW_HEADERS = [
   { x: 265, y: 377, w: 814, h: 47 },
   { x: 265, y: 611.8, w: 814, h: 36.5 },
@@ -71,6 +73,14 @@ const DISC_TYPE_AT = CLICK_DISC_TYPE + 3;
 const MODAL_IN = 80;
 export const GEN_AT = 90;
 export const BLOCK_AT = 135;
+/** Wide overlays' exits (start of a 6-frame fade): the generation-price ring goes before the cursor
+ *  reaches the checkboxes, its caption once the oil count-down settles, the block caption under the
+ *  new work line with the camera's move to the summary. The LoopEstimate reuses them. */
+export const GEN_RING_OUT = 110;
+export const GEN_CAPTION_OUT = 126;
+export const BLOCK_CAPTION_OUT = 180;
+/** The block caption in the estimate: under the new work line, over the add-form placeholders. */
+export const BLOCK_ANCHOR = { x: 330, y: 471 };
 const TOAST_IN = 155;
 const TOAST_OUT = 200;
 const SNAP2_AT = 195;
@@ -399,8 +409,8 @@ export const CAM: { wide: CamKey[]; social: CamKey[] } = {
  *  end). «block» is one plaque from the sheet through the landing (the wide cut re-anchors it); it leaves
  *  with the camera's move to the summary (180, on the beat — the wide cut's own «block» out), gone by 186. */
 export const SOCIAL_CALLOUTS: readonly { key: 'generation' | 'block' | 'discounts'; at: number; out: number | null }[] = [
-  { key: 'generation', at: GEN_AT, out: 126 },
-  { key: 'block', at: BLOCK_AT, out: 180 },
+  { key: 'generation', at: GEN_AT, out: GEN_CAPTION_OUT },
+  { key: 'block', at: BLOCK_AT, out: BLOCK_CAPTION_OUT },
   { key: 'discounts', at: SNAP3_AT, out: null },
 ];
 
@@ -467,7 +477,7 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
         ) : null}
         {/* Generation price: ring the labor line of the sheet; gone before the cursor reaches the
             checkboxes (the dim would cover them). */}
-        <Fade opacity={fadeOut(frame, 110, 6)} z={50}>
+        <Fade opacity={fadeOut(frame, GEN_RING_OUT, 6)} z={50}>
           <Highlight rect={APPLY_LABOR} appearAt={GEN_AT} accent={accent} />
         </Fade>
         {/* The kit's 10 % on wo-hero.2: ring the discount cell (the row keeps its outline), gone
@@ -485,7 +495,7 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
         ) : (
           <>
             {/* One caption per beat: «generation» leaves once the oil count-down settles, before «block». */}
-            <Fade opacity={Math.min(state.modalOpacity, fadeOut(frame, 126, 6))} z={90}>
+            <Fade opacity={Math.min(state.modalOpacity, fadeOut(frame, GEN_CAPTION_OUT, 6))} z={90}>
               {/* Right of the dialog, level with the labor line: clear of its price and the checkboxes. */}
               <Callout
                 text={callouts.generation}
@@ -507,12 +517,12 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
             </Fade>
             {/* The same caption follows the block into the estimate: under the new work line, over the
                 add-form placeholders (left of the «2200» rate input), clear of every amount. */}
-            <Fade opacity={fadeOut(frame, 180, 6)} z={90}>
-              <Callout text={callouts.block} at={APPLY_AT} anchor={{ x: 330, y: 471 }} side="bottom" accent={accent} />
+            <Fade opacity={fadeOut(frame, BLOCK_CAPTION_OUT, 6)} z={90}>
+              <Callout text={callouts.block} at={APPLY_AT} anchor={BLOCK_ANCHOR} side="bottom" accent={accent} />
             </Fade>
             {/* At the summary's left edge, level with «Скидка на наряд»: the pill lies over the empty
                 right half of the parts panel head, above the column heads and the kit's «−1 490 ₽». */}
-            <Callout text={callouts.discounts} at={SNAP3_AT} anchor={{ x: SUMMARY_X, y: 540 }} side="left" accent={accent} />
+            <Callout text={callouts.discounts} at={SNAP3_AT} anchor={DISCOUNTS_ANCHOR} side="left" accent={accent} />
           </>
         )}
         <Cursor path={CURSOR} clicks={SCENE_CLICKS.estimate} accent={accent} />

@@ -16,9 +16,9 @@ import {
   HEAD,
   LOOP_SCALE,
   LOOP_SPECS,
+  overlayMax,
   PRICE_LIST_LOOP,
   PL_HIGHLIGHT,
-  PL_OPTIONS,
   PL_PICKS,
   boardLoopState,
   plRows,
@@ -70,13 +70,26 @@ describe.each(LOOP_SPECS.map((s) => [s.id, s] as const))('%s is seamless by cons
       expect(spec.frame(k)).toEqual(spec.frame(0));
       expect(cameraAt(k, FPS, spec.cam)).toEqual(cameraAt(0, FPS, spec.cam));
       expect(cursorAt(k, FPS, spec.cursor)).toEqual(cursorAt(0, FPS, spec.cursor));
-      expect(spec.overlayOpacity(k)).toBe(0);
+      expect(overlayMax(spec, k)).toBe(0);
     }
   });
   it('captions and highlights are off at both ends', () => {
-    for (const t of [0, D - 1, D + 9]) expect(spec.overlayOpacity(t)).toBe(0);
+    for (const t of [0, D - 1, D + 9]) expect(overlayMax(spec, t)).toBe(0);
   });
-  it('clicks fall on the beat, inside the loop, and the clip is idle before the first and after the last', () => {
+  it('the pointer is paced: no per-frame step above 75 px on screen', () => {
+    // Measured in frame px relative to the page — |Δ UI px| × the camera zoom — so the camera's own
+    // pans and pushes are not counted, and every loop is judged at the size the viewer sees it.
+    let max = 0;
+    let at = -1;
+    for (let t = 0; t < D + 10; t++) {
+      const [a, b] = [cursorAt(t, FPS, spec.cursor), cursorAt(t + 1, FPS, spec.cursor)];
+      const zoom = Math.max(cameraAt(t, FPS, spec.cam).zoom, cameraAt(t + 1, FPS, spec.cam).zoom);
+      const step = Math.hypot(b.x - a.x, b.y - a.y) * zoom;
+      if (step > max) [max, at] = [step, t];
+    }
+    expect(max, `largest step ${max.toFixed(1)} px at ${at}→${at + 1}`).toBeLessThanOrEqual(75);
+  });
+  it('clicks fall on the beat, after frame 0 and at least 30 frames before the end', () => {
     for (const c of spec.clicks) {
       expect(c % FRAMES_PER_BEAT).toBe(0);
       expect(c).toBeGreaterThan(0);
@@ -122,7 +135,7 @@ describe('LoopBooking', () => {
   it('the camera pulls back out only after the caption has gone', () => {
     const c = (t: number) => cameraAt(t, FPS, BOOKING_LOOP.cam);
     expect(c(149)).toEqual(c(100));
-    expect(BOOKING_LOOP.overlayOpacity(150)).toBe(0);
+    expect(overlayMax(BOOKING_LOOP, 150)).toBe(0);
   });
 });
 
@@ -147,13 +160,13 @@ describe('LoopDiscounts', () => {
   it('totals come from the fixtures through the PricingService mirror: 44 400 → 42 910 → 40 764,50', () => {
     expect(T).toEqual([44400, 42910, 40764.5]);
     expect(f(0).total).toBe(T[0]);
-    expect(f(62).total).toBe(T[0]);
-    expect(f(78).total).toBe(T[1]);
-    expect(f(107).total).toBe(T[1]);
-    expect(f(128).total).toBe(T[2]);
-    expect(f(150).total).toBe(T[2]);
+    expect(f(77).total).toBe(T[0]);
+    expect(f(93).total).toBe(T[1]);
+    expect(f(122).total).toBe(T[1]);
+    expect(f(143).total).toBe(T[2]);
+    expect(f(160).total).toBe(T[2]);
     // monotone count-downs, whole kopecks
-    for (let t = 63; t < 130; t++) {
+    for (let t = 78; t < 145; t++) {
       expect(f(t + 1).total).toBeLessThanOrEqual(f(t).total);
       expect(Math.round(f(t).total * 100) / 100).toBe(f(t).total);
     }
@@ -168,29 +181,33 @@ describe('LoopDiscounts', () => {
     expect(1 - kitAfterBoth / partGross(kit)).toBeCloseTo(0.145, 10);
     expect(Math.round(discountAmount(WO3) * 100) / 100).toBe(2145.5);
   });
-  it('the line discount is typed into the kit line\'s edit form, then saved (wo-hero.2)', () => {
-    expect(f(9).hoverKit).toBe(false);
-    expect(f(10).hoverKit).toBe(true);
-    expect(f(17).edit).toBeNull();
-    expect(f(18).edit).toBe('');
-    expect(f(38).edit).toBe('1');
-    expect(f(43).edit).toBe('10');
-    expect(f(62).edit).toBe('10');
-    expect(f(62).snap).toBe(1);
-    expect(f(63)).toMatchObject({ snap: 2, edit: null });
+  it('the line discount: ✎ hovered as the pointer lands (25), edit form (33), «10» typed, saved (wo-hero.2, 78)', () => {
+    expect(DISCOUNTS_LOOP.clicks).toEqual([30, 45, 75, 105]);
+    expect(f(24).hoverKit).toBe(false);
+    expect(f(25).hoverKit).toBe(true);
+    const tip = cursorAt(25, FPS, DISCOUNTS_LOOP.cursor);
+    expect(Math.hypot(tip.x - 1016, tip.y - 671)).toBeLessThan(20); // on ✎ (x 1001–1031, y 656–686)
+    expect(f(32).edit).toBeNull();
+    expect(f(33).edit).toBe('');
+    expect(f(53).edit).toBe('1');
+    expect(f(58).edit).toBe('10');
+    expect(f(77)).toMatchObject({ snap: 1, edit: '10' });
+    expect(f(78)).toMatchObject({ snap: 2, edit: null });
   });
-  it('then the order discount: type «%» (90 → 93), «5» typed, applied (wo-hero.3) at 108', () => {
-    expect(f(92).discountDraft).toBeNull();
-    expect(f(93).discountDraft).toEqual({ type: 'percent', value: '' });
-    expect(f(98).discountDraft).toEqual({ type: 'percent', value: '5' });
-    expect(f(107).snap).toBe(2);
-    expect(f(108).snap).toBe(3);
-    expect(DISCOUNTS_LOOP.clicks).toEqual([15, 30, 60, 90]);
+  it('then the order discount: type «%» (105 → 108), «5» typed, applied (wo-hero.3) at 123', () => {
+    expect(f(107).discountDraft).toBeNull();
+    expect(f(108).discountDraft).toEqual({ type: 'percent', value: '' });
+    expect(f(113).discountDraft).toEqual({ type: 'percent', value: '5' });
+    expect(f(122).snap).toBe(2);
+    expect(f(123).snap).toBe(3);
   });
-  it('dissolves back to wo-hero.1 after the caption has gone', () => {
-    expect(DISCOUNTS_LOOP.overlayOpacity(156)).toBe(0);
-    expect(f(160).reset).toBeGreaterThan(0);
-    expect(f(168)).toEqual(f(0));
+  it('dissolves (eased, 10 frames) back to wo-hero.1 once the caption has gone', () => {
+    expect(overlayMax(DISCOUNTS_LOOP, 165)).toBe(0);
+    expect(f(165).reset).toBe(0);
+    const r = [166, 167, 168, 169, 170, 171, 172, 173, 174].map((t) => f(t).reset);
+    for (let i = 1; i < r.length; i++) expect(r[i]).toBeGreaterThan(r[i - 1]);
+    expect(r[0]).toBeLessThan(0.1); // eased in
+    expect(f(175)).toEqual(f(0));
   });
   it('the camera frames the kit line and the whole summary inside the window', () => {
     const v = stageView(cameraAt(0, FPS, DISCOUNTS_LOOP.cam), 'wide', LOOP_W, LOOP_H);
@@ -211,13 +228,16 @@ describe('LoopPriceList', () => {
       ['F60', 'R56'],
     ]);
     expect(PRICE_LIST_LOOP.clicks).toEqual(PL_PICKS.flatMap((p) => [p.open, p.pick]));
-    for (const p of PL_PICKS) expect(PL_OPTIONS[p.pickIndex]).toContain(` ${p.to} · `);
+    for (const p of PL_PICKS) expect(p.options[p.pickIndex]).toContain(` ${p.to} · `);
   });
-  it('the options are the select\'s own labels (genLabel · years), in the generations\' order', () => {
+  it('each opening shows a window of the select\'s own labels (genLabel · years), in the generations\' order', () => {
     const labels = generations.map((g) => `${g.make} ${[g.model, g.code].filter(Boolean).join(' ')}${g.years ? ` · ${g.years}` : ''}`);
-    const start = labels.indexOf(PL_OPTIONS[0]);
-    expect(start).toBeGreaterThanOrEqual(0);
-    expect(PL_OPTIONS).toEqual(labels.slice(start, start + PL_OPTIONS.length));
+    for (const p of PL_PICKS) {
+      const start = labels.indexOf(p.options[0]);
+      expect(start).toBeGreaterThanOrEqual(0);
+      expect(p.options).toEqual(labels.slice(start, start + p.options.length));
+      expect(p.options.length).toBe(6);
+    }
     expect(genId('R56')).toBeTruthy();
   });
   it('rows are the fixture rows of the shown generation, prices counting between generations', () => {

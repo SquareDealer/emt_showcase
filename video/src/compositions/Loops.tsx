@@ -22,44 +22,41 @@ import {
   ADD_FROM_PRICE,
   APPLY_AT,
   APPLY_LABOR,
+  BLOCK_ANCHOR,
   BLOCK_AT,
   DIALOG,
+  DISCOUNTS_ANCHOR,
   EstimateWindow,
   GEN_AT,
   KIT_LINE,
   OPTION_WINDOW,
   PICK_AT,
   PICK_INDEX,
-  SUMMARY_X,
   estimateState,
 } from '../scenes/Estimate';
-import { BoardWindow, CALLOUT_ANCHOR, CALLOUT_AT as BOARD_CALLOUT_AT, CALLOUT_OUT as BOARD_CALLOUT_OUT } from '../scenes/Board';
+import { BoardWindow, CALLOUT_ANCHOR, CALLOUT_AT as BOARD_CALLOUT_AT } from '../scenes/Board';
 import { LOOP_DEFS, type LoopId } from './loop-defs';
 import {
-  BK_CAPTION_OUT,
   BOARD_LOOP,
   BOOKING_LOOP,
   DC_CAPTION,
-  DC_CAPTION_OUT,
   DISCOUNTS_LOOP,
   ESTIMATE_LOOP,
   PL_CAPTION,
-  PL_CAPTION_OUT,
-  PL_GEOMETRY,
   PL_HIGHLIGHT,
-  PL_OPTIONS,
   PL_PICKS,
+  PL_SELECT,
   PRICE_LIST_LOOP,
   boardLoopState,
-  fadeOut,
+  gen,
   genOption,
-  plGeneration,
   plRows,
 } from './loops';
 
 // The six feature loops (1600×1000). Timelines, cameras and cursor paths are pure (./loops, tested:
 // every loop ends in its first frame's data, camera and cursor); this file only draws them with the
-// scenes' own windows and the kit. Captions use the hero's texts and leave before the reset.
+// scenes' own windows and the kit. Captions use the hero's texts and leave before the reset; every
+// caption/ring wrapper takes its opacity from the loop's `overlays(t)` (the values the spec checks).
 
 const noop = () => {};
 const brandFor = (name: string): Brand => ({
@@ -113,7 +110,7 @@ function BookingClip({ theme, brand, callouts, accent }: ShowcaseProps) {
       <Background theme={theme} />
       <Camera keys={BOOKING_LOOP.cam}>
         <BookingWindow theme={theme} brandName={brand.name} state={state} />
-        <Fade opacity={fadeOut(t, BK_CAPTION_OUT)} z={90}>
+        <Fade opacity={BOOKING_LOOP.overlays(t).caption} z={90}>
           {/* The Booking scene's placement: above the slot, clear of the ghost, the menu and the order. */}
           <Callout text={callouts.booking} at={BOOKING_CALLOUT_AT} anchor={{ x: SLOT.x + 44, y: SLOT.y }} side="top" accent={accent} />
         </Fade>
@@ -129,6 +126,7 @@ function EstimateClip({ theme, brand, callouts, accent }: ShowcaseProps) {
   const { fps } = useVideoConfig();
   const f = ESTIMATE_LOOP.frame(t);
   const state = estimateState(f.scene, fps);
+  const o = ESTIMATE_LOOP.overlays(t);
   return (
     <AbsoluteFill>
       <Background theme={theme} />
@@ -150,10 +148,10 @@ function EstimateClip({ theme, brand, callouts, accent }: ShowcaseProps) {
             placeholder="+ Из прайса…"
           />
         ) : null}
-        <Fade opacity={fadeOut(t, 110)} z={50}>
+        <Fade opacity={o.ring} z={50}>
           <Highlight rect={APPLY_LABOR} appearAt={GEN_AT} accent={accent} />
         </Fade>
-        <Fade opacity={Math.min(state.modalOpacity, fadeOut(t, 126))} z={90}>
+        <Fade opacity={o.generation} z={90}>
           <Callout
             text={callouts.generation}
             at={GEN_AT}
@@ -162,11 +160,11 @@ function EstimateClip({ theme, brand, callouts, accent }: ShowcaseProps) {
             accent={accent}
           />
         </Fade>
-        <Fade opacity={state.modalOpacity} z={90}>
+        <Fade opacity={o.blockSheet} z={90}>
           <Callout text={callouts.block} at={BLOCK_AT} anchor={{ x: DIALOG.x + DIALOG.w / 2, y: DIALOG.y }} side="top" accent={accent} />
         </Fade>
-        <Fade opacity={fadeOut(t, 180)} z={90}>
-          <Callout text={callouts.block} at={APPLY_AT} anchor={{ x: 330, y: 471 }} side="bottom" accent={accent} />
+        <Fade opacity={o.blockLine} z={90}>
+          <Callout text={callouts.block} at={APPLY_AT} anchor={BLOCK_ANCHOR} side="bottom" accent={accent} />
         </Fade>
         <Cursor path={ESTIMATE_LOOP.cursor} clicks={ESTIMATE_LOOP.clicks} accent={accent} />
       </Camera>
@@ -205,9 +203,9 @@ function DiscountsClip({ theme, brand, callouts, accent }: ShowcaseProps) {
         <Over opacity={f.reset}>
           <EstimateWindow key="reset" theme={theme} brandName={brand.name} state={{ ...quiet, wo: woHero[1] }} />
         </Over>
-        <Fade opacity={fadeOut(t, DC_CAPTION_OUT)} z={90}>
+        <Fade opacity={DISCOUNTS_LOOP.overlays(t).caption} z={90}>
           {/* The Estimate scene's placement: left of the summary, level with «Скидка на наряд». */}
-          <Callout text={callouts.discounts} at={DC_CAPTION} anchor={{ x: SUMMARY_X, y: 540 }} side="left" accent={accent} />
+          <Callout text={callouts.discounts} at={DC_CAPTION} anchor={DISCOUNTS_ANCHOR} side="left" accent={accent} />
         </Fade>
         <Cursor path={DISCOUNTS_LOOP.cursor} clicks={DISCOUNTS_LOOP.clicks} accent={accent} />
       </Camera>
@@ -248,7 +246,7 @@ function PriceListClip({ theme, brand, callouts, accent }: ShowcaseProps) {
               key={f.gen}
               tab="works"
               generations={generations}
-              generationId={plGeneration(f.gen).id}
+              generationId={gen(f.gen).id}
               rows={rows}
               withOverride={rows.filter((r) => r.override).length}
               highlightTemplateId={f.highlight ? PL_HIGHLIGHT : undefined}
@@ -265,16 +263,16 @@ function PriceListClip({ theme, brand, callouts, accent }: ShowcaseProps) {
           t >= p.open && t < p.at ? (
             <FakeSelect
               key={p.open}
-              rect={PL_GEOMETRY.select}
-              options={PL_OPTIONS}
+              rect={PL_SELECT}
+              options={p.options}
               openAt={p.open}
               pickIndex={p.pickIndex}
               pickAt={p.at}
-              value={genOption(plGeneration(p.from))}
+              value={genOption(gen(p.from))}
             />
           ) : null,
         )}
-        <Fade opacity={fadeOut(t, PL_CAPTION_OUT)} z={90}>
+        <Fade opacity={PRICE_LIST_LOOP.overlays(t).caption} z={90}>
           <Callout text={callouts.generation} at={PL_CAPTION} anchor={PL_CAPTION_ANCHOR} side="top" accent={accent} />
         </Fade>
         <Cursor path={PRICE_LIST_LOOP.cursor} clicks={PRICE_LIST_LOOP.clicks} accent={accent} />
@@ -293,7 +291,7 @@ function BoardClip({ theme, brand, callouts, accent }: ShowcaseProps) {
       <Background theme={theme} />
       <Camera keys={BOARD_LOOP.cam}>
         <BoardWindow theme={theme} brandName={brand.name} state={state} />
-        <Fade opacity={fadeOut(t, BOARD_CALLOUT_OUT)} z={90}>
+        <Fade opacity={BOARD_LOOP.overlays(t).caption} z={90}>
           <Callout text={callouts.board} at={BOARD_CALLOUT_AT} anchor={CALLOUT_ANCHOR} side="right" accent={accent} />
         </Fade>
         <Cursor path={BOARD_LOOP.cursor} clicks={BOARD_LOOP.clicks} accent={accent} />
