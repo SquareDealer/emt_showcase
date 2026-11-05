@@ -26,6 +26,14 @@ import {
 } from '../fixtures';
 import { VideoProviders } from '../providers/VideoProviders';
 import { AppWindow } from '../kit/AppWindow';
+import { Background } from '../kit/Background';
+import { Camera } from '../kit/Camera';
+import { Cursor } from '../kit/Cursor';
+import { Highlight } from '../kit/Highlight';
+import { Callout } from '../kit/Callout';
+import { TypeText } from '../kit/TypeText';
+import { CountUp } from '../kit/CountUp';
+import { FakeSelect } from '../kit/FakeSelect';
 
 type Theme = 'light' | 'dark';
 export type DebugProps = { theme: Theme };
@@ -42,20 +50,12 @@ const BRAND: Brand = {
 const owner = users.find((u) => u.role === 'owner');
 if (!owner) throw new Error('fixtures/users.json: no owner');
 
-/** Frame background + centred window. Task 5's kit/Background replaces the inline gradient. */
+/** Frame background + centred window. */
 function Stage({ theme, route, children }: { theme: Theme; route: string; children: ReactNode }) {
   return (
     <VideoProviders theme={theme}>
-      <AbsoluteFill
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          background:
-            theme === 'dark'
-              ? 'radial-gradient(120% 90% at 50% 0%, oklch(0.32 0.03 240), oklch(0.14 0.01 240))'
-              : 'radial-gradient(120% 90% at 50% 0%, oklch(0.93 0.02 235), oklch(0.78 0.03 240))',
-        }}
-      >
+      <Background theme={theme} />
+      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
         <AppWindow theme={theme} route={route}>
           <AppShellView
             userName={owner!.name}
@@ -189,3 +189,77 @@ export function DebugDashboard({ theme }: DebugProps) {
     </Stage>
   );
 }
+
+// Kit smoke test: every kit piece on one screen, 90 frames. Click at frame 30; UI = 1440×900.
+// Debug scaffolding only — PhoneFrame/PaperSheet/LoopCrossfade need media and are used by scenes.
+export function DebugKit({ theme }: DebugProps) {
+  return (
+    <VideoProviders theme={theme}>
+      <Background theme={theme} />
+      <Camera
+        keys={[
+          { at: 0, x: 720, y: 450, zoom: 1 },
+          { at: 1, x: 640, y: 380, zoom: 1.25 },
+          { at: 2.5, x: 640, y: 380, zoom: 1.25 },
+        ]}
+      >
+        <AppWindow theme={theme} route="/board">
+          <div style={{ padding: 40, background: 'var(--bg)', height: '100%', position: 'relative' }}>
+            <h2 style={{ margin: 0, color: 'var(--ink)' }}>Kit</h2>
+            <div style={{ marginTop: 24, display: 'flex', gap: 32, alignItems: 'center' }}>
+              <input
+                className="input"
+                readOnly
+                style={{ width: 280 }}
+                value=""
+                placeholder="VIN"
+              />
+              <span className="mono" style={{ color: 'var(--ink)', fontSize: 22 }}>
+                <TypeText text="WMWSV32010T" startFrame={10} framesPerChar={3} />
+              </span>
+            </div>
+            <div style={{ marginTop: 40, fontSize: 40, fontWeight: 600, color: 'var(--ink)' }}>
+              <CountUp from={0} to={36517.5} fromFrame={30} toFrame={75} />
+            </div>
+            <FakeSelect
+              rect={{ x: 600, y: 150, w: 280, h: 36 }}
+              options={['Диагностика', 'Замена масла', 'Цепь ГРМ']}
+              openAt={36}
+              pickIndex={1}
+              pickAt={66}
+              placeholder="Работа"
+            />
+            <div
+              style={{
+                position: 'absolute',
+                left: 80,
+                top: 520,
+                width: 360,
+                height: 80,
+                borderRadius: 10,
+                background: 'var(--surface-2)',
+                border: '1px solid var(--border)',
+              }}
+            />
+            <Highlight rect={{ x: 80, y: 520, w: 360, h: 80 }} appearAt={45} />
+            <Callout
+              text="Цена — под поколение"
+              at={45}
+              anchor={{ x: 440, y: 560 }}
+              side="right"
+            />
+            <Cursor
+              path={[
+                { at: 0, x: 200, y: 250 },
+                { at: 1, x: 640, y: 168 },
+                { at: 3, x: 640, y: 168 },
+              ]}
+              clicks={[30]}
+            />
+          </div>
+        </AppWindow>
+      </Camera>
+    </VideoProviders>
+  );
+}
+
