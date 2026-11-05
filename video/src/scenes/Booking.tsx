@@ -132,7 +132,7 @@ export const CAM: { wide: CamKey[]; social: CamKey[] } = {
 const s = (f: number) => f / FPS;
 // Cursor: idles low-right, glides onto the slot, then onto «Новая запись», then clears out to
 // the lower right (off-frame once the camera dives) so it never sits on the landed order.
-const CURSOR: CursorPoint[] = [
+export const CURSOR: CursorPoint[] = [
   { at: 0, x: 1120, y: 780 },
   { at: s(30), x: 1120, y: 780 },
   { at: s(CLICK_SLOT - 6), x: slotCentre.x + 6, y: slotCentre.y + 4 },

@@ -14,6 +14,7 @@ export function FakeSelect({
   pickIndex,
   pickAt,
   placeholder,
+  value,
 }: {
   rect: Rect;
   options: string[];
@@ -21,6 +22,8 @@ export function FakeSelect({
   pickIndex: number;
   pickAt: number;
   placeholder?: string;
+  /** The control's current value until the pick (ink); without it the placeholder shows (faint). */
+  value?: string;
 }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -44,8 +47,8 @@ export function FakeSelect({
           backgroundImage: 'none',
         }}
       >
-        <span style={{ color: picked ? 'var(--ink)' : 'var(--faint)' }}>
-          {picked ? options[pickIndex] : (placeholder ?? '')}
+        <span style={{ color: picked || value !== undefined ? 'var(--ink)' : 'var(--faint)' }}>
+          {picked ? options[pickIndex] : (value ?? placeholder ?? '')}
         </span>
         <ChevronDown size={16} color="gray" />
       </div>

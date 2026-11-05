@@ -2,7 +2,7 @@ import { type CSSProperties, type ReactNode } from 'react';
 import { AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { AppShellView } from '@crm/components/AppShellView';
 import { ToastView } from '@crm/components/ToastView';
-import { WorkOrderView } from '@crm/features/work-orders/WorkOrderView';
+import { WorkOrderView, type PartDraft } from '@crm/features/work-orders/WorkOrderView';
 import { ScheduleFields } from '@crm/features/work-orders/ScheduleFields';
 import { ApplyTemplateView } from '@crm/features/work-orders/ApplyTemplateView';
 import { navForRole, templateTotal } from '@crm/lib/view-helpers';
@@ -44,33 +44,33 @@ import { FPS, SCENE_CLICKS } from '../timing';
 //   DISC_TYPE      `[data-demo="wo-discount"] select` (snapshot 2, type «нет»): x 1307 y 509.5 w 92 h 30.
 //   toast          `.toast` (fixed, bottom-centre of the window): x 617 y 840.5 w 205.5 h 35.5.
 // ---------------------------------------------------------------------------------------------
-const ADD_FROM_PRICE = { x: 692, y: 208, w: 371, h: 30 };
-const DIALOG = { x: 410, y: 167, w: 620, h: 566 };
-const APPLY_LABOR = { x: 427, y: 239, w: 586, h: 69 };
+export const ADD_FROM_PRICE = { x: 692, y: 208, w: 371, h: 30 };
+export const DIALOG = { x: 410, y: 167, w: 620, h: 566 };
+export const APPLY_LABOR = { x: 427, y: 239, w: 586, h: 69 };
 const CHECKBOX = { x: 443, y0: 371.5, step: 62.5, size: 13 };
 const CONFIRM = { x: 823, y: 684, w: 190, h: 36 };
 /** FakeSelect list: 4 px below the control, 4 px padding, 36 px rows (kit/FakeSelect.tsx). */
 const optionY = (i: number) => ADD_FROM_PRICE.y + ADD_FROM_PRICE.h + 4 + 4 + 36 * i + 18;
-const SUMMARY_X = 1096;
+export const SUMMARY_X = 1096;
 const NEW_HEADERS = [
   { x: 265, y: 377, w: 814, h: 47 },
   { x: 265, y: 611.8, w: 814, h: 36.5 },
 ];
-const DISC_TYPE = { x: 1307, y: 509.5, w: 92, h: 30 };
+export const DISC_TYPE = { x: 1307, y: 509.5, w: 92, h: 30 };
 /** The kit's «−1 490 ₽ (10%)» (`.smeta-row .disc` x 824.6 y 657.3 w 62.4 h 36.5), padded. */
 const KIT_DISC_CELL = { x: 816, y: 652, w: 80, h: 47 };
 
 const [CLICK_SELECT, CLICK_OPTION, CLICK_OIL, CLICK_CONFIRM, CLICK_DISC_TYPE] = SCENE_CLICKS.estimate;
 // Every click's effect lands 3 frames after the press, so the press and its ring hit the target.
 /** The list stays open under the press, then closes with the option picked. */
-const PICK_AT = CLICK_OPTION + 3;
+export const PICK_AT = CLICK_OPTION + 3;
 /** The sheet closes and wo-hero.1 arrives (the app's onSuccess). */
-const APPLY_AT = CLICK_CONFIRM + 3;
+export const APPLY_AT = CLICK_CONFIRM + 3;
 /** The order-discount type switches «нет» → «%» (its input appears), then «5» is typed. */
 const DISC_TYPE_AT = CLICK_DISC_TYPE + 3;
 const MODAL_IN = 80;
-const GEN_AT = 90;
-const BLOCK_AT = 135;
+export const GEN_AT = 90;
+export const BLOCK_AT = 135;
 const TOAST_IN = 155;
 const TOAST_OUT = 200;
 const SNAP2_AT = 195;
@@ -98,8 +98,8 @@ const OPTION_NAME = templatePreview.group_name;
 const TEMPLATE_INDEX = templates.findIndex((t) => t.id === templatePreview.template_id);
 if (TEMPLATE_INDEX < 0) throw new Error('templates.json: no template of template-preview.json');
 /** A native select opens scrolled; FakeSelect shows a window of the list around the target. */
-const OPTION_WINDOW = templates.slice(Math.max(0, TEMPLATE_INDEX - 5), TEMPLATE_INDEX + 3).map((t) => t.name);
-const PICK_INDEX = OPTION_WINDOW.indexOf(OPTION_NAME);
+export const OPTION_WINDOW = templates.slice(Math.max(0, TEMPLATE_INDEX - 5), TEMPLATE_INDEX + 3).map((t) => t.name);
+export const PICK_INDEX = OPTION_WINDOW.indexOf(OPTION_NAME);
 if (PICK_INDEX < 0) throw new Error(`templates.json: «${OPTION_NAME}» is not the template's name`);
 
 const DEFAULT_PARTS = templatePreview.parts.filter((p) => p.is_default).map((p) => p.part_template_id);
@@ -118,7 +118,7 @@ export function newLineIds(prev: WorkOrder, next: WorkOrder): string[] {
   return [...(next.labor_lines ?? []), ...(next.part_lines ?? [])].map((l) => l.id).filter((id) => !had.has(id));
 }
 export const NEW_LINES = newLineIds(WO0, WO1);
-const KIT_LINE = (WO2.part_lines ?? []).find((p) => p.part_template_id === HERO.parts.chainKit);
+export const KIT_LINE = (WO2.part_lines ?? []).find((p) => p.part_template_id === HERO.parts.chainKit);
 if (!KIT_LINE) throw new Error('wo-hero.2: no chain kit line');
 
 const TOAST = [{ id: 1, kind: 'success' as const, text: 'Блок добавлен в смету' }];
@@ -179,10 +179,17 @@ export function EstimateWindow({
   theme,
   brandName,
   state,
+  editPartId = null,
+  partDraft,
+  hoverLineId,
 }: {
   theme: 'light' | 'dark';
   brandName: string;
   state: ReturnType<typeof estimateState>;
+  /** Loops (the line-discount edit): the part line shown as its edit form, with pinned values. */
+  editPartId?: string | null;
+  partDraft?: Partial<PartDraft>;
+  hoverLineId?: string;
 }) {
   const { wo } = state;
   return (
@@ -208,7 +215,7 @@ export function EstimateWindow({
           canAssign
           laborRate={settings.labor_rate}
           editLaborId={null}
-          editPartId={null}
+          editPartId={editPartId}
           pending={{}}
           scheduleSlot={
             <ScheduleFields
@@ -221,6 +228,8 @@ export function EstimateWindow({
             />
           }
           highlightLineId={state.highlightLine}
+          hoverLineId={hoverLineId}
+          partDraft={partDraft}
           discountDraft={state.discountDraft}
           rowStyle={(_, id) => state.rowStyle(id) ?? {}}
           onUpdate={noop}
@@ -406,7 +415,7 @@ const DISC_TYPE_POINT = { x: DISC_TYPE.x + 30, y: DISC_TYPE.y + DISC_TYPE.h / 2 
 // Cursor tip on each target a few frames before its click; after the confirm it leaves the window
 // to the right, then comes back into the summary shot for the discount type. It stays there: once
 // «%» is chosen the select moves left and the point becomes the discount input being typed into.
-const CURSOR: CursorPoint[] = [
+export const CURSOR: CursorPoint[] = [
   { at: 0, x: 1000, y: 640 },
   { at: s(12), x: 1000, y: 640 },
   { at: s(CLICK_SELECT - 6), ...SELECT_AT },

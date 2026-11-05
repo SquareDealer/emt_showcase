@@ -51,3 +51,8 @@ export REMOTION_BROWSER=/path/to/chrome-headless-shell  # скрипты пер�
 - `npm run prerender:mobile` — композиция `MobileMaster` (390×844, 6 с, h264 без звука) →
   `public/prerender/mobile-master.mp4`; её проигрывает `PhoneFrame` (луп `LoopMasterMobile`). Файл
   закоммичен (~0,8 МБ): после правок `MobileMaster`, доски или фикстур — перегенерировать.
+- Лупы `Loop*` (1600×1000, `src/compositions/Loops.tsx`; таймлайны — чистый `loops.ts` со спекой):
+  каждый кончается тем же кадром, с которого начинается (данные, камера, курсор), поэтому
+  `LoopCrossfade` лишь страхует. Проверка — `npm run loops:check` (`scripts/loop-diff.ts`: still
+  кадров 0 и `dur−1`, доля пикселей с разницей > 16 в любом канале ≤ 1 %). Рендер:
+  `npm run render -- LoopBoard out/loops/board.webm --codec=vp9 --muted` (и `.mp4 --codec=h264`).

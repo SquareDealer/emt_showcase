@@ -38,11 +38,11 @@ const COL_X0 = 264;
 const COL_PITCH = 256;
 const COL_W = 244;
 const CARD = { x: 273, y: 208, w: 226, h: 155 };
-const SLOT_STEP = CARD.h + 8;
+export const SLOT_STEP = CARD.h + 8;
 const SLOT = { x: CARD.x + COL_PITCH, y: CARD.y };
 const PAN = 116;
 /** «В работе»'s counter `.board-count`: x 727 y 167 w 24 h 20 — the callout dot sits 33 px above its centre. */
-const CALLOUT_ANCHOR = { x: 739, y: 134 };
+export const CALLOUT_ANCHOR = { x: 739, y: 134 };
 
 /** Left edge of a column before the pan. */
 const colX = (status: WorkOrderStatus) => COL_X0 + COL_PITCH * STATUS_ORDER.indexOf(status);
@@ -58,8 +58,8 @@ const DROP_AT = CLICK_DROP + 3;
 const SETTLE = 10;
 const SWAP_AT = DROP_AT + SETTLE;
 const SWAP = 4;
-const CALLOUT_AT = 60;
-const CALLOUT_OUT = 102;
+export const CALLOUT_AT = 60;
+export const CALLOUT_OUT = 102;
 const PAN_FROM = 90;
 const PAN_TO = 140;
 
@@ -81,7 +81,7 @@ if (HERO_BEFORE.status !== 'scheduled' || HERO_AFTER.status !== 'in_progress' ||
     `Board: expected wo-hero.3 scheduled → wo-hero.4 in_progress of one order, got ${HERO_BEFORE.status} → ${HERO_AFTER.status}`,
   );
 }
-const HERO_ID = HERO_BEFORE.id;
+export const HERO_ID = HERO_BEFORE.id;
 if (STATUS_ORDER.some((s) => boardOwner[s].some((w) => w.id === HERO_ID))) {
   throw new Error('board.owner.json already holds the hero order (it is exported before the hero copy)');
 }
@@ -103,7 +103,7 @@ const GRAB_AT = { x: CARD.x + GRAB.x, y: CARD.y + GRAB.y };
 const DROP_POINT = { x: SLOT.x + GRAB.x + 9, y: SLOT.y + GRAB.y + 13 };
 // Idles low on «В работе», glides onto the hero card, then carries it in a shallow arc (lifted ~26 px
 // mid-way) to «В работе» and lets go; after the drop it leaves below the window (out of every view).
-const CURSOR: CursorPoint[] = [
+export const CURSOR: CursorPoint[] = [
   { at: 0, x: 700, y: 760 },
   { at: s(6), x: 700, y: 760 },
   { at: s(CLICK_PRESS - 6), ...GRAB_AT },
