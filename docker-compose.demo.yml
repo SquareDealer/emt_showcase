@@ -1,0 +1,28 @@
+name: tatarin_demo
+services:
+  db:
+    image: postgres:16
+    container_name: tatarin_demo_pg
+    environment: { POSTGRES_USER: crm, POSTGRES_PASSWORD: crm, POSTGRES_DB: tatarin_demo }
+    ports: ["5545:5432"]
+    volumes: [tatarin_demo_pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U crm -d tatarin_demo"], interval: 5s, timeout: 3s, retries: 10 }
+  api:
+    profiles: [app]
+    build: { context: ., dockerfile: Dockerfile }
+    container_name: tatarin_demo_api
+    environment:
+      DATABASE_URL: postgres://crm:crm@db:5432/tatarin_demo
+      JWT_SECRET: ${DEMO_JWT_SECRET:?set DEMO_JWT_SECRET}
+      SEED_OWNER_PASSWORD: ${DEMO_PASSWORD:?set DEMO_PASSWORD}
+    depends_on: { db: { condition: service_healthy } }
+    ports: ["3100:3000"]
+  web:
+    profiles: [app]
+    build: { context: ./client, dockerfile: Dockerfile }
+    container_name: tatarin_demo_web
+    environment: { DOMAIN: ":80" }
+    depends_on: [api]
+    ports: ["8088:80"]
+volumes:
+  tatarin_demo_pgdata:
