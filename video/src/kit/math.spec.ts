@@ -114,3 +114,14 @@ describe('round-2 fixes', () => {
     }
   });
 });
+
+describe('round2 guards', () => {
+  const r = (v: number) => countUp(1, 0, 1, 0, v);
+  it('tiny, zero and negative zero', () => {
+    expect(r(1e-7)).toBe(0);
+    expect(r(0)).toBe(0);
+    expect(Object.is(r(-0), 0)).toBe(true);
+    expect(Object.is(r(-1e-7), 0)).toBe(true);
+  });
+  it('huge values pass through', () => expect(r(1e21)).toBe(1e21));
+});

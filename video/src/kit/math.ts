@@ -10,8 +10,13 @@ const CURSOR_EASE = Easing.inOut(Easing.cubic);
 
 /** Round to kopecks via decimal-string shift (binary-float safe for x.xx5), symmetric for negatives. */
 function round2(v: number): number {
+  if (!Number.isFinite(v)) return v;
   const a = Math.abs(v);
+  // String(a) switches to exponent notation below 1e-6 and from 1e21; the 'e2' shift breaks there.
+  if (a < 0.005) return 0;
+  if (a >= 1e15) return v;
   const r = Number(Math.round(Number(a + 'e2')) + 'e-2');
+  if (!Number.isFinite(r) || r === 0) return 0;
   return v < 0 ? -r : r;
 }
 
