@@ -170,3 +170,33 @@ export interface BlockPlan {
   notes: string | null;
   created_at: Date;
 }
+
+/** Mirrors work_order_status in src/entities/work-order.entity.ts (no "cancelled"). */
+export type WorkOrderStatus = 'scheduled' | 'in_progress' | 'waiting' | 'done' | 'closed';
+
+export interface WorkOrderPlan {
+  id: string;
+  vehicle_id: string;
+  /** Not a column: the statistics need it. */
+  client_id: string;
+  assigned_master_id: string;
+  status: WorkOrderStatus;
+  title: string;
+  notes: string | null;
+  complaint: string | null;
+  recommendation: string | null;
+  scheduled_at: Date;
+  scheduled_duration_min: number;
+  discount_type: 'percent' | 'fixed' | null;
+  discount_value: number | null;
+  total_cached: number;
+  total_frozen: number | null;
+  paid_amount: number;
+  created_at: Date;
+  updated_at: Date;
+  closed_at: Date | null;
+  /** Not a column: written into notes as «Пробег при приёме: 123 450 км». */
+  odometer_km: number;
+  labor: LaborLinePlan[];
+  parts: PartLinePlan[];
+}

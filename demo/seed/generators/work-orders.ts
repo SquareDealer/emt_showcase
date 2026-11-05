@@ -1,0 +1,531 @@
+import type { Faker } from '@faker-js/faker';
+import { PriceResolutionService } from '../../../src/task-templates/price-resolution.service';
+import { PricingService } from '../../../src/work-orders/pricing.service';
+import {
+  FUTURE_DAYS,
+  LABOR_RATE_NEW,
+  LABOR_RATE_OLD,
+  MONTHLY_TICKET_GROWTH,
+  ORDERS_TARGET,
+  RATE_CHANGE_MONTHS_AGO,
+  REGULAR_WEIGHT,
+  SLOT_MIN,
+  TICKET_MEDIAN,
+  TICKET_SIGMA,
+} from '../config';
+import { COMPLAINTS, RECOMMENDATIONS, WAITING_PARTS } from '../data/texts';
+import { HERO, heroSchedule } from '../hero';
+import { demoId } from '../ids';
+import { chance, stratifiedLognormal, weightedIndex } from '../rng';
+import { addDays, daysBetween, isWorkday, mskAt, mskDay, subMonthsDay } from '../time';
+import type {
+  BlockPlan,
+  CatalogPlan,
+  ClientPlan,
+  FreeLabor,
+  StaffPlan,
+  TaskPlan,
+  VehiclePlan,
+  WorkOrderPlan,
+  WorkOrderStatus,
+  WorkPick,
+} from '../types';
+import { overrideFor, resolveTemplatePartsPlan, taskByKey } from './catalog';
+import { buildOrderLines } from './lines';
+import { DayBoard, dailyCounts, windowStartDay } from './schedule';
+import { odometerAt } from './vehicles';
+
+const MS_MIN = 60_000;
+const MS_DAY = 86_400_000;
+/** Days between booking and visit, 0..10: mostly 1–3. */
+const LEAD_WEIGHTS = [1.5, 5, 5, 4, 2, 1.2, 1, 0.8, 0.6, 0.5, 0.4];
+const MAX_PICKS = 6;
+const TIRE_PEAK_MONTHS = [10, 11];
+const TIRE_PEAK_FACTOR = 6;
+/** The seasonal swap (with its balancing and wheel storage) belongs to the swap seasons; off-season only the odd straggler. */
+const SEASONAL_SWAP = new Set(['tire-change', 'wheel-balance', 'tire-storage']);
+const SWAP_MONTHS = [4, 5, 10, 11];
+const SWAP_OFF_SEASON_FACTOR = 0.15;
+const BUSY_DAY_MIN = 9;
+const NEXT_DAY_MIN = 4;
+const OVERDUE_COUNT = 2;
+/** A target above 8 × median (the top 0.7%) is out of reach of 6 works; the carry stays within ±2 × median. */
+const TICKET_CAP_X = 8;
+const OWED_LIMIT_X = 2;
+/** Works tied to the N14 engine only make sense on the R-series. */
+const R_SERIES_ONLY = new Set(['timing-chain-n14']);
+
+/** Hero client's history: 8 × R56, 3 × RAV4 (the last visit is the RAV4 and the one before it the R56, so both cars land in the autumn). */
+const HERO_VISITS: { car: 'r56' | 'rav4'; works: string[] }[] = [
+  { car: 'r56', works: ['service-regular'] },
+  { car: 'r56', works: ['brake-pads-front'] },
+  { car: 'rav4', works: ['oil-change', 'cabin-filter'] },
+  { car: 'r56', works: ['suspension-diagnostics', 'stab-links-front'] },
+  { car: 'r56', works: ['oil-change'] },
+  { car: 'r56', works: ['valve-cover-gasket'] },
+  { car: 'rav4', works: ['service-regular', 'brake-fluid'] },
+  { car: 'r56', works: ['coolant-change'] },
+  { car: 'r56', works: ['computer-diagnostics', 'spark-plugs'] },
+  { car: 'r56', works: ['oil-change'] },
+  { car: 'rav4', works: ['wheel-alignment'] },
+];
+
+/**
+ * Pick weight multiplier: tires peak in October–November, the seasonal swap is rare off-season. The peak
+ * boosts only an order's first tire work: one swap per visit, so a big autumn order does not fill its six
+ * works with cheap tire jobs and fall short of its ticket.
+ */
+function seasonFactor(t: TaskPlan, month: number, hasTires: boolean): number {
+  if (t.category !== 'tires') return 1;
+  if (TIRE_PEAK_MONTHS.includes(month)) return hasTires ? 1 : TIRE_PEAK_FACTOR;
+  return SEASONAL_SWAP.has(t.key) && !SWAP_MONTHS.includes(month) ? SWAP_OFF_SEASON_FACTOR : 1;
+}
+
+export function rateAt(demoNow: Date, at: Date): number {
+  const change = mskAt(subMonthsDay(mskDay(demoNow), RATE_CHANGE_MONTHS_AGO), 0);
+  return at < change ? LABOR_RATE_OLD : LABOR_RATE_NEW;
+}
+
+export function planSettings(demoNow: Date): Record<string, string> {
+  return {
+    labor_rate: String(LABOR_RATE_NEW),
+    company_name: 'ООО «Гараж»',
+    company_inn: '0000000000',
+    company_address: 'г. Москва, ул. Примерная, д. 1',
+    company_phone: '+7 (555) 000-00-00',
+    vat_rate: '20',
+    working_hours_start: '8',
+    working_hours_end: '20',
+    slot_minutes: String(SLOT_MIN),
+    default_appointment_min: '60',
+    demo_now: mskDay(demoNow),
+  };
+}
+
+/** 123450 → «123 450» with plain spaces (no Intl: its group separator differs between ICU builds). */
+export function formatKm(km: number): string {
+  return String(km).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+export interface WorkOrdersContext {
+  demoNow: Date;
+  catalog: CatalogPlan;
+  clients: ClientPlan[];
+  vehicles: VehiclePlan[];
+  staff: StaffPlan[];
+  blocks: BlockPlan[];
+}
+
+/** A placed order before its status, lines and dates are settled. */
+interface Draft {
+  id: string;
+  client: ClientPlan;
+  vehicle: VehiclePlan;
+  masterId: string;
+  start: Date;
+  duration: number;
+  works: WorkPick[];
+  free: FreeLabor[];
+  createdAt: Date;
+  discount: { type: 'percent' | 'fixed'; value: number } | null;
+  /** Hero orders: the status is part of the story; `texts` null → drawn like any other order. */
+  hero?: { status: WorkOrderStatus; texts: { complaint: string | null; recommendation: string | null } | null };
+}
+
+const lastWorkdayOnOrBefore = (day: string): string => {
+  let d = day;
+  while (!isWorkday(d)) d = addDays(d, -1);
+  return d;
+};
+const nextWorkdayAfter = (day: string): string => {
+  let d = addDays(day, 1);
+  while (!isWorkday(d)) d = addDays(d, 1);
+  return d;
+};
+const lastDayOfMonth = (day: string): string => {
+  const [y, m] = day.split('-').map(Number);
+  return addDays(m === 12 ? `${y + 1}-01-01` : `${y}-${String(m + 1).padStart(2, '0')}-01`, -1);
+};
+const monthOf = (day: string): number => Number(day.slice(5, 7));
+const roundUp30 = (min: number): number => Math.ceil(min / SLOT_MIN) * SLOT_MIN;
+const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
+const earliest = (...ds: Date[]): Date => new Date(Math.min(...ds.map((d) => d.getTime())));
+const latest = (...ds: Date[]): Date => new Date(Math.max(...ds.map((d) => d.getTime())));
+const byDateThenId = (a: WorkOrderPlan, b: WorkOrderPlan): number =>
+  a.scheduled_at.getTime() - b.scheduled_at.getTime() || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+
+export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[] {
+  const { demoNow, catalog, clients, vehicles, staff, blocks } = ctx;
+  const resolution = new PriceResolutionService();
+  const pricing = new PricingService();
+  const nowMs = demoNow.getTime();
+  const closeBy = nowMs - 30 * MS_MIN;
+  const today = mskDay(demoNow);
+  const windowStart = windowStartDay(demoNow);
+  const windowEnd = addDays(today, FUTURE_DAYS);
+  const { busyDay, freeSlot } = heroSchedule(demoNow);
+  const masters = staff.filter((s) => s.role === 'master');
+  const masterId = (login: string): string => {
+    const m = masters.find((s) => s.login === login);
+    if (!m) throw new Error(`no master ${login}`);
+    return m.id;
+  };
+  const board = new DayBoard(masters, blocks, freeSlot);
+  const clientById = new Map(clients.map((c) => [c.id, c]));
+  const vehicleById = new Map(vehicles.map((v) => [v.id, v]));
+  const carsOf = new Map<string, VehiclePlan[]>();
+  for (const v of vehicles) carsOf.set(v.client_id, [...(carsOf.get(v.client_id) ?? []), v]);
+  const must = <T>(x: T | undefined, what: string): T => {
+    if (x === undefined) throw new Error(`missing ${what}`);
+    return x;
+  };
+
+  // estimate = the work's price for the car's generation + its default parts (memoised: ~5k lookups).
+  const estCache = new Map<string, number>();
+  const estimate = (task: TaskPlan, gen: string | null, rate: number): number => {
+    const k = `${task.key}|${gen ?? '-'}|${rate}`;
+    let v = estCache.get(k);
+    if (v === undefined) {
+      const r = resolution.resolve(task, overrideFor(catalog, task.key, gen), rate);
+      const labor = r.price_override ?? (r.hours ?? 0) * r.rate_snapshot;
+      const parts = resolveTemplatePartsPlan(catalog, task.key, gen)
+        .filter((c) => c.is_default)
+        .reduce((s, c) => s + c.qty * c.part.default_price, 0);
+      v = labor + parts;
+      estCache.set(k, v);
+    }
+    return v;
+  };
+  const durationOf = (works: WorkPick[], gen: string | null): number => {
+    const hours = works.reduce((s, w) => {
+      const t = taskByKey(catalog, w.taskKey);
+      return s + (resolution.resolve(t, overrideFor(catalog, t.key, gen), 0).hours ?? 0);
+    }, 0);
+    return clamp(roundUp30(hours * 60), 30, 480);
+  };
+
+  /** The day the order is booked: `lead` days before the visit (mostly 1–3), never after today. */
+  const bookingDay = (day: string): string => {
+    const lead = weightedIndex(f, LEAD_WEIGHTS);
+    const d = addDays(day, -lead);
+    return d <= today ? d : addDays(today, -f.number.int({ min: 0, max: 6 }));
+  };
+  /** created_at: 10:00–19:00 of the booking day, never after the visit or DEMO_NOW (15 min of slack for the line stamps). */
+  const createdAtFor = (creationDay: string, start: Date): Date =>
+    earliest(mskAt(creationDay, 0, f.number.int({ min: 10 * 60, max: 19 * 60 })), start, new Date(nowMs - 15 * MS_MIN));
+  const lineDiscounts = (keys: string[]): WorkPick[] => keys.map((taskKey) => (chance(f, 0.04) ? { taskKey, laborDiscountPct: 10 } : { taskKey }));
+  const orderDiscount = (client: ClientPlan): Draft['discount'] => {
+    if (client.discount_default_pct) return { type: 'percent', value: client.discount_default_pct };
+    const r = f.number.float();
+    if (r < 0.08) return { type: 'percent', value: f.helpers.arrayElement([5, 10]) };
+    if (r < 0.1) return { type: 'fixed', value: f.helpers.arrayElement([500, 1000]) };
+    return null;
+  };
+  const endOf = (d: { start: Date; duration: number }) => d.start.getTime() + d.duration * MS_MIN;
+
+  /** The status table: future → scheduled, running → in_progress, then by the age of `end`. */
+  const statusByDate = (d: Draft): WorkOrderStatus => {
+    const end = endOf(d);
+    if (d.start.getTime() > nowMs) return 'scheduled';
+    if (nowMs < end) return 'in_progress';
+    const age = (nowMs - end) / MS_DAY;
+    const table: [WorkOrderStatus, number][] =
+      age <= 3
+        ? [['closed', 30], ['done', 30], ['waiting', 20], ['in_progress', age <= 2 ? 20 : 0]]
+        : age <= 7
+          ? [['closed', 85], ['waiting', 10], ['done', 5]]
+          : [['closed', 96], ['done', 4]];
+    const s = table[weightedIndex(f, table.map(([, w]) => w))][0];
+    // A closing needs half an hour after the work; one that just ended is still «done».
+    return s === 'closed' && end > closeBy ? 'done' : s;
+  };
+
+  /** Status, lines, total (real PricingService), dates and texts of one placed order. */
+  const finalize = (d: Draft): WorkOrderPlan => {
+    const status = d.hero?.status ?? statusByDate(d);
+    const end = endOf(d);
+    const rate = rateAt(demoNow, d.createdAt);
+    const { labor, parts } = buildOrderLines({
+      woId: d.id,
+      works: d.works,
+      free: d.free,
+      generation: d.vehicle.generationCode,
+      catalog,
+      rate,
+      createdAt: d.createdAt,
+      resolution,
+    });
+    // A fixed 500/1000 off a 700 ₽ puncture repair would zero the order: only on a sizeable one.
+    const discount = d.discount?.type === 'fixed' && pricing.netSubtotal(labor, parts) < 4 * d.discount.value ? null : d.discount;
+    const total = pricing.computeTotal(labor, parts, discount?.type ?? null, discount?.value ?? null);
+
+    let closedAt: Date | null = null;
+    if (status === 'closed') {
+      // end + 0–2 days at 17:00–19:30, within the month the work ended in (revenue stays in its month).
+      const endDay = mskDay(new Date(end));
+      const plus = addDays(endDay, weightedIndex(f, [5, 3, 1]));
+      const day = plus <= lastDayOfMonth(endDay) ? plus : lastDayOfMonth(endDay);
+      const candidate = mskAt(day, 0, f.number.int({ min: 17 * 60, max: 19 * 60 + 30 }));
+      closedAt = new Date(Math.min(latest(candidate, new Date(end)).getTime(), closeBy));
+    }
+
+    const category = taskByKey(catalog, d.works[0].taskKey).category;
+    const texts = d.hero?.texts ?? {
+      complaint: chance(f, 0.6) ? f.helpers.arrayElement(COMPLAINTS[category]) : null,
+      // advice comes with finished work
+      recommendation: (status === 'closed' || status === 'done') && chance(f, 0.3) ? f.helpers.arrayElement(RECOMMENDATIONS[category]) : null,
+    };
+    const odometer = odometerAt(d.vehicle, new Date(Math.min(d.start.getTime(), nowMs)), demoNow);
+    const waitingFor = status === 'waiting' ? (parts.length ? f.helpers.arrayElement(parts).name : f.helpers.arrayElement(WAITING_PARTS)) : null;
+    const groupNames = labor.filter((l) => l.group_key).sort((a, b) => a.group_sort - b.group_sort).map((l) => l.group_name as string);
+
+    return {
+      id: d.id,
+      vehicle_id: d.vehicle.id,
+      client_id: d.client.id,
+      assigned_master_id: d.masterId,
+      status,
+      title: groupNames.slice(0, 2).join(', '),
+      notes: [`Пробег при приёме: ${formatKm(odometer)} км`, ...(waitingFor ? [`Ждёт запчасть: ${waitingFor}`] : [])].join('\n'),
+      complaint: texts.complaint,
+      recommendation: texts.recommendation,
+      scheduled_at: d.start,
+      scheduled_duration_min: d.duration,
+      discount_type: discount?.type ?? null,
+      discount_value: discount?.value ?? null,
+      total_cached: total,
+      total_frozen: status === 'closed' ? total : null,
+      paid_amount: status === 'closed' ? total : 0,
+      created_at: d.createdAt,
+      updated_at: closedAt ?? latest(d.createdAt, new Date(Math.min(d.start.getTime(), nowMs))),
+      closed_at: closedAt,
+      odometer_km: odometer,
+      labor,
+      parts,
+    };
+  };
+
+  const out: WorkOrderPlan[] = [];
+
+  // ── 1. Hero pins: fixed time and master, occupied on the board before anything else ──
+  const pin = (d: Omit<Draft, 'createdAt'>, createdAt: Date): void => {
+    board.occupy(d.masterId, d.start, d.duration);
+    out.push(finalize({ ...d, createdAt }));
+  };
+  const heroClient = must(clientById.get(HERO.client.id), 'hero client');
+  const r56 = must(vehicleById.get(HERO.r56.vehicleId), 'hero R56');
+  const rav4 = must(vehicleById.get(HERO.secondVehicleId), 'hero RAV4');
+  const f60 = must(vehicleById.get(HERO.bigOrder.vehicleId), 'hero F60');
+
+  pin(
+    {
+      id: HERO.bigOrder.id,
+      client: must(clientById.get(f60.client_id), 'F60 owner'),
+      vehicle: f60,
+      masterId: HERO.masterId,
+      start: mskAt(busyDay, 9),
+      duration: 360,
+      works: [{ taskKey: 'service-regular' }, { taskKey: 'brake-pads-front', laborDiscountPct: 10 }, { taskKey: 'brake-discs-front' }, { taskKey: 'stab-links-front' }],
+      free: [{ name: 'Мойка двигателя', hours: 0.5 }],
+      discount: { type: 'percent', value: 5 },
+      hero: { status: 'in_progress', texts: { complaint: 'Плановое ТО; скрип при торможении и стук спереди на неровностях', recommendation: null } },
+    },
+    mskAt(addDays(busyDay, -2), 15),
+  );
+
+  const diagStart = mskAt(lastWorkdayOnOrBefore(addDays(busyDay, -7)), 10);
+  pin(
+    {
+      id: HERO.diagnosticsOrderId,
+      client: heroClient,
+      vehicle: r56,
+      masterId: masterId('master2'),
+      start: diagStart,
+      duration: 60,
+      works: [{ taskKey: 'engine-diagnostics' }],
+      free: [],
+      discount: null,
+      hero: {
+        status: 'closed',
+        texts: { complaint: 'Треск двигателя на холодную', recommendation: 'Растяжение цепи ГРМ (N14) — рекомендована замена цепи и натяжителя' },
+      },
+    },
+    createdAtFor(bookingDay(mskDay(diagStart)), diagStart),
+  );
+
+  const pdfStart = mskAt(lastWorkdayOnOrBefore(addDays(busyDay, -4)), 11);
+  const pdfBooking = bookingDay(mskDay(pdfStart));
+  const heroClients = new Set([HERO.client.id, HERO.bigOrder.clientId, HERO.fleetClientId]);
+  const pdfCar = must(
+    vehicles.find((v) => {
+      const c = clientById.get(v.client_id);
+      return v.generationCode === 'F56' && c?.kind === 'person' && !heroClients.has(c.id) && v.created_at <= mskAt(pdfBooking, 0);
+    }),
+    'an F56 of an ordinary client',
+  );
+  pin(
+    {
+      id: HERO.pdfOrderId,
+      client: must(clientById.get(pdfCar.client_id), 'F56 owner'),
+      vehicle: pdfCar,
+      masterId: masterId('master3'),
+      start: pdfStart,
+      duration: 120,
+      works: [{ taskKey: 'oil-change' }, { taskKey: 'spark-plugs' }],
+      free: [],
+      discount: null,
+      hero: { status: 'closed', texts: { complaint: 'Плановое ТО: масло и свечи', recommendation: 'Следующая замена масла через 8 000 км' } },
+    },
+    createdAtFor(pdfBooking, pdfStart),
+  );
+
+  // ── 2. Hero client's visits: weekdays spread evenly over the window, not in the last 4 days ──
+  const first = addDays(windowStart, 3);
+  const last = addDays(busyDay, -5);
+  const span = daysBetween(first, last);
+  HERO_VISITS.forEach((visit, i) => {
+    let day = lastWorkdayOnOrBefore(addDays(first, Math.round((i * span) / (HERO_VISITS.length - 1))));
+    const car = visit.car === 'r56' ? r56 : rav4;
+    const works = lineDiscounts(TIRE_PEAK_MONTHS.includes(monthOf(day)) ? [...visit.works, 'tire-change'] : visit.works);
+    const duration = durationOf(works, car.generationCode);
+    const creationDay = bookingDay(day);
+    let slot = board.place(day, duration, { rng: f });
+    while (!slot && day < last) {
+      day = nextWorkdayAfter(day);
+      slot = board.place(day, duration, { rng: f });
+    }
+    if (!slot) throw new Error(`no slot for hero visit ${i + 1}`);
+    out.push(
+      finalize({
+        id: demoId('wo', `hero-visit-${i + 1}`),
+        client: heroClient,
+        vehicle: car,
+        masterId: slot.masterId,
+        start: slot.start,
+        duration,
+        works,
+        free: [],
+        createdAt: createdAtFor(creationDay, slot.start),
+        discount: orderDiscount(heroClient),
+        hero: { status: 'closed', texts: null },
+      }),
+    );
+  });
+
+  // ── 3. Bulk: daily counts, a dense busy day, a bookable next weekday ──
+  const counts = dailyCounts(demoNow, ORDERS_TARGET - out.length);
+  const onDay = (d: string) => out.filter((w) => mskDay(w.scheduled_at) === d).length;
+  counts.set(busyDay, Math.max(counts.get(busyDay) ?? 0, BUSY_DAY_MIN - onDay(busyDay)));
+  const nextDay = mskDay(freeSlot.startsAt);
+  counts.set(nextDay, Math.max(counts.get(nextDay) ?? 0, NEXT_DAY_MIN - onDay(nextDay)));
+
+  // Target tickets: stratified lognormal per month, the median grows month over month.
+  const [sy, sm] = windowStart.split('-').map(Number);
+  const perMonth = new Map<string, number>();
+  for (const [d, n] of counts) perMonth.set(d.slice(0, 7), (perMonth.get(d.slice(0, 7)) ?? 0) + n);
+  const targets = new Map<string, number[]>();
+  const medians = new Map<string, number>();
+  for (const [m, n] of perMonth) {
+    const [y, mm] = m.split('-').map(Number);
+    const median = TICKET_MEDIAN * Math.pow(1 + MONTHLY_TICKET_GROWTH, (y - sy) * 12 + (mm - sm));
+    medians.set(m, median);
+    targets.set(m, stratifiedLognormal(f, n, median, TICKET_SIGMA).map((t) => Math.min(t, TICKET_CAP_X * median)));
+  }
+  // What the month still owes its targets (target − revenue). Discrete picks, the 6-work cap, discounts and
+  // unpaid orders would otherwise make monthly revenue jitter by ±5%, hiding the 3–8% growth. Like the
+  // rounding carry of dailyCounts, the gap is passed on to the month's next order (bounded, so one
+  // unreachable target never snowballs into a run of oversized orders).
+  const owed = new Map<string, number>();
+
+  const pickable = (gen: string | null) => catalog.tasks.filter((t) => !R_SERIES_ONLY.has(t.key) || (gen ?? '').startsWith('R'));
+  const bulkClients = clients.filter((c) => c.id !== HERO.client.id);
+  const firstCar = new Map(bulkClients.map((c) => [c.id, Math.min(...(carsOf.get(c.id) ?? []).map((v) => v.created_at.getTime()))]));
+
+  let seq = 0;
+  for (const [day, n] of counts) {
+    const monthKey = day.slice(0, 7);
+    const month = monthOf(day);
+    const pool = must(targets.get(monthKey), `targets ${monthKey}`);
+    const owedLimit = OWED_LIMIT_X * must(medians.get(monthKey), `median ${monthKey}`);
+    for (let k = 0; k < n; k++) {
+      const base = must(pool.shift(), `target ${day}`);
+      const target = Math.max(0.3 * base, base + (owed.get(monthKey) ?? 0));
+      const creationDay = bookingDay(day);
+      // Client and car exist before the day the order is booked.
+      const bound = mskAt(creationDay, 0).getTime();
+      const candidates = bulkClients.filter((c) => (firstCar.get(c.id) ?? Infinity) <= bound);
+      if (!candidates.length) continue;
+      const client = candidates[weightedIndex(f, candidates.map((c) => (c.tier === 'regular' ? REGULAR_WEIGHT : 1)))];
+      const vehicle = f.helpers.arrayElement((carsOf.get(client.id) ?? []).filter((v) => v.created_at.getTime() <= bound));
+      const gen = vehicle.generationCode;
+      const rate = rateAt(demoNow, mskAt(creationDay, 12));
+
+      const picks: TaskPlan[] = [];
+      let sum = 0;
+      while (sum < 0.9 * target && picks.length < MAX_PICKS) {
+        const room = (target - sum) * 1.5 + 1000;
+        const options = pickable(gen).filter((t) => !picks.includes(t) && estimate(t, gen, rate) <= room);
+        if (!options.length) break;
+        const hasTires = picks.some((x) => x.category === 'tires');
+        const t = options[weightedIndex(f, options.map((o) => o.weight * seasonFactor(o, month, hasTires)))];
+        picks.push(t);
+        sum += estimate(t, gen, rate);
+      }
+      if (!picks.length) {
+        // the cheapest work, the more common one on a tie
+        picks.push([...pickable(gen)].sort((a, b) => estimate(a, gen, rate) - estimate(b, gen, rate) || b.weight - a.weight)[0]);
+      }
+
+      const works = lineDiscounts(picks.map((t) => t.key));
+      const duration = durationOf(works, gen);
+      const notBeforeMin = chance(f, 0.5) ? 8 * 60 + SLOT_MIN * f.number.int({ min: 0, max: 8 }) : undefined;
+      let at = day;
+      let slot = board.place(at, duration, { rng: f, notBeforeMin }) ?? board.place(at, duration, { rng: f });
+      while (!slot) {
+        at = nextWorkdayAfter(at);
+        if (at > windowEnd) break;
+        slot = board.place(at, duration, { rng: f });
+      }
+      if (!slot) continue;
+      seq++;
+      const wo = finalize({
+        id: demoId('wo', seq),
+        client,
+        vehicle,
+        masterId: slot.masterId,
+        start: slot.start,
+        duration,
+        works,
+        free: [],
+        createdAt: createdAtFor(creationDay, slot.start),
+        discount: orderDiscount(client),
+      });
+      // Recent and future orders will be paid; only an old «done» is revenue lost for good.
+      const lost = wo.status === 'done' && nowMs - endOf({ start: slot.start, duration }) > 7 * MS_DAY;
+      owed.set(monthKey, clamp(target - (lost ? 0 : wo.total_cached), -owedLimit, owedLimit));
+      out.push(wo);
+    }
+  }
+
+  // ── 4. Exactly two bookings of the last two days nobody moved on: still «scheduled» ──
+  const recent = out.filter((w) => !heroClients.has(w.client_id) && w.scheduled_at.getTime() >= nowMs - 2 * MS_DAY && w.scheduled_at.getTime() < nowMs);
+  const finished = recent.filter((w) => endOf({ start: w.scheduled_at, duration: w.scheduled_duration_min }) <= nowMs);
+  const overdue = new Set(f.helpers.arrayElements(finished.length >= OVERDUE_COUNT ? finished : recent, OVERDUE_COUNT).map((w) => w.id));
+  if (overdue.size !== OVERDUE_COUNT) throw new Error(`need ${OVERDUE_COUNT} overdue candidates, have ${recent.length}`);
+
+  return out
+    .map((w) => {
+      if (!overdue.has(w.id)) return w;
+      return {
+        ...w,
+        status: 'scheduled' as const,
+        notes: w.notes?.split('\n').filter((l) => !l.startsWith('Ждёт запчасть')).join('\n') ?? null,
+        recommendation: null,
+        total_frozen: null,
+        paid_amount: 0,
+        closed_at: null,
+        updated_at: latest(w.created_at, w.scheduled_at),
+      };
+    })
+    .sort(byDateThenId);
+}
