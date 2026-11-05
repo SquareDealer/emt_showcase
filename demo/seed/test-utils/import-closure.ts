@@ -1,6 +1,9 @@
 import { existsSync, readFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 
+// test-utils -> seed -> demo -> repo root; root tsconfig has baseUrl "./", so 'src/...' is a valid bare import.
+const REPO_ROOT = resolve(__dirname, '..', '..', '..');
+
 const IMPORT_RE = /(?:\bfrom\s*|\bimport\s*\(?\s*|\brequire\s*\(\s*)['"]([^'"]+)['"]/g;
 
 function resolveRelative(from: string, spec: string): string {
@@ -23,7 +26,16 @@ export function importClosure(entry: string): string[] {
     for (const m of src.matchAll(IMPORT_RE)) {
       const spec = m[1];
       if (spec.startsWith('.')) walk(resolveRelative(file, spec));
-      else out.add(spec);
+      else {
+        out.add(spec);
+        if (/^src[\\/]/.test(spec)) {
+          try {
+            walk(resolveRelative(resolve(REPO_ROOT, 'x'), `./${spec}`));
+          } catch {
+            // unresolved baseUrl import: the bare specifier is already recorded
+          }
+        }
+      }
     }
   };
   walk(entry);

@@ -26,10 +26,14 @@ const EXAMPLE_URL = 'DATABASE_URL=postgres://crm:crm@localhost:5545/tatarin_demo
 export function parseArgs(argv: string[], realNow: Date): SeedArgs {
   let force = false;
   let demoDay = todayMsk(realNow);
+  let seenNow = false;
   for (const arg of argv) {
     if (arg === '--force') {
+      if (force) throw new DemoSeedRefusal('Аргумент --force указан дважды.');
       force = true;
     } else if (arg.startsWith('--now=')) {
+      if (seenNow) throw new DemoSeedRefusal('Аргумент --now= указан дважды.');
+      seenNow = true;
       const v = arg.slice('--now='.length);
       const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
       const ok =
@@ -57,15 +61,18 @@ export function dbNameOf(url: string): string {
   } catch {
     throw new DemoSeedRefusal(`DATABASE_URL не разобрать как URL. Пример: ${EXAMPLE_URL}`);
   }
+  let name: string;
   try {
-    return decodeURIComponent(pathname.replace(/^\//, ''));
+    name = decodeURIComponent(pathname.replace(/^\//, ''));
   } catch {
     throw new DemoSeedRefusal(`DATABASE_URL: имя базы не декодируется. Пример: ${EXAMPLE_URL}`);
   }
+  if (!name) throw new DemoSeedRefusal(`DATABASE_URL без имени базы. Пример: ${EXAMPLE_URL}`);
+  return name;
 }
 
 export function assertSafeEnv(env: NodeJS.ProcessEnv, opts: { requirePassword: boolean }): SafeEnv {
-  if (env.NODE_ENV === 'production') {
+  if ((env.NODE_ENV ?? '').trim().toLowerCase() === 'production') {
     throw new DemoSeedRefusal('Отказ: NODE_ENV=production. Сид стирает таблицы и не запускается в production.');
   }
   const databaseUrl = env.DATABASE_URL;
