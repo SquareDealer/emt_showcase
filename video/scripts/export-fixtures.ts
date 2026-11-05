@@ -325,8 +325,6 @@ async function main(): Promise<void> {
 
     write('dashboard.json', await buildDashboard(db, demoNow));
 
-    pdfToPng(await pdf(owner, `/work-orders/${HERO.pdfOrderId}/pdf`), join(DOCS, 'smeta.png'));
-
     // ---- hero: real mutations on a copy of the closed diagnostics order, then put the database back.
     const seqBefore = await readSequences(db);
     const { freeSlot } = heroSchedule(demoNow);
@@ -382,6 +380,13 @@ async function main(): Promise<void> {
       await snap(4);
 
       pdfToPng(await pdf(owner, `${path}/order-pdf`), join(DOCS, 'order-pdf.png'));
+
+      // The estimate of the SAME order (the Docs scene fans it out behind the order PDF): close the
+      // copy (freezes the total, draws doc_number from work_order_doc_number_seq — given back below),
+      // pin the API-clock closed_at to DEMO_NOW, render, and let `finally` delete the copy.
+      await call(owner, 'POST', `${path}/close`, {});
+      await db.query(`UPDATE work_orders SET closed_at = $2 WHERE id = $1`, [copyId, demoNow]);
+      pdfToPng(await pdf(owner, `${path}/pdf`), join(DOCS, 'smeta.png'));
     } finally {
       if (copyId) await call(owner, 'DELETE', `/work-orders/${copyId}`);
       // order-pdf drew a number for the copy; give it back so the database ends as it started.
