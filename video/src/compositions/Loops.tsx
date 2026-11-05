@@ -17,7 +17,13 @@ import { Highlight } from '../kit/Highlight';
 import { LoopCrossfade } from '../kit/LoopCrossfade';
 import { PhoneFrame } from '../kit/PhoneFrame';
 import { SCENE_CLICKS } from '../timing';
-import { BookingWindow, CALLOUT_AT as BOOKING_CALLOUT_AT, SLOT, bookingState } from '../scenes/Booking';
+import {
+  BookingWindow,
+  CALLOUT_ANCHOR as BOOKING_CALLOUT_ANCHOR,
+  CALLOUT_AT as BOOKING_CALLOUT_AT,
+  CALLOUT_SIDE as BOOKING_CALLOUT_SIDE,
+  bookingState,
+} from '../scenes/Booking';
 import {
   ADD_FROM_PRICE,
   APPLY_AT,
@@ -93,7 +99,7 @@ function BookingClip({ theme, brand, callouts, accent }: ShowcaseProps) {
   const t = useCurrentFrame();
   const { fps } = useVideoConfig();
   const f = BOOKING_LOOP.frame(t);
-  const base = bookingState(f.scene, fps);
+  const base = { ...bookingState(f.scene, fps), scroll: f.scroll };
   // The reset: the landed order fades out (its outline goes first), the week is back as at frame 0.
   const state =
     f.heroFade < 1
@@ -109,8 +115,8 @@ function BookingClip({ theme, brand, callouts, accent }: ShowcaseProps) {
       <Camera keys={BOOKING_LOOP.cam}>
         <BookingWindow theme={theme} brandName={brand.name} state={state} />
         <Fade opacity={BOOKING_LOOP.overlays(t).caption} z={90}>
-          {/* The Booking scene's placement: above the slot, clear of the ghost, the menu and the order. */}
-          <Callout text={callouts.booking} at={BOOKING_CALLOUT_AT} anchor={{ x: SLOT.x + 44, y: SLOT.y }} side="top" accent={accent} />
+          {/* The Booking scene's placement: right of the slot, clear of the ghost, the menu and the order. */}
+          <Callout text={callouts.booking} at={BOOKING_CALLOUT_AT} anchor={BOOKING_CALLOUT_ANCHOR} side={BOOKING_CALLOUT_SIDE} accent={accent} />
         </Fade>
         <Cursor path={BOOKING_LOOP.cursor} clicks={BOOKING_LOOP.clicks} accent={accent} />
       </Camera>

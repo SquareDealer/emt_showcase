@@ -5,7 +5,7 @@ import { generations, priceList, woHero } from '../fixtures';
 import { cameraAt, cursorAt, maxPointerStep, stageView } from '../kit/math';
 import { FRAMES_PER_BEAT, SCENE_CLICKS } from '../timing';
 import { COLUMNS_AFTER, COLUMNS_BEFORE, HERO_ID, SLOT_STEP, boardState } from '../scenes/Board';
-import { bookingState } from '../scenes/Booking';
+import { SCROLL as BOOKING_SCROLL, bookingScroll, bookingState } from '../scenes/Booking';
 import { DISCOUNTS_FROM, KIT_LINE, estimateState } from '../scenes/Estimate';
 import { DC_SETTLED, discountsAt } from '../scenes/discounts';
 import { LOOP_DEFS, LOOP_H, LOOP_W } from './loop-defs';
@@ -117,15 +117,27 @@ describe('the scenes the loops play are idle through the head (pinned to their f
 
 describe('LoopBooking', () => {
   const f = BOOKING_LOOP.frame;
-  it('plays the Booking scene from its first frame: slot click 75, «Новая запись» 105, the order lands 120', () => {
-    for (const t of [10, 75, 105, 120, 149]) expect(f(t)).toEqual({ scene: t, heroFade: 1 });
+  it('plays the Booking scene from its first frame: scroll 30–60, slot click 75, «Новая запись» 105, the order lands 120', () => {
+    for (const t of [10, 75, 105, 120, 149]) expect(f(t)).toEqual({ scene: t, heroFade: 1, scroll: bookingScroll(t) });
+    for (const t of [60, 75, 149]) expect(f(t).scroll).toBe(BOOKING_SCROLL);
+    expect(f(30).scroll).toBe(0);
+    expect(f(45).scroll).toBe(bookingScroll(45));
     expect(BOOKING_LOOP.clicks).toEqual([75, 105]);
   });
   it('then the landed order fades out and the calendar is back to its first frame', () => {
     expect(f(150).scene).toBe(149);
     expect(f(157).heroFade).toBeGreaterThan(0);
     expect(f(157).heroFade).toBeLessThan(1);
-    expect(f(165)).toEqual({ scene: 0, heroFade: 1 });
+    expect(f(165)).toMatchObject({ scene: 0, heroFade: 1 });
+    expect(f(170)).toEqual({ scene: 0, heroFade: 1, scroll: 0 });
+  });
+  it('the timeline scrolls back up with the camera\'s pull-back (150–170), no jump at the reset (165)', () => {
+    expect(f(150).scroll).toBe(BOOKING_SCROLL);
+    for (let t = 150; t < 170; t++) {
+      expect(f(t + 1).scroll).toBeLessThan(f(t).scroll);
+      // the camera's curve over 20 frames peaks at ≈ 38 px/frame; a reset jump would be the whole 280
+      expect(f(t).scroll - f(t + 1).scroll).toBeLessThan(60);
+    }
   });
   it('the camera pulls back out only after the caption has gone', () => {
     const c = (t: number) => cameraAt(t, FPS, BOOKING_LOOP.cam);

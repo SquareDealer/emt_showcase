@@ -4,7 +4,13 @@ import type { PriceListRow, VehicleGeneration, WorkOrderStatus } from '@crm/lib/
 import { generations, priceList } from '../fixtures';
 import { CAM_EASE, countUp, type CamKey, type CursorPoint } from '../kit/math';
 import { FPS, SCENE_CLICKS } from '../timing';
-import { CALLOUT_AT as BOOKING_CALLOUT_AT, CAM as BOOKING_CAM, CURSOR as BOOKING_CURSOR } from '../scenes/Booking';
+import {
+  CALLOUT_AT as BOOKING_CALLOUT_AT,
+  CAM as BOOKING_CAM,
+  CURSOR as BOOKING_CURSOR,
+  SCROLL as BOOKING_SCROLL,
+  bookingScroll,
+} from '../scenes/Booking';
 import {
   APPLY_AT,
   BLOCK_AT,
@@ -75,27 +81,33 @@ export type LoopSpec<S> = {
 /** The strongest overlay at t (0 = nothing drawn over the window). */
 export const overlayMax = (spec: LoopSpec<unknown>, t: number) => Math.max(0, ...Object.values(spec.overlays(t)));
 
-// ---- LoopBooking (180): the Booking scene 0–149 (slot 75, «Новая запись» 105, the order lands 120,
-// caption 90), then the landed order fades out while the camera pulls back to the week. ----
+// ---- LoopBooking (180): the Booking scene 0–149 (the timeline scrolls to Thursday 30–60, slot 75,
+// «Новая запись» 105, the order lands 120, caption 90), then the landed order fades out while the camera
+// pulls back to the week and the timeline scrolls back up to Monday with it (150–170). ----
 const BK_FADE_FROM = 150;
 const BK_FADE = 15;
+const BK_BACK_TO = 170;
 const BK_CAPTION_OUT = 140;
 const [, BK_CLICK_BOOKING] = SCENE_CLICKS.booking;
 const bookingKeys = BOOKING_CAM.wide.filter((k) => k.at <= 5).map(toLoop);
-export type BookingFrame = { scene: number; heroFade: number };
+/** `scroll`: the timeline's scroll (UI px) — the scene's up to 149, then back to 0 with the camera. */
+export type BookingFrame = { scene: number; heroFade: number; scroll: number };
 export const BOOKING_LOOP: LoopSpec<BookingFrame> = {
   id: 'LoopBooking',
   dur: dur('LoopBooking'),
-  // Wide → 1.7 (hero) on the slot and the menu, held; back out 150–170 instead of the hero's dive.
-  cam: [...bookingKeys, { ...bookingKeys[0], at: s(170) }],
+  // Wide → 1.6 (hero) on Wednesday–Thursday, held; back out 150–170 instead of the hero's dive.
+  cam: [...bookingKeys, { ...bookingKeys[0], at: s(BK_BACK_TO) }],
   // The scene's path to «Новая запись», then back to where it idles at frame 0.
   cursor: [...BOOKING_CURSOR.filter((p) => p.at <= s(BK_CLICK_BOOKING + 12)), { ...BOOKING_CURSOR[0], at: s(165) }],
   clicks: SCENE_CLICKS.booking,
   frame: (t) => {
-    if (t < BK_FADE_FROM) return { scene: fromScene(t), heroFade: 1 };
+    // The scroll back rides the camera's pull-back (same frames, same curve), as the scene's scroll
+    // rides its push.
+    const back = interpolate(t, [BK_FADE_FROM, BK_BACK_TO], [BOOKING_SCROLL, 0], { ...clamp, easing: CAM_EASE });
+    if (t < BK_FADE_FROM) return { scene: fromScene(t), heroFade: 1, scroll: bookingScroll(fromScene(t)) };
     if (t < BK_FADE_FROM + BK_FADE)
-      return { scene: BK_FADE_FROM - 1, heroFade: interpolate(t, [BK_FADE_FROM, BK_FADE_FROM + BK_FADE], [1, 0]) };
-    return { scene: 0, heroFade: 1 };
+      return { scene: BK_FADE_FROM - 1, heroFade: interpolate(t, [BK_FADE_FROM, BK_FADE_FROM + BK_FADE], [1, 0]), scroll: back };
+    return { scene: 0, heroFade: 1, scroll: back };
   },
   overlays: (t) => ({ caption: shown(t, BOOKING_CALLOUT_AT, BK_CAPTION_OUT) }),
 };
