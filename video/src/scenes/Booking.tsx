@@ -269,7 +269,7 @@ export function BookingScene({ theme, brand, callouts, accent }: ShowcaseProps) 
   const state = bookingState(frame, fps);
   return (
     <AbsoluteFill>
-      <Background theme={theme} />
+      <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <BookingWindow theme={theme} brandName={brand.name} state={state} />
         {/* Wide: above the slot, over the empty bodies of the long morning orders: clear of the

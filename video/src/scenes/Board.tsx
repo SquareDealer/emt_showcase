@@ -295,7 +295,7 @@ export function BoardScene({ theme, brand, callouts, accent }: ShowcaseProps) {
   const calloutOpacity = fadeOut(frame, CALLOUT_OUT);
   return (
     <AbsoluteFill>
-      <Background theme={theme} />
+      <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <BoardWindow theme={theme} brandName={brand.name} state={state} />
         {calloutOpacity > 0 ? (

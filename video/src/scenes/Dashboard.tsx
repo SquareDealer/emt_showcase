@@ -211,7 +211,7 @@ export function DashboardScene({ theme, brand, callouts, accent, dashboardDeltaL
   const callout = calloutOpacity(frame, social);
   return (
     <AbsoluteFill>
-      <Background theme={theme} />
+      <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <DashboardWindow theme={theme} brandName={brand.name} deltaLabel={dashboardDeltaLabel} state={state} />
         {callout > 0 ? (

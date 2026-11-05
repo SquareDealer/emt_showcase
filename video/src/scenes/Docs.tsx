@@ -53,8 +53,10 @@ export const DOCS_CAMERA: CamKey[] = [
   // key point = PNG point at the screen centre: block centre at x 600 ⇒ key.x = c + (960 − 600)/zoom
   { at: s(BLOCK_AT), x: BLOCK_C.x + (960 - BLOCK_SCREEN_X) / ZOOM_BLOCK, y: BLOCK_C.y, zoom: ZOOM_BLOCK },
   { at: s(SMETA_AT), x: BLOCK_C.x + (960 - BLOCK_SCREEN_X) / ZOOM_BLOCK, y: BLOCK_C.y, zoom: ZOOM_BLOCK },
-  // pair: x from −250 (order's left) to 3278 (smeta's top-right after the fan) → centre 1514; y shows the top ~1970
-  { at: s(PAIR_AT), x: 1514, y: 950, zoom: ZOOM_PAIR },
+  // pair: x from −250 (order's left) to 3278 (smeta's top-right after the fan) → centre 1514. y 900: the
+  // fanned smeta's highest point (its top-left corner, PNG y ≈ −74 after the 6° turn) lands ≈24 px below
+  // the frame's top edge, the order sheet's top at ≈63 px — both whole sheets' tops on screen.
+  { at: s(PAIR_AT), x: 1514, y: 900, zoom: ZOOM_PAIR },
 ];
 
 /** Callout dot: just right of the paper's edge at the block's height; the pill extends to the right. */

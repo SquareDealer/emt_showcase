@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SCENE_CLICKS } from '../timing';
-import { BLOCK, CALLOUT_ANCHOR, docsState, ORDER_DX, SMETA_DX, DOCS_CAMERA, SHEET_W, toScreen, ZOOM_BLOCK, ZOOM_PAIR } from './Docs';
+import { BLOCK, CALLOUT_ANCHOR, docsState, ORDER_DX, SMETA_DX, DOCS_CAMERA, SHEET_H, SHEET_W, toScreen, ZOOM_BLOCK, ZOOM_PAIR } from './Docs';
 
 const at = (f: number) => docsState(f, 30);
 
@@ -47,5 +47,17 @@ describe('docs scene state', () => {
     // the order sheet's right edge stays left of the smeta's fanned left edge at mid-height of the content
     expect(ORDER_DX + SHEET_W).toBeLessThan(SMETA_DX + (2339 - 1000) * Math.sin((6 * Math.PI) / 180));
     expect(DOCS_CAMERA.at(-1)!.zoom).toBe(ZOOM_PAIR);
+  });
+
+  it('final view: both sheets keep their top on screen, the fanned smeta corner included (≈24 px)', () => {
+    const st = at(119);
+    expect(toScreen(119, { x: st.orderX, y: st.riseY }).y).toBeGreaterThan(0);
+    // the smeta turns about its foot's centre: its top-left corner is its highest point
+    const a = (st.smetaRot * Math.PI) / 180;
+    const [px, py] = [SHEET_W / 2, SHEET_H];
+    const corner = { x: st.smetaX + px + -px * Math.cos(a) + py * Math.sin(a), y: py + -px * Math.sin(a) - py * Math.cos(a) };
+    const y = toScreen(119, corner).y;
+    expect(y).toBeGreaterThan(10);
+    expect(y).toBeLessThan(40);
   });
 });

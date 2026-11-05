@@ -312,7 +312,7 @@ export function SearchScene({ theme, brand, callouts, accent }: ShowcaseProps) {
   const callout = calloutOpacity(frame, social);
   return (
     <AbsoluteFill>
-      <Background theme={theme} />
+      <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <SearchWindow theme={theme} brandName={brand.name} state={state} />
         {callout > 0 ? (

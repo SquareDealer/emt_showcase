@@ -23,12 +23,12 @@ describe('estimate scene state', () => {
     expect(at(225).wo.part_lines).toBe(woHero[3].part_lines);
   });
 
-  it('totals: 2 200 → 44 400 → 42 910 → counts to 40 764,50 by 255', () => {
+  it('totals: 2 200 → 44 400 → 42 910 → counts to 40 764,50 by 240', () => {
     expect(at(0).wo.total_cached).toBe(2200);
     expect(at(160).wo.total_cached).toBe(44400);
     expect(at(200).wo.total_cached).toBe(42910);
     expect(at(225).wo.total_cached).toBe(orderTotal(woHero[2]));
-    expect(at(255).wo.total_cached).toBe(40764.5);
+    expect(at(240).wo.total_cached).toBe(40764.5);
     expect(at(269).wo.total_cached).toBe(orderTotal(woHero[3]));
   });
 

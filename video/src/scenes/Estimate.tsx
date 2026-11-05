@@ -89,7 +89,7 @@ const TOAST_IN = 155;
 const TOAST_OUT = 200;
 const SNAP2_AT = 195;
 const SNAP3_AT = 225;
-const TOTAL_TO = 255;
+const TOTAL_TO = 240;
 
 const brandFor = (name: string): Brand => ({
   name,
@@ -467,7 +467,7 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
   const state = estimateState(frame, fps);
   return (
     <AbsoluteFill>
-      <Background theme={theme} />
+      <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <EstimateWindow theme={theme} brandName={brand.name} state={state} />
         {state.showSelect ? (
