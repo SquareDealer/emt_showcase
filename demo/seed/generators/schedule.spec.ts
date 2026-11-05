@@ -18,6 +18,15 @@ const avg = (pred: (d: string) => boolean) => {
   return ds.reduce((s, d) => s + counts.get(d)!, 0) / ds.length;
 };
 const past = (d: string) => d < '2026-11-04';
+it('never emits a negative count or -0, and still sums exactly', () => {
+  for (const day of ['2026-01-01', '2026-01-08', '2026-11-04', '2026-11-08', '2028-02-29']) {
+    for (const total of [780, 786, 800]) {
+      const c = dailyCounts(mskAt(day, 12), total);
+      for (const n of c.values()) expect(n < 0 || Object.is(n, -0)).toBe(false);
+      expect([...c.values()].reduce((s, n) => s + n, 0)).toBe(total);
+    }
+  }
+});
 it('sums exactly and spans the window', () => {
   expect([...counts.values()].reduce((s, n) => s + n, 0)).toBe(780);
   expect([...counts.keys()][0]).toBe(windowStartDay(now));

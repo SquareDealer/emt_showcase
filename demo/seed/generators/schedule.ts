@@ -35,7 +35,9 @@ export function dailyCounts(demoNow: Date, total: number): Map<string, number> {
   let carry = 0;
   days.forEach((d, i) => {
     const v = weights[i] * scale + carry;
-    const n = Math.round(v);
+    // carry ∈ [-0.5, 0.5) and weights > 0, so v > -0.5: Math.round only yields -0 here, never a
+    // negative integer. Normalising -0 to 0 leaves both the carry and the exact total unchanged.
+    const n = Math.max(0, Math.round(v)) || 0;
     carry = v - n;
     out.set(d, n);
   });
