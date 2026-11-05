@@ -6,7 +6,7 @@ export const TRANSITION = 15;
 export const SCENES = [
   { id: 'intro', dur: 75 },
   { id: 'booking', dur: 180 },
-  { id: 'estimate', dur: 270 },
+  { id: 'estimate', dur: 360 },
   { id: 'board', dur: 150 },
   { id: 'docs', dur: 120 },
   { id: 'search', dur: 150 },
@@ -17,11 +17,14 @@ export const SCENES = [
 export type SceneId = (typeof SCENES)[number]['id'];
 export type SceneDef = { readonly id: SceneId; readonly dur: number };
 
-/** Social durations that differ from the hero: booking ends on the landed order (no dive), the
- *  dashboard drops the 15-frame hold after the load shot settles (110) and fades into the outro. */
-const SOCIAL_DUR: Partial<Record<SceneId, number>> = { booking: 150, dashboard: 135 };
+/** Social durations that differ from the hero — settled holds trimmed so the cut stays ≤ 30 s with the
+ *  hero's 360-frame estimate: booking ends on the landed order (no dive); the board on its settled drop
+ *  (92) + a 13-frame hold; search and the dashboard take their social shots in 15-frame moves and hold
+ *  each settled shot a beat (search: orders settle 105, slide at 120; dashboard: chart 60–75, load
+ *  settles 90, fade at 105); the outro holds its title from 48 and fades out over its last 15 frames. */
+export const SOCIAL_DUR: Partial<Record<SceneId, number>> = { booking: 150, board: 120, search: 135, dashboard: 120, outro: 90 };
 
-/** Social cut (≤ 30 s): no intro/docs, shorter booking and dashboard. */
+/** Social cut (≤ 30 s): no intro/docs, shorter booking, board, search, dashboard and outro. */
 export const SCENES_SOCIAL: readonly SceneDef[] = SCENES.filter((s) => s.id !== 'intro' && s.id !== 'docs').map(
   (s) => ({ id: s.id, dur: SOCIAL_DUR[s.id] ?? s.dur }),
 );
@@ -43,7 +46,7 @@ export function totalDuration(scenes: readonly SceneDef[] = SCENES): number {
 export const SCENE_CLICKS: Record<SceneId, number[]> = {
   intro: [],
   booking: [75, 105],
-  estimate: [45, 75, 120, 150, 210],
+  estimate: [45, 75, 120, 150, 225, 240, 270, 300],
   board: [30, 75],
   docs: [],
   search: [60],

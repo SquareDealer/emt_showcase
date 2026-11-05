@@ -1,9 +1,8 @@
 import type { CSSProperties } from 'react';
 import { interpolate } from 'remotion';
-import { orderTotal } from '@crm/lib/format';
 import type { PriceListRow, VehicleGeneration, WorkOrderStatus } from '@crm/lib/types';
-import { generations, priceList, woHero } from '../fixtures';
-import { CAM_EASE, countUp, typed, type CamKey, type CursorPoint } from '../kit/math';
+import { generations, priceList } from '../fixtures';
+import { CAM_EASE, countUp, type CamKey, type CursorPoint } from '../kit/math';
 import { FPS, SCENE_CLICKS } from '../timing';
 import { CALLOUT_AT as BOOKING_CALLOUT_AT, CAM as BOOKING_CAM, CURSOR as BOOKING_CURSOR } from '../scenes/Booking';
 import {
@@ -12,12 +11,12 @@ import {
   BLOCK_CAPTION_OUT,
   CAM as ESTIMATE_CAM,
   CURSOR as ESTIMATE_CURSOR,
-  DISC_TYPE,
   GEN_AT,
   GEN_CAPTION_OUT,
   GEN_RING_OUT,
   estimateState,
 } from '../scenes/Estimate';
+import { DC_CLICKS, discountsAt, discountsCursor, type DiscountsState } from '../scenes/discounts';
 import {
   CALLOUT_AT as BOARD_CALLOUT_AT,
   CALLOUT_OUT as BOARD_CALLOUT_OUT,
@@ -53,6 +52,8 @@ const dur = (id: LoopId) => LOOP_DEFS.find((d) => d.id === id)!.dur;
 /** LoopCrossfade's overlap: output frame f < HEAD shows clip(D + f) over clip(f), so every loop holds
  *  its first frame through 0 … HEAD−1 (nothing moves there; the scenes are idle that long anyway). */
 export const HEAD = 10;
+/** A click's effect lands 3 frames after the press (every scene's convention). */
+const FX = 3;
 /** Scene frame for loop frame t: the scene from its start, its idle head pinned to frame 0. */
 const fromScene = (t: number) => (t < HEAD ? 0 : t);
 
@@ -146,67 +147,20 @@ export const ESTIMATE_LOOP: LoopSpec<EstimateFrame> = {
   },
 };
 
-// ---- LoopDiscounts (180): wo-hero.1 → the chain kit's ✎ (30), its discount field (45), «10» typed,
-// ✓ (75): wo-hero.2, total counts down → the order discount «%» (105), «5», applied (123): wo-hero.3,
-// total counts to 40 764,50 → caption «10% + 5% = 14,5%» (135–159) → dissolve back to wo-hero.1
-// (165–174). ----
-const [, WO1, WO2, WO3] = woHero;
-const TOTALS = [orderTotal(WO1), orderTotal(WO2), orderTotal(WO3)] as const;
-/** A click's effect lands 3 frames after the press (every scene's convention). */
-const FX = 3;
-const [DC_PENCIL, DC_INPUT, DC_SAVE, DC_TYPE] = [30, 45, 75, 105];
-const DC_EDIT = DC_PENCIL + FX;
-const DC_SNAP2 = DC_SAVE + FX;
-const DC_DTYPE = DC_TYPE + FX;
-/** The order discount applies (the app's onBlur) 10 frames after «5» is typed. */
-const DC_SNAP3 = 123;
-export const DC_CAPTION = 135;
-const DC_CAPTION_OUT = 159;
-const DC_RESET = 165;
+// ---- LoopDiscounts (180): the discount sequence of the Estimate scene (./scenes/discounts, the same
+// pure timeline the scene plays from its frame 195) on wo-hero.1: the chain kit's ✎ (30), its discount
+// field (45), «10» typed, ✓ (75): wo-hero.2, «Итого» counts 44 400 → 42 910 → the order discount «%»
+// (105), «5», applied (120): wo-hero.3, «Итого» counts to 40 764,50 by 135 and holds → dissolve back
+// to wo-hero.1 (165–174). No caption. ----
+/** The dissolve back to wo-hero.1 (the settled total holds from DC_SETTLED to it). */
+export const DC_RESET = 165;
 const DC_RESET_LEN = 10;
-/** ✎ shows on the kit row once the pointer is over it (it lands at 27). */
-const DC_HOVER = 25;
-export type DiscountsFrame = {
-  snap: 1 | 2 | 3;
-  total: number;
-  /** The kit line's edit form with this discount typed; null = the read-only row. */
-  edit: string | null;
-  hoverKit: boolean;
-  discountDraft: { type: 'percent'; value: string } | null;
-  /** The app's row highlight on the kit line (wo-hero.2 until the caption leaves). */
-  kitOutline: boolean;
+export type DiscountsFrame = DiscountsState & {
   /** Opacity of wo-hero.1 dissolving in over the end state. */
   reset: number;
 };
-function discountsAt(t: number, reset: number): DiscountsFrame {
-  const snap = t >= DC_SNAP3 ? 3 : t >= DC_SNAP2 ? 2 : 1;
-  return {
-    snap,
-    total:
-      snap === 1
-        ? TOTALS[0]
-        : snap === 2
-          ? countUp(t, DC_SNAP2, DC_SNAP2 + 15, TOTALS[0], TOTALS[1])
-          : countUp(t, DC_SNAP3, DC_SNAP3 + 20, TOTALS[1], TOTALS[2]),
-    edit: t >= DC_EDIT && t < DC_SNAP2 ? typed(t, DC_INPUT + FX, '10', 5) : null,
-    hoverKit: t >= DC_HOVER && t < DC_EDIT,
-    discountDraft: t >= DC_DTYPE ? { type: 'percent', value: typed(t, DC_DTYPE, '5', 5) } : null,
-    kitOutline: t >= DC_SNAP2 && t < DC_CAPTION_OUT,
-    reset,
-  };
-}
-// Cursor targets, UI px (measured on EstimateWindow with wo-hero.1, the kit line hovered / in edit):
-// the kit row's ✎ x 1001 y 656.3 30×30; the edit form's discount input x 791 y 657.3 52×30 and its ✓
-// x 1033 y 657.3 30×30; the order-discount type (the Estimate scene's DISC_TYPE).
-const DC_PENCIL_AT = { x: 1016, y: 671 };
-const DC_INPUT_AT = { x: 817, y: 672 };
-const DC_CHECK_AT = { x: 1048, y: 672 };
-/** After the click on the discount field the pointer drifts down-right, off the digits being typed
- *  and on the way to ✓ (over the next row's «—» discount cell). */
-const DC_INPUT_ASIDE = { x: 900, y: 708 };
-const DC_TYPE_AT = { x: DISC_TYPE.x + 30, y: DISC_TYPE.y + DISC_TYPE.h / 2 };
-/** Idle in the gap between the parts panel (to 1079) and the summary (from 1096), clear of every row
- *  and of the caption (which ends at the summary's left edge, centred on y 548). */
+const discountsFrame = (t: number, reset: number): DiscountsFrame => ({ ...discountsAt(t), reset });
+/** Idle in the gap between the parts panel (to 1079) and the summary (from 1096), clear of every row. */
 const DC_REST = { x: 1087, y: 770 };
 /** The Estimate scene's summary shot (zoom 1.62 → 1.35, view 1185×741), moved so that its right and
  *  bottom edges sit 10 px inside the window (1440×900; no rounded corner, no background): x 245–1430
@@ -224,32 +178,19 @@ export const DISCOUNTS_LOOP: LoopSpec<DiscountsFrame> = {
       y: summaryView.b - LOOP_H / 2 / summaryKey.zoom,
     },
   ],
-  cursor: [
-    { at: 0, ...DC_REST },
-    { at: s(HEAD), ...DC_REST },
-    { at: s(DC_PENCIL - 3), ...DC_PENCIL_AT },
-    { at: s(DC_PENCIL + 1), ...DC_PENCIL_AT },
-    { at: s(DC_INPUT - 3), ...DC_INPUT_AT },
-    { at: s(DC_INPUT + 2), ...DC_INPUT_AT },
-    { at: s(DC_INPUT + 9), ...DC_INPUT_ASIDE },
-    { at: s(DC_SAVE - 12), ...DC_INPUT_ASIDE },
-    { at: s(DC_SAVE - 4), ...DC_CHECK_AT },
-    { at: s(DC_SAVE + 6), ...DC_CHECK_AT },
-    { at: s(DC_TYPE - 6), ...DC_TYPE_AT },
-    { at: s(DC_SNAP3 + 4), ...DC_TYPE_AT },
-    // Back down past the totals to the gap (the caption sits left of the summary, above it).
-    { at: s(155), ...DC_REST },
-  ],
-  clicks: [DC_PENCIL, DC_INPUT, DC_SAVE, DC_TYPE],
+  // Rest → ✎ (the sequence's pointer from there to the order discount) → back down past the totals
+  // to the gap.
+  cursor: [{ at: 0, ...DC_REST }, { at: s(HEAD), ...DC_REST }, ...discountsCursor(0), { at: s(155), ...DC_REST }],
+  clicks: [...DC_CLICKS],
   frame: (t) => {
-    if (t >= DC_RESET + DC_RESET_LEN) return discountsAt(0, 0);
+    if (t >= DC_RESET + DC_RESET_LEN) return discountsFrame(0, 0);
     // Under the dissolve the end state holds (the frame before it starts).
-    if (t >= DC_RESET) return discountsAt(DC_RESET - 1, CAM_EASE((t - DC_RESET) / DC_RESET_LEN));
-    return discountsAt(t, 0);
+    if (t >= DC_RESET) return discountsFrame(DC_RESET - 1, CAM_EASE((t - DC_RESET) / DC_RESET_LEN));
+    return discountsFrame(t, 0);
   },
-  // The kit line is marked by the app's own row outline (kitOutline), not a dimming ring: the
-  // total counts down at the same time and must stay bright.
-  overlays: (t) => ({ caption: shown(t, DC_CAPTION, DC_CAPTION_OUT) }),
+  // Nothing drawn over the window: the kit line is marked by the app's own row outline (kitOutline),
+  // not a dimming ring — «Итого» counts down at the same time and must stay bright.
+  overlays: () => ({}),
 };
 
 // ---- LoopPriceList (180): «Прайс-лист» on R56 → the generation select: F56 (30/45) → F60 (75/90)

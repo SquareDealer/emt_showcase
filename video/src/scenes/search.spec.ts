@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { cameraAt, cameraCentre, stageView } from '../kit/math';
 import { HERO } from '../../../demo/seed/hero';
 import { clientHero, searchByPrefix, woHero } from '../fixtures';
-import { SCENE_CLICKS } from '../timing';
+import { FRAMES_PER_BEAT, SCENE_CLICKS, SCENES, SCENES_SOCIAL, sceneStart } from '../timing';
 import {
   CALLOUT_AT,
   CLICK_POINT,
@@ -22,6 +22,8 @@ import {
   CAM,
   searchState,
   SOCIAL_ZONES,
+  SOCIAL_MOVE_FROM,
+  SOCIAL_SETTLE,
   ORDER_AMOUNTS_X,
 } from './Search';
 
@@ -119,8 +121,14 @@ describe('search scene state', () => {
     }
   });
 
+  it('social zone 3: a 15-frame move from 90, settled by 105 and held a beat before the slide (social dur 135)', () => {
+    const dur = SCENES_SOCIAL.find((x) => x.id === 'search')!.dur;
+    expect([SOCIAL_MOVE_FROM, SOCIAL_SETTLE, dur]).toEqual([90, 105, 135]);
+    expect(dur - 15 - SOCIAL_SETTLE).toBeGreaterThanOrEqual(FRAMES_PER_BEAT);
+  });
+
   it('social zone 3: the orders panel head and rows 0–7 whole (titles to status chips), the bottom edge on a row line', () => {
-    for (let f = 130; f < 150; f++) {
+    for (let f = SOCIAL_SETTLE; f < SCENES_SOCIAL.find((x) => x.id === 'search')!.dur; f++) {
       const v = stage(f);
       expect(inside(v, SOCIAL_ZONES.orders)).toBe(true);
       expect(v.l).toBeGreaterThan(694); // right of the vehicles panel
@@ -134,14 +142,14 @@ describe('search scene state', () => {
 
   it('callout window: from 45 (on the beat, one hit left) through the switch; wide gone by 75, the social plaque stays', () => {
     expect(CALLOUT_AT).toBe(45);
-    expect((720 + CALLOUT_AT) % 15).toBe(0);
+    expect((sceneStart('search', SCENES) + CALLOUT_AT) % 15).toBe(0);
     expect(at(CALLOUT_AT).hits).toHaveLength(1);
     expect(calloutOpacity(44, false)).toBe(0);
     for (const f of [45, 60, 63, 69]) expect(calloutOpacity(f, false)).toBe(1);
     expect(calloutOpacity(75, false)).toBe(0);
     for (const f of [45, 84, 90, 149]) expect(calloutOpacity(f, true)).toBe(1);
     expect(calloutOpacity(44, true)).toBe(0);
-    expect((525 + CALLOUT_AT) % 15).toBe(0);
+    expect((sceneStart('search', SCENES_SOCIAL) + CALLOUT_AT) % 15).toBe(0);
   });
 
   it('cursor: leaves the hit from the switch (63), never rests on the card, out of every view by 84', () => {

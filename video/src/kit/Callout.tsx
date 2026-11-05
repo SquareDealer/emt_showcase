@@ -97,7 +97,7 @@ export function Callout({
 }
 
 /** Plaque line breaks: a dash or an arrow never starts a line; a short preposition/conjunction or a
- *  number never ends one («по VIN», «в 2 клика», «до копейки») — the space after it becomes a no-break space. */
+ *  number never ends one («по VIN», «в 2 клика», «из тех же») — the space after it becomes a no-break space. */
 export const plaqueText = (text: string) =>
   text
     .replace(/ (—|→)/g, '\u00a0$1')

@@ -25,21 +25,19 @@ import {
   BLOCK_ANCHOR,
   BLOCK_AT,
   DIALOG,
-  DISCOUNTS_ANCHOR,
   EstimateWindow,
   GEN_AT,
-  KIT_LINE,
   OPTION_WINDOW,
   PICK_AT,
   PICK_INDEX,
   estimateState,
+  withDiscounts,
 } from '../scenes/Estimate';
 import { BoardWindow, CALLOUT_ANCHOR, CALLOUT_AT as BOARD_CALLOUT_AT } from '../scenes/Board';
 import { LOOP_DEFS, type LoopId } from './loop-defs';
 import {
   BOARD_LOOP,
   BOOKING_LOOP,
-  DC_CAPTION,
   DISCOUNTS_LOOP,
   ESTIMATE_LOOP,
   PL_CAPTION,
@@ -173,40 +171,22 @@ function EstimateClip({ theme, brand, callouts, accent }: ShowcaseProps) {
 }
 
 // ---- Discounts ----
-function DiscountsClip({ theme, brand, callouts, accent }: ShowcaseProps) {
+function DiscountsClip({ theme, brand, accent }: ShowcaseProps) {
   const t = useCurrentFrame();
   const { fps } = useVideoConfig();
   const f = DISCOUNTS_LOOP.frame(t);
-  // estimateState(0): no sheet, no select, no toast, no row animation — the order is ours to set.
+  // estimateState(0): no sheet, no select, no toast, no row animation — the order is the discount
+  // sequence's (withDiscounts, exactly what the Estimate scene draws from its frame 195).
   const quiet = estimateState(0, fps);
-  const kit = KIT_LINE!.id;
-  const editing = f.edit !== null;
-  const state = {
-    ...quiet,
-    wo: { ...woHero[f.snap], total_cached: f.total },
-    discountDraft: f.discountDraft ?? undefined,
-    highlightLine: f.kitOutline ? kit : undefined,
-  };
+  const state = withDiscounts(quiet, f);
   return (
     <AbsoluteFill>
       <Background theme={theme} />
       <Camera keys={DISCOUNTS_LOOP.cam}>
-        <EstimateWindow
-          key={`wo${f.snap}${editing ? '-edit' : ''}`}
-          theme={theme}
-          brandName={brand.name}
-          state={state}
-          editPartId={editing ? kit : null}
-          partDraft={editing ? { discValue: f.edit! } : undefined}
-          hoverLineId={f.hoverKit ? kit : undefined}
-        />
+        <EstimateWindow key={state.windowKey} theme={theme} brandName={brand.name} state={state} />
         <Over opacity={f.reset}>
           <EstimateWindow key="reset" theme={theme} brandName={brand.name} state={{ ...quiet, wo: woHero[1] }} />
         </Over>
-        <Fade opacity={DISCOUNTS_LOOP.overlays(t).caption} z={90}>
-          {/* The Estimate scene's placement: left of the summary, between its two discount rows. */}
-          <Callout text={callouts.discounts} at={DC_CAPTION} anchor={DISCOUNTS_ANCHOR} side="left" accent={accent} />
-        </Fade>
         <Cursor path={DISCOUNTS_LOOP.cursor} clicks={DISCOUNTS_LOOP.clicks} accent={accent} />
       </Camera>
     </AbsoluteFill>

@@ -6,7 +6,7 @@ import { APP_H, APP_W } from '../kit/AppWindow';
 import { Background } from '../kit/Background';
 import { BrandMark } from '../kit/BrandMark';
 import { PhoneFrame } from '../kit/PhoneFrame';
-import { EstimateWindow, estimateState } from '../scenes/Estimate';
+import { EstimateWindow, TOTAL_TO, estimateState } from '../scenes/Estimate';
 import { BoardWindow, boardState } from '../scenes/Board';
 import { FPS } from '../timing';
 
@@ -16,7 +16,7 @@ import { FPS } from '../timing';
 
 /** Estimate after the story: the block applied, kit line −10 %, order −5 %, total 40 764,50 ₽ —
  *  wo-hero.3 as saved (no draft over the discount form, no demo outline on the kit row). */
-const ESTIMATE = { ...estimateState(269, FPS), highlightLine: undefined, discountDraft: undefined };
+const ESTIMATE = { ...estimateState(TOTAL_TO, FPS), highlightLine: undefined, discountDraft: undefined };
 /** Board after the drag: the hero order on top of «В работе», settled, not panned (the app's own
  *  view at 1440 px: the fifth column «Выдана» runs past the page edge, as it does in the browser). */
 const BOARD = { ...boardState(149, FPS), scroll: 0 };

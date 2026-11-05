@@ -13,7 +13,7 @@ describe('social plaque text', () => {
     expect(plaqueText('Работа и её запчасти — одним блоком')).toBe(`Работа и${NB}её запчасти${NB}— одним блоком`);
     expect(plaqueText('Свободное окно → запись в 2 клика')).toBe(`Свободное окно${NB}→ запись в${NB}2${NB}клика`);
     expect(plaqueText('Любая машина по VIN — за секунду')).toBe(`Любая машина по${NB}VIN${NB}— за${NB}секунду`);
-    expect(plaqueText('10% + 5% = 14,5%, до копейки')).toBe(`10% + 5% = 14,5%, до${NB}копейки`);
+    expect(plaqueText('Заказ-наряд в PDF — из тех же данных')).toBe(`Заказ-наряд в${NB}PDF${NB}— из${NB}тех же данных`);
   });
   it('every default caption keeps its words (only spaces change)', () => {
     for (const t of Object.values(defaultProps.callouts)) expect(plaqueText(t).replaceAll(NB, ' ')).toBe(t);

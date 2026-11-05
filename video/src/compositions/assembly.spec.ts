@@ -47,10 +47,11 @@ describe('assembly plan', () => {
   it('every transition lasts TRANSITION frames (linearTiming)', () => {
     for (const p of assemblyPlan(SCENES)) if (p.type === 'transition') expect(p.timing.getDurationInFrames({ fps: FPS })).toBe(TRANSITION);
   });
-  it('TransitionSeries total equals totalDuration (hero 1110 = 37.0 s, social)', () => {
+  it('TransitionSeries total equals totalDuration (hero 1200 = 40.0 s, social 900 = 30.0 s)', () => {
     expect(planDuration(assemblyPlan(SCENES), FPS)).toBe(totalDuration(SCENES));
-    expect(planDuration(assemblyPlan(SCENES), FPS)).toBe(1110);
+    expect(planDuration(assemblyPlan(SCENES), FPS)).toBe(1200);
     expect(planDuration(assemblyPlan(SCENES_SOCIAL), FPS)).toBe(totalDuration(SCENES_SOCIAL));
+    expect(planDuration(assemblyPlan(SCENES_SOCIAL), FPS)).toBe(900);
   });
   it('each scene enters the series at sceneStart()', () => {
     for (const scenes of [SCENES, SCENES_SOCIAL]) {
@@ -91,8 +92,8 @@ describe('sound effects', () => {
       expect(keys).toEqual(grows);
     }
   });
-  it('key SFX in the hero: 740…770, every 5 frames', () => {
-    expect(heroKeySfx()).toEqual([740, 745, 750, 755, 760, 765, 770]);
+  it('key SFX in the hero: 830…860, every 5 frames', () => {
+    expect(heroKeySfx()).toEqual([830, 835, 840, 845, 850, 855, 860]);
   });
   it('whoosh SFX at the start of each slide transition (= the entering scene\'s start)', () => {
     expect(heroWhooshSfx()).toEqual([sceneStart('board'), sceneStart('docs'), sceneStart('dashboard')]);
@@ -116,21 +117,22 @@ describe('sound effects', () => {
 
 describe('sfxCues: the single list the assembly renders', () => {
   const pick = (scenes: Parameters<typeof sfxCues>[0], name: string) => sfxCues(scenes).filter((c) => c.name === name).map((c) => c.at);
-  it('hero: clicks === clicksAbsolute(SCENES), 7 keys 740…770, whooshes at board/docs/dashboard', () => {
+  it('hero: clicks === clicksAbsolute(SCENES), 7 keys 830…860, whooshes at board/docs/dashboard', () => {
     expect(pick(SCENES, 'click')).toEqual(clicksAbsolute(SCENES));
-    expect(pick(SCENES, 'key')).toEqual([740, 745, 750, 755, 760, 765, 770]);
-    expect(pick(SCENES, 'whoosh')).toEqual([480, 615, 855]);
+    expect(pick(SCENES, 'click')).toEqual([135, 165, 270, 300, 345, 375, 450, 465, 495, 525, 600, 645, 870]);
+    expect(pick(SCENES, 'key')).toEqual([830, 835, 840, 845, 850, 855, 860]);
+    expect(pick(SCENES, 'whoosh')).toEqual([570, 705, 945]);
   });
   it('social: clicks === clicksAbsolute(SCENES_SOCIAL), keys from its search start, whooshes on its two slides', () => {
     expect(pick(SCENES_SOCIAL, 'click')).toEqual(clicksAbsolute(SCENES_SOCIAL));
-    expect(pick(SCENES_SOCIAL, 'click')).toEqual([75, 105, 180, 210, 255, 285, 345, 420, 465, 585]);
+    expect(pick(SCENES_SOCIAL, 'click')).toEqual([75, 105, 180, 210, 255, 285, 360, 375, 405, 435, 510, 555, 645]);
     const s = sceneStart('search', SCENES_SOCIAL);
-    expect(s).toBe(525);
+    expect(s).toBe(585);
     expect(pick(SCENES_SOCIAL, 'key')).toEqual([20, 25, 30, 35, 40, 45, 50].map((f) => s + f));
     // Social transitions: booking>estimate fade, estimate>board slide, board>search fade, search>dashboard slide, dashboard>outro fade.
     const kinds = assemblyPlan(SCENES_SOCIAL).flatMap((p) => (p.type === 'transition' ? [`${p.from}>${p.to}:${p.kind}`] : []));
     expect(kinds).toEqual(['booking>estimate:fade', 'estimate>board:slide', 'board>search:fade', 'search>dashboard:slide', 'dashboard>outro:fade']);
-    expect(pick(SCENES_SOCIAL, 'whoosh')).toEqual([390, 660]);
+    expect(pick(SCENES_SOCIAL, 'whoosh')).toEqual([480, 705]);
   });
   it('every cue carries its sound\'s src/volume/frames, is on a whole frame and ends inside the composition', () => {
     for (const scenes of [SCENES, SCENES_SOCIAL]) {
@@ -154,14 +156,14 @@ describe('sfxCues: the single list the assembly renders', () => {
 
 describe('music', () => {
   it('volume envelope: 0 → 0.8 over the first second, holds, 0 over the last 3 s', () => {
-    const v = (f: number) => musicVolume(f, 1110);
+    const v = (f: number) => musicVolume(f, 1200);
     expect(v(0)).toBe(0);
     expect(v(15)).toBeCloseTo(0.4);
     expect(v(30)).toBe(0.8);
     expect(v(500)).toBe(0.8);
-    expect(v(1020)).toBe(0.8);
-    expect(v(1065)).toBeCloseTo(0.4);
-    expect(v(1110)).toBe(0);
+    expect(v(1110)).toBe(0.8);
+    expect(v(1155)).toBeCloseTo(0.4);
+    expect(v(1200)).toBe(0);
     expect(v(2000)).toBe(0);
     expect(v(-5)).toBe(0);
   });

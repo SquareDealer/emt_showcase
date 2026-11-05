@@ -15,6 +15,8 @@ import {
   LOAD_AT,
   MOVE,
   REVENUE_AT,
+  SOCIAL_LOAD_FROM,
+  SOCIAL_MOVE,
 } from './Dashboard';
 
 const at = (f: number) => dashboardState(f, 30);
@@ -75,13 +77,30 @@ describe('dashboard scene state', () => {
     for (const f of [CALLOUT_AT, LOAD_AT, 134]) expect(calloutOpacity(f, true)).toBe(1);
   });
 
-  it.each([false, true])('camera (social=%s): holds 0–45, settles on the chart by 65, on the load by 110 and holds', (social) => {
-    const keys = social ? CAM.social : CAM.wide;
-    const cam = (f: number) => cameraAt(f, 30, keys);
+  it('camera (wide): holds 0–45, settles on the chart by 65, on the load by 110 and holds', () => {
+    const cam = (f: number) => cameraAt(f, 30, CAM.wide);
     expect(cam(0)).toEqual(cam(REVENUE_AT));
     expect(cam(REVENUE_AT + MOVE)).toEqual(cam(LOAD_AT));
     expect(cam(LOAD_AT + MOVE)).toEqual(cam(149));
     expect(cam(149).zoom).toBeGreaterThan(cam(LOAD_AT).zoom);
+  });
+
+  it('camera (social, 120 f): 15-frame moves on the beat — chart 45→60 held to 75, load 75→90 held a beat before the fade (105)', () => {
+    const cam = (f: number) => cameraAt(f, 30, CAM.social);
+    const dur = SCENES_SOCIAL.find((x) => x.id === 'dashboard')!.dur;
+    expect(dur).toBe(120);
+    expect(SOCIAL_MOVE).toBe(15);
+    expect(SOCIAL_LOAD_FROM).toBe(75);
+    expect(cam(0)).toEqual(cam(REVENUE_AT));
+    expect(cam(REVENUE_AT + SOCIAL_MOVE)).toEqual(cam(SOCIAL_LOAD_FROM));
+    expect(cam(LOAD_AT)).toEqual(cam(dur - 1));
+    expect(cam(dur - 1).zoom).toBeGreaterThan(cam(SOCIAL_LOAD_FROM).zoom);
+    // every settled shot holds at least a beat; the load shot until the fade into the outro starts
+    expect(SOCIAL_LOAD_FROM - (REVENUE_AT + SOCIAL_MOVE)).toBeGreaterThanOrEqual(FRAMES_PER_BEAT);
+    expect(dur - 15 - LOAD_AT).toBeGreaterThanOrEqual(FRAMES_PER_BEAT);
+    for (const f of [REVENUE_AT, REVENUE_AT + SOCIAL_MOVE, SOCIAL_LOAD_FROM, LOAD_AT]) {
+      expect((sceneStart('dashboard', SCENES_SOCIAL) + f) % FRAMES_PER_BEAT).toBe(0);
+    }
   });
 
   it('wide chart and load views stay inside the 1440×900 window', () => {
@@ -119,15 +138,15 @@ describe('dashboard scene state', () => {
     it('0–45: the revenue KPI card whole while it counts up', () => {
       for (let f = 0; f <= REVENUE_AT; f++) expect(inside(view(f), SOCIAL_ZONES.kpi)).toBe(true);
     });
-    it('65–90: the chart — title, every bar and label, the month ticks; the footnote wholly out', () => {
-      for (let f = REVENUE_AT + MOVE; f <= LOAD_AT; f++) {
+    it('60–75: the chart — title, every bar and label, the month ticks; the footnote wholly out', () => {
+      for (let f = REVENUE_AT + SOCIAL_MOVE; f <= SOCIAL_LOAD_FROM; f++) {
         const v = view(f);
         expect(inside(v, SOCIAL_ZONES.chart)).toBe(true);
         expect(v.b).toBeLessThan(841);
       }
     });
-    it('110–end: the masters\' load panel whole, right of the revenue panel', () => {
-      for (let f = LOAD_AT + MOVE; f < dur; f++) {
+    it('90–end: the masters\' load panel whole, right of the revenue panel', () => {
+      for (let f = LOAD_AT; f < dur; f++) {
         const v = view(f);
         expect(inside(v, SOCIAL_ZONES.load)).toBe(true);
         expect(v.l).toBeGreaterThan(960.8);

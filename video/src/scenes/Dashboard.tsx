@@ -154,10 +154,11 @@ const LOAD = { x: 1022, y: 352.75, zoom: 2.32 };
 // SOCIAL (stage 1080×970 between the bands), one zone at a time:
 //   KPI   1.7 (view 635×571): x 273.4–908.6 — the revenue card whole (274–640.7) counting up, the orders
 //         card's figure; y 130.7–701 — the KPI row (from 132.5) and the bars growing under it.
-//   CHART 1.7 from 45 by 65: x 299.7–935 — the plot (Jun's label from 317 to Nov's), the panel's own
+//   CHART 1.7 from 45 by 60, held to 75: x 299.7–935 — the plot (Jun's label from 317 to Nov's), the panel's own
 //         padding cut; y 267.4–838 — the panel's top and title (286.7) to the month ticks (833); the
 //         footnote (841) wholly under the edge.
-//   LOAD  2.38 from 90 by 110 (view 454×408): x 964.6–1418.4 — the right column, clear of the revenue
+//   LOAD  2.38 from 75 by 90 (its ring springs in from 90), held to the fade into the outro (105–120 in
+//         the social cut's 120 frames) (view 454×408): x 964.6–1418.4 — the right column, clear of the revenue
 //         panel (960.8); y 262–669.6 — the load panel whole, the top works' title and first two rows.
 export const SOCIAL_ZONES = {
   kpi: { x: 274, y: 132.5, w: 366.7, h: 113.2 },
@@ -176,9 +177,19 @@ const keysThrough = ([a, b, c]: { x: number; y: number; zoom: number }[]): CamKe
   { at: s(LOAD_AT), ...b },
   { at: s(LOAD_AT + MOVE), ...c },
 ];
+/** Social moves take a beat each, on the beat (chart 45→60, load 75→90), so every settled shot holds
+ *  a beat in the social cut's 120 frames: the chart 60–75, the load 90–105 (then the fade). */
+export const SOCIAL_MOVE = 15;
+export const SOCIAL_LOAD_FROM = LOAD_AT - SOCIAL_MOVE;
 export const CAM: { wide: CamKey[]; social: CamKey[] } = {
   wide: keysThrough([OVERVIEW, REVENUE, LOAD]),
-  social: keysThrough([SOCIAL_KPI, SOCIAL_CHART, SOCIAL_LOAD]),
+  social: [
+    { at: 0, ...SOCIAL_KPI },
+    { at: s(REVENUE_AT), ...SOCIAL_KPI },
+    { at: s(REVENUE_AT + SOCIAL_MOVE), ...SOCIAL_CHART },
+    { at: s(SOCIAL_LOAD_FROM), ...SOCIAL_CHART },
+    { at: s(LOAD_AT), ...SOCIAL_LOAD },
+  ],
 };
 
 /** «Владелец видит выручку и загрузку» from 60 (on the beat), gone before the camera leaves the chart. */

@@ -53,9 +53,10 @@ export const FRAMES_PER_CHAR = 5;
 export const SWITCH_AT = CLICK_HIT + 3;
 export const MOVE_FROM = 75;
 export const MOVE_TO = 135;
-/** Social: the camera holds on the card head until 90, then settles on the orders by SOCIAL_SETTLE. */
+/** Social: the camera holds on the card head until 90, then settles on the orders by SOCIAL_SETTLE (a
+ *  15-frame move, as the other social moves) and holds them a beat before the slide (social dur 135). */
 export const SOCIAL_MOVE_FROM = 90;
-export const SOCIAL_SETTLE = 120;
+export const SOCIAL_SETTLE = 105;
 /** «Любая машина по VIN — за секунду» appears beside the hit as the hits narrow to the hero (45: «WMWSV3»,
  *  one hit) and stays through the switch; wide: gone by 75, before the camera moves; social: the bottom
  *  plaque, independent of the camera, stays to the end. */
@@ -253,7 +254,7 @@ const END = { x: 840, y: END_TOP_PAGE + 540 / END_ZOOM - SCROLL.wide, zoom: END_
 //   HEAD    2.45 by 76 (view 441×396): x 264–704 — the back link, avatar, name, phone, stats and the
 //           vehicles panel (274–694), short of the orders panel (710); y 75–471 — back link (81) to the
 //           vehicles panel's bottom (461).
-//   ORDERS  1.95 from 90 by 120 (view 554×498): x 704–1258 — the orders panel from its left edge: titles,
+//   ORDERS  1.95 from 90 by 105 (view 554×498): x 704–1258 — the orders panel from its left edge: titles,
 //           cars, dates and the status chips (end 1251); the amounts (from 1267) are left out whole, not
 //           cut; y 263–760.8 — under the stats (256), the panel head and rows 0–7, the bottom edge on the
 //           line under row 7. The page doesn't scroll.

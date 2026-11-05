@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { STATUS_ORDER } from '@crm/lib/types';
 import { boardOwner, woHero } from '../fixtures';
 import { cameraAt, stageView } from '../kit/math';
-import { CAM, SOCIAL_ZONE, boardState, COLUMNS_AFTER, COLUMNS_BEFORE } from './Board';
+import { SCENES_SOCIAL } from '../timing';
+import { BOARD_LAST_FRAME, CALLOUT_OUT, CAM, SOCIAL_ZONE, boardState, COLUMNS_AFTER, COLUMNS_BEFORE } from './Board';
 
 const at = (f: number) => boardState(f, 30);
 const HERO = woHero[3].id;
@@ -99,6 +100,22 @@ describe('board social: two columns', () => {
       expect(v.r).toBeLessThan(776); // «Ожидание» starts
       expect(v.b).toBeLessThan(534); // the third card row starts
     }
+  });
+  it('social cut (120 f): the drop settles by 92 and holds 13 frames before the fade into search (105); its last frame is the board search draws behind the palette', () => {
+    const dur = SCENES_SOCIAL.find((x) => x.id === 'board')!.dur;
+    expect(dur).toBe(120);
+    const settled = boardState(92, 30, true);
+    const strip = (st: ReturnType<typeof boardState>) => ({ ...st, cursor: null, rowStyle: null });
+    for (const f of [92, dur - 15, dur - 1]) expect(strip(boardState(f, 30, true))).toEqual(strip(settled));
+    // Search's background is boardState(BOARD_LAST_FRAME = 149, social): the same picture as frame 119.
+    expect(strip(boardState(BOARD_LAST_FRAME, 30, true))).toEqual(strip(boardState(dur - 1, 30, true)));
+    for (const st of STATUS_ORDER) {
+      for (const [i, w] of settled.columns[st].entries()) {
+        expect(boardState(dur - 1, 30, true).rowStyle(st, i, w.id)).toEqual(boardState(BOARD_LAST_FRAME, 30, true).rowStyle(st, i, w.id));
+      }
+    }
+    // The plaque is up 60–102 (readable, 42 frames) and fades 102–108, with the board's own fade.
+    expect(CALLOUT_OUT).toBeLessThanOrEqual(dur - 15);
   });
   it('the social board does not pan (the camera holds two columns); the wide one still does', () => {
     for (const f of [0, 100, 149]) expect(boardState(f, 30, true).scroll).toBe(0);

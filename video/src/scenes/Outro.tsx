@@ -3,10 +3,20 @@ import type { ShowcaseProps } from '../schema';
 import { Background } from '../kit/Background';
 import { BrandMark } from '../kit/BrandMark';
 import { useLayout } from '../kit/useLayout';
+import { SCENES, SCENES_SOCIAL } from '../timing';
 
 export const OUTRO_FEATURES = 'Запись · Смета · Доска · Документы · Поиск';
+const FADE = 15;
 
-/** Outro (120 f): mark 0–15, features on 15, title on 30, subtitle/cta on 45, fade-out 105–120. */
+/** The outro's fade-out: over its last 15 frames in the cut it plays in (hero 120: 105–120; social 90:
+ *  75–90). */
+export function outroFade(frame: number, social: boolean): number {
+  const dur = (social ? SCENES_SOCIAL : SCENES).find((sc) => sc.id === 'outro')!.dur;
+  return interpolate(frame, [dur - FADE, dur], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+}
+
+/** Outro (hero 120 f, social 90 f): mark 0–15, features on 15, title on 30, subtitle/cta on 45, fade-out
+ *  over the last 15 frames. */
 export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -14,7 +24,7 @@ export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
 
   const enter = (at: number) => spring({ frame: frame - at, fps, config: { damping: 200 }, durationInFrames: 18 });
   const mark = spring({ frame, fps, config: { damping: 200 }, durationInFrames: 15 });
-  const fade = interpolate(frame, [105, 120], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const fade = outroFade(frame, social);
   const rise = (at: number) => {
     const p = frame >= at ? enter(at) : 0;
     return { opacity: p, transform: `translateY(${(1 - p) * 24}px)` };

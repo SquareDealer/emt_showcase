@@ -2,15 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { STATUS_ORDER } from '@crm/lib/types';
 import { discountAmount, orderTotal, partGross, partTotal } from '@crm/lib/format';
 import { generations, priceList, woHero } from '../fixtures';
-import { cameraAt, cursorAt, stageView } from '../kit/math';
-import { FRAMES_PER_BEAT } from '../timing';
+import { cameraAt, cursorAt, maxPointerStep, stageView } from '../kit/math';
+import { FRAMES_PER_BEAT, SCENE_CLICKS } from '../timing';
 import { COLUMNS_AFTER, COLUMNS_BEFORE, HERO_ID, SLOT_STEP, boardState } from '../scenes/Board';
 import { bookingState } from '../scenes/Booking';
-import { KIT_LINE, estimateState } from '../scenes/Estimate';
+import { DISCOUNTS_FROM, KIT_LINE, estimateState } from '../scenes/Estimate';
+import { DC_SETTLED, discountsAt } from '../scenes/discounts';
 import { LOOP_DEFS, LOOP_H, LOOP_W } from './loop-defs';
 import {
   BOARD_LOOP,
   BOOKING_LOOP,
+  DC_RESET,
   DISCOUNTS_LOOP,
   ESTIMATE_LOOP,
   HEAD,
@@ -79,14 +81,7 @@ describe.each(LOOP_SPECS.map((s) => [s.id, s] as const))('%s is seamless by cons
   it('the pointer is paced: no per-frame step above 75 px on screen', () => {
     // Measured in frame px relative to the page — |Δ UI px| × the camera zoom — so the camera's own
     // pans and pushes are not counted, and every loop is judged at the size the viewer sees it.
-    let max = 0;
-    let at = -1;
-    for (let t = 0; t < D + 10; t++) {
-      const [a, b] = [cursorAt(t, FPS, spec.cursor), cursorAt(t + 1, FPS, spec.cursor)];
-      const zoom = Math.max(cameraAt(t, FPS, spec.cam).zoom, cameraAt(t + 1, FPS, spec.cam).zoom);
-      const step = Math.hypot(b.x - a.x, b.y - a.y) * zoom;
-      if (step > max) [max, at] = [step, t];
-    }
+    const { max, at } = maxPointerStep(spec.cursor, spec.cam, FPS, 0, D + 10);
     expect(max, `largest step ${max.toFixed(1)} px at ${at}→${at + 1}`).toBeLessThanOrEqual(75);
   });
   it('clicks fall on the beat, after frame 0 and at least 30 frames before the end', () => {
@@ -162,11 +157,11 @@ describe('LoopDiscounts', () => {
     expect(f(0).total).toBe(T[0]);
     expect(f(77).total).toBe(T[0]);
     expect(f(93).total).toBe(T[1]);
-    expect(f(122).total).toBe(T[1]);
-    expect(f(143).total).toBe(T[2]);
-    expect(f(160).total).toBe(T[2]);
+    expect(f(119).total).toBe(T[1]);
+    expect(f(135).total).toBe(T[2]);
+    expect(f(164).total).toBe(T[2]);
     // monotone count-downs, whole kopecks
-    for (let t = 78; t < 145; t++) {
+    for (let t = 78; t < 137; t++) {
       expect(f(t + 1).total).toBeLessThanOrEqual(f(t).total);
       expect(Math.round(f(t).total * 100) / 100).toBe(f(t).total);
     }
@@ -194,15 +189,31 @@ describe('LoopDiscounts', () => {
     expect(f(77)).toMatchObject({ snap: 1, edit: '10' });
     expect(f(78)).toMatchObject({ snap: 2, edit: null });
   });
-  it('then the order discount: type «%» (105 → 108), «5» typed, applied (wo-hero.3) at 123', () => {
+  it('then the order discount: type «%» (105 → 108), «5» typed (113), applied (wo-hero.3) a beat after the click (120)', () => {
     expect(f(107).discountDraft).toBeNull();
     expect(f(108).discountDraft).toEqual({ type: 'percent', value: '' });
     expect(f(113).discountDraft).toEqual({ type: 'percent', value: '5' });
-    expect(f(122).snap).toBe(2);
-    expect(f(123).snap).toBe(3);
+    expect(f(119).snap).toBe(2);
+    expect(f(120).snap).toBe(3);
   });
-  it('dissolves (eased, 10 frames) back to wo-hero.1 once the caption has gone', () => {
-    expect(overlayMax(DISCOUNTS_LOOP, 165)).toBe(0);
+  it('no caption: nothing is drawn over the window; the settled total holds 135–164 with the kit outlined', () => {
+    for (let t = 0; t < DISCOUNTS_LOOP.dur + 10; t++) expect(overlayMax(DISCOUNTS_LOOP, t)).toBe(0);
+    expect(DC_SETTLED).toBe(135);
+    expect(DC_RESET - DC_SETTLED).toBeGreaterThanOrEqual(30);
+    for (let t = DC_SETTLED; t < DC_RESET; t++) expect(f(t)).toMatchObject({ snap: 3, total: T[2], kitOutline: true, reset: 0 });
+  });
+  it('plays the Estimate scene\'s discount sequence: the same states at scene frame DISCOUNTS_FROM + t', () => {
+    for (let t = 0; t < DC_RESET; t++) {
+      const { reset, ...seq } = f(t);
+      expect(reset).toBe(0);
+      expect(seq).toEqual(discountsAt(t));
+      const scene = estimateState(DISCOUNTS_FROM + t, FPS);
+      expect(scene.wo.total_cached).toBe(seq.total);
+      expect(scene.discountDraft ?? null).toEqual(seq.discountDraft);
+    }
+    expect(DISCOUNTS_LOOP.clicks).toEqual(SCENE_CLICKS.estimate.slice(4).map((c) => c - DISCOUNTS_FROM));
+  });
+  it('dissolves (eased, 10 frames) back to wo-hero.1', () => {
     expect(f(165).reset).toBe(0);
     const r = [166, 167, 168, 169, 170, 171, 172, 173, 174].map((t) => f(t).reset);
     for (let i = 1; i < r.length; i++) expect(r[i]).toBeGreaterThan(r[i - 1]);
