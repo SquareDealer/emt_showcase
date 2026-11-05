@@ -73,3 +73,45 @@ export interface GenerationSpec {
   model: string;
   years: string;
 }
+
+export type UserRole = 'owner' | 'master_receptionist' | 'master';
+export type ClientSource = 'manual' | 'telegram_bot' | 'csv_import';
+
+export interface StaffPlan {
+  id: string;
+  name: string;
+  login: string;
+  role: UserRole;
+  loadWeight: number;
+}
+
+export interface ClientPlan {
+  id: string;
+  full_name: string;
+  phone: string;
+  kind: 'person' | 'company';
+  tier: 'regular' | 'occasional';
+  source: ClientSource;
+  discount_default_pct: number | null;
+  imported_deals_count: number;
+  imported_deals_sum: number;
+  notes: string | null;
+  created_at: Date;
+  vehicleCount: number;
+}
+
+export interface VehiclePlan {
+  id: string;
+  client_id: string;
+  make: string;
+  /** null: VehiclesService fills in the generation's model. */
+  model: string | null;
+  generationCode: string | null;
+  vin: string;
+  plate: string;
+  year: number;
+  baseKm: number;
+  annualKm: number;
+  mileage: number;
+  created_at: Date;
+}
