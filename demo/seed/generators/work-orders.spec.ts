@@ -1,7 +1,7 @@
 import { PricingService } from '../../../src/work-orders/pricing.service';
 import { HERO, heroSchedule } from '../hero';
 import { buildDemoPlan } from '../plan';
-import { allowedStatuses, overlaps, planViolations } from '../test-utils/plan-checks';
+import { allowedStatuses, overlaps, planViolations, staleDone } from '../test-utils/plan-checks';
 import { mskAt, mskDay } from '../time';
 import type { WorkOrderPlan } from '../types';
 import { formatKm, planSettings, rateAt } from './work-orders';
@@ -17,6 +17,14 @@ it('~800 orders', () => {
 });
 it('status follows the date rules', () => {
   for (const w of wos) expect(allowedStatuses(w, now)).toContain(w.status);
+});
+it('«Готово» is recent: past 14 days only a couple of unpaid stragglers', () => {
+  expect(staleDone(wos, now).length).toBeGreaterThanOrEqual(1);
+  expect(staleDone(wos, now).length).toBeLessThanOrEqual(3);
+  const MS_DAY = 86_400_000;
+  const old = wos.filter((w) => w.status !== 'closed' && now.getTime() - w.scheduled_at.getTime() > 14 * MS_DAY);
+  expect(old.map((w) => w.status)).toEqual(old.map(() => 'done'));
+  expect(old.every((w) => w.total_cached <= 7000)).toBe(true);
 });
 it('exactly two overdue scheduled orders', () =>
   expect(wos.filter((w) => w.status === 'scheduled' && w.scheduled_at < now)).toHaveLength(2));

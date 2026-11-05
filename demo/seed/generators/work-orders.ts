@@ -49,6 +49,9 @@ const SWAP_OFF_SEASON_FACTOR = 0.15;
 const BUSY_DAY_MIN = 9;
 const NEXT_DAY_MIN = 4;
 const OVERDUE_COUNT = 2;
+/** Past two weeks every order is paid and closed, but for a couple of forgotten «Готово» on the board. */
+const STALE_DONE_DAYS = 14;
+const STALE_DONE_COUNT = 2;
 /** The hero F60 (the big order's car) is a regular, but ~20 visits in six months would look odd. */
 const HERO_F60_BULK_MAX = 4;
 /** Top-up works for the busy day and the next weekday: short enough to fit any remaining gap. */
@@ -239,7 +242,9 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
         ? [['closed', 30], ['done', 30], ['waiting', 20], ['in_progress', age <= 2 ? 20 : 0]]
         : age <= 7
           ? [['closed', 85], ['waiting', 10], ['done', 5]]
-          : [['closed', 96], ['done', 4]];
+          : age <= STALE_DONE_DAYS
+            ? [['closed', 96], ['done', 4]]
+            : [['closed', 1]];
     const s = table[weightedIndex(f, table.map(([, w]) => w))][0];
     // A closing needs half an hour after the work; one that just ended is still «done».
     return s === 'closed' && end > closeBy ? 'done' : s;
@@ -598,7 +603,14 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
   const finished = out.filter((w) => ordinary(w) && w.scheduled_at.getTime() >= nowMs - 2 * MS_DAY && endMs(w) <= nowMs);
   const overdue = new Set(f.helpers.arrayElements(finished, OVERDUE_COUNT).map((w) => w.id));
   if (overdue.size !== OVERDUE_COUNT) throw new Error(`need ${OVERDUE_COUNT} overdue candidates, have ${finished.length}`);
-  let result = out.map((w) => (overdue.has(w.id) ? unpaid(w, 'scheduled') : w));
+  // A couple of stragglers: small orders of 2–6 weeks ago the client never came to pay for.
+  const pinned = new Set([HERO.bigOrder.id, HERO.diagnosticsOrderId, HERO.pdfOrderId]);
+  const staleFrom = nowMs - 42 * MS_DAY;
+  const staleTo = nowMs - (STALE_DONE_DAYS + 1) * MS_DAY;
+  const strays = out.filter((w) => ordinary(w) && !pinned.has(w.id) && w.status === 'closed' && endMs(w) >= staleFrom && endMs(w) <= staleTo && w.total_cached <= TICKET_MEDIAN);
+  const stale = new Set(f.helpers.arrayElements(strays, STALE_DONE_COUNT).map((w) => w.id));
+  if (stale.size !== STALE_DONE_COUNT) throw new Error(`need ${STALE_DONE_COUNT} stale «done» candidates, have ${strays.length}`);
+  let result = out.map((w) => (overdue.has(w.id) ? unpaid(w, 'scheduled') : stale.has(w.id) ? unpaid(w, 'done') : w));
 
   // At least one order waits for a part. If the status table drew none, the latest finished
   // order of the last week waits.

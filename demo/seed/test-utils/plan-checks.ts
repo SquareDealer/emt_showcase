@@ -26,7 +26,13 @@ export function allowedStatuses(w: Pick<WorkOrderPlan, 'scheduled_at' | 'schedul
   if (age <= 2) return ['closed', 'done', 'waiting', 'in_progress', ...overdue];
   if (age <= 3) return ['closed', 'done', 'waiting', ...overdue];
   if (age <= 7) return ['closed', 'waiting', 'done', ...overdue];
+  // Past 14 days only `closed`, but for the 1–3 stale «done» stragglers (counted in planViolations).
   return ['closed', 'done'];
+}
+
+/** «Готово» orders whose work ended more than 14 days before `now`. */
+export function staleDone(wos: WorkOrderPlan[], now: Date): WorkOrderPlan[] {
+  return wos.filter((w) => w.status === 'done' && now.getTime() - (w.scheduled_at.getTime() + w.scheduled_duration_min * MS_MIN) > 14 * MS_DAY);
 }
 
 /** Everything the brief requires of a plan for any `--now`. Returns failures instead of throwing, so a test shows them all. */
@@ -111,6 +117,8 @@ export function planViolations(plan: DemoPlan): string[] {
   if (overdue.length !== 2) out.push(`overdue scheduled: ${overdue.length}`);
   for (const w of overdue) if (w.scheduled_at.getTime() + w.scheduled_duration_min * MS_MIN > now.getTime()) bad(w, 'overdue order is still running');
   if (!wos.some((w) => w.status === 'waiting')) out.push('no waiting order');
+  const stale = staleDone(wos, now).length;
+  if (stale < 1 || stale > 3) out.push(`stale done (> 14 days): ${stale}`);
 
   const big = wos.find((w) => w.id === HERO.bigOrder.id);
   const diag = wos.find((w) => w.id === HERO.diagnosticsOrderId);
