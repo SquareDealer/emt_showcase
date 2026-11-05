@@ -125,7 +125,7 @@ export function planViolations(plan: DemoPlan): string[] {
   if (!wos.some((w) => w.status === 'waiting')) out.push('no waiting order');
   for (const w of wos.filter((x) => x.status === 'waiting')) {
     const awaited = /^Ждёт запчасть: (.+)$/m.exec(w.notes ?? '')?.[1];
-    if (!awaited || !w.parts.some((p) => p.name === awaited)) bad(w, `waits for a part not on the order: ${awaited ?? '—'}`);
+    if (!awaited || !w.parts.some((p) => p.name === awaited && p.unit === 'pcs')) bad(w, `waits for a part not on the order (or a fluid): ${awaited ?? '—'}`);
   }
   const stale = staleDone(wos, now).length;
   if (stale < 1 || stale > 3) out.push(`stale done (> 14 days): ${stale}`);

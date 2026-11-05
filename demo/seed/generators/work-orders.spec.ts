@@ -4,7 +4,7 @@ import { buildDemoPlan } from '../plan';
 import { allowedStatuses, overlaps, planViolations, staleDone } from '../test-utils/plan-checks';
 import { mskAt, mskDay, mskMinutes } from '../time';
 import type { WorkOrderPlan } from '../types';
-import { formatKm, orderTitle, planSettings, rateAt } from './work-orders';
+import { awaitedPart, formatKm, orderTitle, planSettings, rateAt } from './work-orders';
 
 const now = mskAt('2026-11-04', 12);
 const plan = buildDemoPlan(now);
@@ -148,10 +148,10 @@ it('no master is double-booked; titles, waiting notes, discounts', () => {
   for (const w of wos) {
     expect(w.title).toBe(orderTitle(w.labor, w.parts));
     if (w.status === 'waiting') {
-      // the awaited part is on the order: its dearest line
+      // the awaited part is on the order: its dearest piece part, never a fluid
       const awaited = /Ждёт запчасть: (.+)$/m.exec(w.notes ?? '')?.[1];
-      const dearest = [...w.parts].sort((a, b) => b.qty * b.unit_price - a.qty * a.unit_price)[0];
-      expect(awaited).toBe(dearest?.name);
+      expect(awaited).toBe(awaitedPart(w.parts));
+      expect(w.parts.find((p) => p.name === awaited)?.unit).toBe('pcs');
     }
   }
   const lines = wos.flatMap((w) => w.labor);

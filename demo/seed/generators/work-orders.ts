@@ -128,11 +128,13 @@ export function formatKm(km: number): string {
   return String(km).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-/** The part an order waits for: its dearest line (a hub bearing or a disc, not the drain plug washer). */
-function awaitedPart(parts: PartLinePlan[]): string {
-  const top = [...parts].sort((a, b) => b.qty * b.unit_price - a.qty * a.unit_price || a.sort - b.sort)[0];
-  if (!top) throw new Error('a waiting order needs a part');
-  return top.name;
+/**
+ * The part an order can wait for: its dearest piece part (a hub bearing or a disc). Fluids are in stock,
+ * so an order with only oil or antifreeze has nothing to wait for. Null: none.
+ */
+export function awaitedPart(parts: PartLinePlan[]): string | null {
+  const top = parts.filter((p) => p.unit === 'pcs').sort((a, b) => b.unit_price - a.unit_price || a.sort - b.sort)[0];
+  return top?.name ?? null;
 }
 
 /** The two most expensive blocks (labor + parts, before discounts), the dearer first; a tie goes to the earlier block. */
@@ -304,8 +306,8 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
       createdAt: d.createdAt,
       resolution,
     });
-    // Waiting for a part needs a part on the order: a labor-only order is just «done».
-    const status: WorkOrderStatus = drawn === 'waiting' && !parts.length ? 'done' : drawn;
+    // Waiting for a part needs a piece part on the order: otherwise the order is just «done».
+    const status: WorkOrderStatus = drawn === 'waiting' && !awaitedPart(parts) ? 'done' : drawn;
     // A fixed 500/1000 off a 700 ₽ puncture repair would zero the order: only on a sizeable one.
     const discount = d.discount?.type === 'fixed' && pricing.netSubtotal(labor, parts) < 4 * d.discount.value ? null : d.discount;
     const total = pricing.computeTotal(labor, parts, discount?.type ?? null, discount?.value ?? null);
@@ -665,10 +667,10 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
   // order of the last week waits.
   if (!result.some((w) => w.status === 'waiting')) {
       const pick = result
-      .filter((w) => ordinary(w) && !overdue.has(w.id) && !stale.has(w.id) && w.parts.length > 0 && endMs(w) <= nowMs && nowMs - endMs(w) <= 7 * MS_DAY)
+      .filter((w) => ordinary(w) && !overdue.has(w.id) && !stale.has(w.id) && awaitedPart(w.parts) !== null && endMs(w) <= nowMs && nowMs - endMs(w) <= 7 * MS_DAY)
       .sort((a, b) => endMs(b) - endMs(a) || (a.id < b.id ? -1 : 1))[0];
     if (!pick) throw new Error('no order can be waiting for a part');
-    const part = awaitedPart(pick.parts);
+    const part = must(awaitedPart(pick.parts) ?? undefined, 'awaited part');
     const waiting = unpaid(pick, 'waiting');
     result = result.map((w) => (w.id === pick.id ? { ...waiting, notes: `${waiting.notes}\nЖдёт запчасть: ${part}` } : w));
   }
