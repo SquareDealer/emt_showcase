@@ -21,7 +21,7 @@ export interface DemoPlan {
 
 /** The whole demo data set, no DB. Each generator has its own rng stream, so editing one does not shift the others. */
 export function buildDemoPlan(demoNow: Date): DemoPlan {
-  const staff = planStaff(makeFaker('staff', demoNow));
+  const staff = planStaff();
   const catalog = planCatalog();
   const clients = planClients(makeFaker('clients', demoNow), demoNow);
   const vehicles = planVehicles(makeFaker('vehicles', demoNow), clients, demoNow);

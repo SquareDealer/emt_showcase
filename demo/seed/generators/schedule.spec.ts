@@ -1,5 +1,4 @@
 import { heroSchedule } from '../hero';
-import { makeFaker } from '../rng';
 import { addDays, mskAt, mskDay, mskMinutes, weekdayOf } from '../time';
 import { planStaff } from './people';
 import { DayBoard, dailyCounts, planBlocks, windowStartDay } from './schedule';
@@ -41,7 +40,7 @@ it('October is ~30% busier than September', () => {
 });
 it('bookings ahead thin out', () =>
   expect(avg((d) => d >= '2026-11-05' && d <= '2026-11-07')).toBeGreaterThan(avg((d) => d >= '2026-11-16')));
-const staff = planStaff(makeFaker('staff', now));
+const staff = planStaff();
 const blocks = planBlocks(staff, now);
 const { freeSlot } = heroSchedule(now);
 it('blocks stay clear of the free slot and are valid', () => {

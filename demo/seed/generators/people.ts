@@ -1,6 +1,7 @@
 import type { Faker } from '@faker-js/faker';
 import { CLIENTS_TOTAL, COMPANIES_TOTAL, HISTORY_DAYS, REGULAR_SHARE, TICKET_MEDIAN } from '../config';
 import { COMPANY_POOL } from '../data/companies';
+import { FEMALE_FIRST_NAMES, MALE_FIRST_NAMES, PATRONYMICS, STAFF_NAMES } from '../data/names';
 import { CLIENT_NOTES } from '../data/vehicles';
 import { HERO } from '../hero';
 import { demoId } from '../ids';
@@ -12,26 +13,34 @@ import { makePhone } from './vehicles';
 const FLEET_NAME = 'ООО «Северный ветер»';
 const MS_MIN = 60_000;
 
-export function planStaff(f: Faker): StaffPlan[] {
-  const rows: [string, StaffPlan['role'], number, 'male' | 'female'][] = [
-    ['owner', 'owner', 0, 'male'],
-    ['reception1', 'master_receptionist', 0, 'female'],
-    ['reception2', 'master_receptionist', 0, 'male'],
-    ['master1', 'master', 0.4, 'male'],
-    ['master2', 'master', 0.35, 'male'],
-    ['master3', 'master', 0.25, 'male'],
+/** Staff names are hand-written (STAFF_NAMES): they are on screen in every scene of the video. */
+export function planStaff(): StaffPlan[] {
+  const rows: [string, StaffPlan['role'], number][] = [
+    ['owner', 'owner', 0],
+    ['reception1', 'master_receptionist', 0],
+    ['reception2', 'master_receptionist', 0],
+    ['master1', 'master', 0.4],
+    ['master2', 'master', 0.35],
+    ['master3', 'master', 0.25],
   ];
-  return rows.map(([login, role, loadWeight, sex]) => ({
+  return rows.map(([login, role, loadWeight]) => ({
     id: demoId('user', login),
-    name: personName(f, sex),
+    name: STAFF_NAMES[login],
     login,
     role,
     loadWeight,
   }));
 }
 
+/** First name and patronymic from the modern pools (data/names.ts); the surname from faker, same gender. */
+function firstName(f: Faker, sex: 'male' | 'female'): string {
+  return f.helpers.arrayElement(sex === 'male' ? MALE_FIRST_NAMES : FEMALE_FIRST_NAMES);
+}
+function patronymic(f: Faker, sex: 'male' | 'female'): string {
+  return f.helpers.arrayElement(PATRONYMICS)[sex];
+}
 function personName(f: Faker, sex: 'male' | 'female'): string {
-  return `${f.person.lastName(sex)} ${f.person.firstName(sex)} ${f.person.middleName(sex)}`;
+  return `${f.person.lastName(sex)} ${firstName(f, sex)} ${patronymic(f, sex)}`;
 }
 
 export function planClients(f: Faker, demoNow: Date): ClientPlan[] {
@@ -55,7 +64,7 @@ export function planClients(f: Faker, demoNow: Date): ClientPlan[] {
       if (/^[А-ЯЁ][а-яё]+$/.test(n)) return n;
     }
   };
-  const ip = (): string => `ИП ${surname()} ${f.person.firstName('male')[0]}. ${f.person.middleName('male')[0]}.`;
+  const ip = (): string => `ИП ${surname()} ${firstName(f, 'male')[0]}. ${patronymic(f, 'male')[0]}.`;
   const companyNames = f.helpers.shuffle([
     ...f.helpers.shuffle(COMPANY_POOL.filter((n) => n !== FLEET_NAME)).slice(0, COMPANIES_TOTAL - 1 - 2),
     ip(),
