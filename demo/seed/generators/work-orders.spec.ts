@@ -2,7 +2,7 @@ import { PricingService } from '../../../src/work-orders/pricing.service';
 import { HERO, heroSchedule } from '../hero';
 import { buildDemoPlan } from '../plan';
 import { allowedStatuses, overlaps, planViolations, staleDone } from '../test-utils/plan-checks';
-import { mskAt, mskDay } from '../time';
+import { mskAt, mskDay, mskMinutes } from '../time';
 import type { WorkOrderPlan } from '../types';
 import { formatKm, orderTitle, planSettings, rateAt } from './work-orders';
 
@@ -161,6 +161,14 @@ it('no master is double-booked; titles, waiting notes, discounts', () => {
   const theirs = wos.filter((w) => withDefault.has(w.client_id) && w.id !== HERO.bigOrder.id);
   expect(theirs.length).toBeGreaterThan(0);
   for (const w of theirs) expect([w.discount_type, w.discount_value]).toEqual(['percent', withDefault.get(w.client_id)]);
+});
+it('start times are spread over the day, mostly in the morning', () => {
+  const minutes = wos.map((w) => mskMinutes(w.scheduled_at));
+  expect(minutes.filter((m) => m === 8 * 60).length / wos.length).toBeLessThan(0.15);
+  expect(minutes.filter((m) => m < 13 * 60).length / wos.length).toBeGreaterThan(0.5);
+  expect(minutes.filter((m) => m >= 14 * 60).length / wos.length).toBeGreaterThan(0.15);
+  const hero = wos.filter((w) => w.client_id === HERO.client.id).map((w) => mskMinutes(w.scheduled_at));
+  expect(hero.filter((m) => m === 8 * 60).length).toBeLessThan(hero.length / 2);
 });
 it('orders come out in date order', () => {
   for (let i = 1; i < wos.length; i++) expect(wos[i - 1].scheduled_at <= wos[i].scheduled_at).toBe(true);

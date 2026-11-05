@@ -113,6 +113,12 @@ export function planViolations(plan: DemoPlan): string[] {
     });
   }
 
+  // Starts are spread over the day, not stacked at opening time.
+  const at8 = wos.filter((w) => mskMinutes(w.scheduled_at) === 8 * 60).length / wos.length;
+  if (at8 >= 0.15) out.push(`08:00 starts: ${(at8 * 100).toFixed(1)}%`);
+  const heroStarts = new Set(wos.filter((w) => w.client_id === HERO.client.id).map((w) => mskMinutes(w.scheduled_at)));
+  if (heroStarts.size < 4) out.push(`hero client's visits start at ${heroStarts.size} distinct times`);
+
   const overdue = wos.filter((w) => w.status === 'scheduled' && w.scheduled_at < now);
   if (overdue.length !== 2) out.push(`overdue scheduled: ${overdue.length}`);
   for (const w of overdue) if (w.scheduled_at.getTime() + w.scheduled_duration_min * MS_MIN > now.getTime()) bad(w, 'overdue order is still running');

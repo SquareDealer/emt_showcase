@@ -12,6 +12,8 @@ import {
   SLOT_MIN,
   TICKET_MEDIAN,
   TICKET_SIGMA,
+  WORK_END_HOUR,
+  WORK_START_HOUR,
 } from '../config';
 import { COMPLAINTS, RECOMMENDATIONS, WAITING_PARTS } from '../data/texts';
 import { HERO, heroSchedule } from '../hero';
@@ -49,6 +51,11 @@ const TIRE_PEAK_FACTOR = 2;
 const SEASONAL_SWAP = new Set(['tire-change', 'wheel-balance', 'tire-storage']);
 const SWAP_MONTHS = [4, 5, 10, 11];
 const SWAP_OFF_SEASON_FACTOR = 0.15;
+/**
+ * Wanted start, per half hour from 08:00: most clients come in the morning, but not all at opening.
+ * Only starts that end by closing time are drawn; when the wanted time is taken, the earliest free slot.
+ */
+const START_WEIGHTS = [3, 3, 4, 4, 4, 4, 3.5, 3.5, 3, 3, 2, 2, 2.5, 2.5, 2, 2, 1.5, 1.5, 1, 1, 0.5, 0.5];
 const BUSY_DAY_MIN = 9;
 const NEXT_DAY_MIN = 4;
 const OVERDUE_COUNT = 2;
@@ -336,6 +343,19 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
     };
   };
 
+  /**
+   * A slot at a drawn start time (morning-weighted), else the earliest free one of the day. The busy day
+   * (DEMO_NOW's) is booked solid from opening: its finished morning orders are also where the two overdue
+   * «scheduled» come from (DEMO_NOW is 12:00, and on a Monday the weekend before it is nearly empty).
+   */
+  const placeSpread = (day: string, duration: number, avoid: Interval[] | undefined): ReturnType<DayBoard['place']> => {
+    if (day === busyDay) return board.place(day, duration, { rng: f, avoid });
+    const latestStart = WORK_END_HOUR * 60 - duration;
+    const weights = START_WEIGHTS.map((w, i) => (WORK_START_HOUR * 60 + i * SLOT_MIN <= latestStart ? w : 0));
+    const notBeforeMin = WORK_START_HOUR * 60 + SLOT_MIN * weightedIndex(f, weights);
+    return board.place(day, duration, { rng: f, notBeforeMin, avoid }) ?? board.place(day, duration, { rng: f, avoid });
+  };
+
   const out: WorkOrderPlan[] = [];
   // Each car's bookings: DayBoard guards the masters, this guards the car (never in two orders at once).
   const carBusy = new Map<string, Interval[]>();
@@ -428,10 +448,10 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
     const works = lineDiscounts(TIRE_PEAK_MONTHS.includes(monthOf(day)) ? [...visit.works, 'tire-change'] : visit.works);
     const duration = durationOf(works, car.generationCode);
     const creationDay = bookingDay(day);
-    let slot = board.place(day, duration, { rng: f, avoid: carBusy.get(car.id) });
+    let slot = placeSpread(day, duration, carBusy.get(car.id));
     while (!slot && day < last) {
       day = nextWorkdayAfter(day);
-      slot = board.place(day, duration, { rng: f, avoid: carBusy.get(car.id) });
+      slot = placeSpread(day, duration, carBusy.get(car.id));
     }
     if (!slot) throw new Error(`no slot for hero visit ${i + 1}`);
     bookCar(car.id, slot.start, duration);
@@ -551,17 +571,12 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
     const works = lineDiscounts(picks.map((t) => t.key));
     const duration = durationOf(works, gen);
     const avoid = carBusy.get(vehicle.id);
-    let slot: ReturnType<DayBoard['place']>;
-    if (quick) slot = board.place(day, duration, { rng: f, avoid });
-    else {
-      const notBeforeMin = chance(f, 0.5) ? 8 * 60 + SLOT_MIN * f.number.int({ min: 0, max: 8 }) : undefined;
-      let at = day;
-      slot = board.place(at, duration, { rng: f, notBeforeMin, avoid }) ?? board.place(at, duration, { rng: f, avoid });
-      while (!slot) {
-        at = nextWorkdayAfter(at);
-        if (at > windowEnd) break;
-        slot = board.place(at, duration, { rng: f, avoid });
-      }
+    let at = day;
+    let slot = placeSpread(at, duration, avoid);
+    while (!slot && !quick) {
+      at = nextWorkdayAfter(at);
+      if (at > windowEnd) break;
+      slot = placeSpread(at, duration, avoid);
     }
     if (!slot) return null;
     bookCar(vehicle.id, slot.start, duration);
