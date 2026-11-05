@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { AppShellView } from '@crm/components/AppShellView';
 import { BoardCard, BoardView, type Columns } from '@crm/features/board/BoardView';
@@ -182,10 +182,13 @@ export function BoardWindow({
   theme,
   brandName,
   state,
+  overlays,
 }: {
   theme: 'light' | 'dark';
   brandName: string;
   state: ReturnType<typeof boardState>;
+  /** The shell's overlay slot (the Search scene opens the ⌘K palette over the board). */
+  overlays?: ReactNode;
 }) {
   const { float } = state;
   // rowStyle is per column position; resolve the column from the id.
@@ -209,6 +212,7 @@ export function BoardWindow({
           onLogout={noop}
           onOpenDrawer={noop}
           onCloseDrawer={noop}
+          overlays={overlays}
         >
           <BoardView
             columns={state.columns}

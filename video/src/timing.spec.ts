@@ -34,6 +34,12 @@ describe('timing', () => {
     expect(sceneStart('board')).toBe(480);
     expect(SCENE_CLICKS.board.map((f) => f + sceneStart('board'))).toEqual([510, 555]);
   });
+  it('search clicks: the hero hit at 60 (absolute 780, social 585, on the beat)', () => {
+    expect(SCENE_CLICKS.search).toEqual([60]);
+    expect(sceneStart('search')).toBe(720);
+    expect(SCENE_CLICKS.search.map((f) => f + sceneStart('search'))).toEqual([780]);
+    expect(SCENE_CLICKS.search.map((f) => f + sceneStart('search', SCENES_SOCIAL))).toEqual([585]);
+  });
   it('offBeatClicks detects off-grid clicks in an injected table', () => {
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [20] })).toEqual([80]);
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [15] })).toEqual([]);

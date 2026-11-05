@@ -20,3 +20,12 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* The ⌘K palette sizes itself in vh (12vh top padding, 70vh max height); in the video vh is the
+   composition (1080 or 1350 px), not the 900-px window — pin them to the window as the app has them. */
+.crm-root .palette-backdrop {
+  padding-top: 108px;
+}
+.crm-root .palette {
+  max-height: 630px;
+}
