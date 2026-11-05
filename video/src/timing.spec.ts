@@ -24,10 +24,10 @@ describe('timing', () => {
     expect(SCENE_CLICKS.booking).toEqual([75, 105]);
     expect(SCENE_CLICKS.booking.map((f) => f + sceneStart('booking'))).toEqual([135, 165]);
   });
-  it('estimate clicks: select 45, option 75, oil 120, confirm 150 (absolute 270/300/345/375, on the beat)', () => {
-    expect(SCENE_CLICKS.estimate).toEqual([45, 75, 120, 150]);
+  it('estimate clicks: select 45, option 75, oil 120, confirm 150, discount type 210 (absolute 270/300/345/375/435, on the beat)', () => {
+    expect(SCENE_CLICKS.estimate).toEqual([45, 75, 120, 150, 210]);
     expect(sceneStart('estimate')).toBe(225);
-    expect(SCENE_CLICKS.estimate.map((f) => f + sceneStart('estimate'))).toEqual([270, 300, 345, 375]);
+    expect(SCENE_CLICKS.estimate.map((f) => f + sceneStart('estimate'))).toEqual([270, 300, 345, 375, 435]);
   });
   it('offBeatClicks detects off-grid clicks in an injected table', () => {
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [20] })).toEqual([80]);

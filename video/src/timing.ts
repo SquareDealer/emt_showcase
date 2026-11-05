@@ -39,7 +39,7 @@ export function totalDuration(scenes: readonly SceneDef[] = SCENES): number {
 export const SCENE_CLICKS: Record<SceneId, number[]> = {
   intro: [],
   booking: [75, 105],
-  estimate: [45, 75, 120, 150],
+  estimate: [45, 75, 120, 150, 210],
   board: [],
   docs: [],
   search: [],

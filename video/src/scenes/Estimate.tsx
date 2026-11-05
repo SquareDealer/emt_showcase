@@ -40,6 +40,8 @@ import { FPS, SCENE_CLICKS } from '../timing';
 //   SUMMARY        `[data-demo="wo-summary"]` x 1096 w 320 from y 195; «Скидка на наряд» y 509.5
 //                  (h 39 once the % input shows), «Скидки по строкам» 551.5 / 560.5, «Скидка наряда»
 //                  592, «Итого» 604 (snapshot 2) / 644.5 (snapshot 3) h 33, «Остаток» 752.5.
+//   new block's group headers (`.smeta-group`): works 265,377 814×47; parts 265,611.8 814×36.5.
+//   DISC_TYPE      `[data-demo="wo-discount"] select` (snapshot 2, type «нет»): x 1307 y 509.5 w 92 h 30.
 //   toast          `.toast` (fixed, bottom-centre of the window): x 617 y 840.5 w 205.5 h 35.5.
 // ---------------------------------------------------------------------------------------------
 const ADD_FROM_PRICE = { x: 692, y: 208, w: 371, h: 30 };
@@ -50,17 +52,28 @@ const CONFIRM = { x: 823, y: 684, w: 190, h: 36 };
 /** FakeSelect list: 4 px below the control, 4 px padding, 36 px rows (kit/FakeSelect.tsx). */
 const optionY = (i: number) => ADD_FROM_PRICE.y + ADD_FROM_PRICE.h + 4 + 4 + 36 * i + 18;
 const SUMMARY_X = 1096;
+const NEW_HEADERS = [
+  { x: 265, y: 377, w: 814, h: 47 },
+  { x: 265, y: 611.8, w: 814, h: 36.5 },
+];
+const DISC_TYPE = { x: 1307, y: 509.5, w: 92, h: 30 };
+/** The kit's «−1 490 ₽ (10%)» (`.smeta-row .disc` x 824.6 y 657.3 w 62.4 h 36.5), padded. */
+const KIT_DISC_CELL = { x: 816, y: 652, w: 80, h: 47 };
 
-const [CLICK_SELECT, CLICK_OPTION, CLICK_OIL, CLICK_CONFIRM] = SCENE_CLICKS.estimate;
-/** The list stays open under the press for 3 frames, then closes with the option picked. */
+const [CLICK_SELECT, CLICK_OPTION, CLICK_OIL, CLICK_CONFIRM, CLICK_DISC_TYPE] = SCENE_CLICKS.estimate;
+// Every click's effect lands 3 frames after the press, so the press and its ring hit the target.
+/** The list stays open under the press, then closes with the option picked. */
 const PICK_AT = CLICK_OPTION + 3;
+/** The sheet closes and wo-hero.1 arrives (the app's onSuccess). */
+const APPLY_AT = CLICK_CONFIRM + 3;
+/** The order-discount type switches «нет» → «%» (its input appears), then «5» is typed. */
+const DISC_TYPE_AT = CLICK_DISC_TYPE + 3;
 const MODAL_IN = 80;
 const GEN_AT = 90;
 const BLOCK_AT = 135;
 const TOAST_IN = 155;
 const TOAST_OUT = 200;
 const SNAP2_AT = 195;
-const TYPE_AT = 210;
 const SNAP3_AT = 225;
 const TOTAL_TO = 255;
 
@@ -100,11 +113,11 @@ const TOTAL_ALL = templateTotal(templatePreview, PICKED_ALL, QTY);
 const TOTAL_NO_OIL = templateTotal(templatePreview, PICKED_NO_OIL, QTY);
 
 /** Lines of `next` that `prev` doesn't have, in rowStyle index order (labor rows, then parts). */
-function newLineIds(prev: WorkOrder, next: WorkOrder): string[] {
+export function newLineIds(prev: WorkOrder, next: WorkOrder): string[] {
   const had = new Set([...(prev.labor_lines ?? []), ...(prev.part_lines ?? [])].map((l) => l.id));
   return [...(next.labor_lines ?? []), ...(next.part_lines ?? [])].map((l) => l.id).filter((id) => !had.has(id));
 }
-const NEW_LINES = newLineIds(WO0, WO1);
+export const NEW_LINES = newLineIds(WO0, WO1);
 const KIT_LINE = (WO2.part_lines ?? []).find((p) => p.part_template_id === HERO.parts.chainKit);
 if (!KIT_LINE) throw new Error('wo-hero.2: no chain kit line');
 
@@ -114,7 +127,7 @@ const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 
 /** Scene-local state: a pure function of the frame. */
 export function estimateState(frame: number, fps: number) {
-  const snap = frame >= SNAP3_AT ? 3 : frame >= SNAP2_AT ? 2 : frame >= CLICK_CONFIRM ? 1 : 0;
+  const snap = frame >= SNAP3_AT ? 3 : frame >= SNAP2_AT ? 2 : frame >= APPLY_AT ? 1 : 0;
   const base = woHero[snap];
   const wo: WorkOrder =
     snap === 3
@@ -122,11 +135,14 @@ export function estimateState(frame: number, fps: number) {
       : base;
   const modalIn = spring({ frame: frame - MODAL_IN, fps, config: { damping: 200 }, durationInFrames: 10 });
   const toastIn = spring({ frame: frame - TOAST_IN, fps, config: { damping: 200 }, durationInFrames: 8 });
+  /** Appearance of the k-th new line (and of its block's header): 8 frames, staggered by 3. */
+  const lineIn = (k: number) =>
+    interpolate(frame, [APPLY_AT + 2 + 3 * k, APPLY_AT + 10 + 3 * k], [0, 1], clamp);
   const toastOut = interpolate(frame, [TOAST_OUT - 6, TOAST_OUT], [1, 0], clamp);
   return {
     wo,
     // The sheet closes on the confirm click (as the app's onSuccess does): no cross-fade over the new rows.
-    modalOpacity: frame >= MODAL_IN && frame < CLICK_CONFIRM ? modalIn : 0,
+    modalOpacity: frame >= MODAL_IN && frame < APPLY_AT ? modalIn : 0,
     modalScale: interpolate(modalIn, [0, 1], [0.96, 1]),
     picked: frame >= CLICK_OIL ? PICKED_NO_OIL : PICKED_ALL,
     buttonTotal: countUp(frame, CLICK_OIL, CLICK_OIL + 12, TOTAL_ALL, TOTAL_NO_OIL),
@@ -134,12 +150,23 @@ export function estimateState(frame: number, fps: number) {
     rowStyle: (id: string): CSSProperties | undefined => {
       const k = NEW_LINES.indexOf(id);
       if (k < 0 || snap !== 1) return undefined;
-      const p = interpolate(frame, [CLICK_CONFIRM + 2 + 3 * k, CLICK_CONFIRM + 10 + 3 * k], [0, 1], clamp);
+      const p = lineIn(k);
       return p >= 1 ? undefined : { opacity: p, transform: `translateY(${(1 - p) * 8}px)` };
     },
+    /**
+     * The view styles rows only; the new block's group headers would pop in at once. A panel-coloured
+     * mask over each header fades out with the block's first new line (works header with the work
+     * line, parts header with the first part).
+     */
+    headerMasks:
+      snap === 1
+        ? [lineIn(0), lineIn(NEW_LINES.findIndex((id) => (WO1.part_lines ?? []).some((p) => p.id === id)))].map(
+            (p) => 1 - p,
+          )
+        : [0, 0],
     highlightLine: frame >= SNAP2_AT ? KIT_LINE!.id : undefined,
     discountDraft:
-      frame >= TYPE_AT ? { type: 'percent' as const, value: typed(frame, TYPE_AT, '5', 6) } : undefined,
+      frame >= DISC_TYPE_AT ? { type: 'percent' as const, value: typed(frame, DISC_TYPE_AT, '5', 5) } : undefined,
     toastOpacity: frame >= TOAST_IN ? Math.min(toastIn, toastOut) : 0,
     toastRise: (1 - toastIn) * 8,
   };
@@ -219,6 +246,23 @@ export function EstimateWindow({
           onStartEditPart={noop}
         />
       </AppShellView>
+      {state.headerMasks.map((o, i) =>
+        o > 0 ? (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: NEW_HEADERS[i].x,
+              top: NEW_HEADERS[i].y,
+              width: NEW_HEADERS[i].w,
+              height: NEW_HEADERS[i].h,
+              background: 'var(--surface)',
+              opacity: o,
+              zIndex: 5,
+            }}
+          />
+        ) : null,
+      )}
       {state.modalOpacity > 0 ? (
         <>
           {/* The inline Modal's own dim would scale with the dialog; draw it separately. */}
@@ -295,7 +339,7 @@ const cameraKeys = (k: number): CamKey[] => [
   { at: s(55), x: 740, y: 420, zoom: 1.25 * k },
   { at: s(CLICK_OPTION), x: 740, y: 420, zoom: 1.25 * k },
   { at: s(95), x: 720, y: 450, zoom: 1.45 * k },
-  { at: s(CLICK_CONFIRM), x: 720, y: 450, zoom: 1.45 * k },
+  { at: s(APPLY_AT), x: 720, y: 450, zoom: 1.45 * k },
   { at: s(168), x: 720, y: 450, zoom: 1.2 * k },
   { at: s(180), x: 720, y: 450, zoom: 1.2 * k },
   { at: s(198), ...SUMMARY_FOCUS, zoom: SUMMARY_FOCUS.zoom * k },
@@ -308,8 +352,10 @@ const OIL_AT = {
   y: CHECKBOX.y0 + CHECKBOX.step * OIL_INDEX + CHECKBOX.size / 2,
 };
 const CONFIRM_AT = { x: CONFIRM.x + 62, y: CONFIRM.y + CONFIRM.h / 2 };
+const DISC_TYPE_POINT = { x: DISC_TYPE.x + 30, y: DISC_TYPE.y + DISC_TYPE.h / 2 };
 // Cursor tip on each target a few frames before its click; after the confirm it leaves the window
-// to the right (off-frame once the camera settles on the summary).
+// to the right, then comes back into the summary shot for the discount type. It stays there: once
+// «%» is chosen the select moves left and the point becomes the discount input being typed into.
 const CURSOR: CursorPoint[] = [
   { at: 0, x: 1000, y: 640 },
   { at: s(12), x: 1000, y: 640 },
@@ -322,6 +368,7 @@ const CURSOR: CursorPoint[] = [
   { at: s(CLICK_CONFIRM - 6), ...CONFIRM_AT },
   { at: s(CLICK_CONFIRM + 6), ...CONFIRM_AT },
   { at: s(178), x: 1500, y: 820 },
+  { at: s(CLICK_DISC_TYPE - 6), ...DISC_TYPE_POINT },
 ];
 
 /** Opacity wrapper in stage coordinates (no offset, no transform) for overlays without an exit. */
@@ -335,9 +382,9 @@ const fadeOut = (frame: number, from: number, dur = 4) => interpolate(frame, [fr
 /**
  * Estimate (270 f): «+ Из прайса…» (45) → «Замена цепи ГРМ (R56/N14)» (75) → the confirmation sheet
  * springs in (80), generation price highlighted (90) → the oil unticked, the button total counts
- * down (120) → «Добавить» (150): the block lands in the estimate row by row, toast → camera on the
- * summary (180) → the kit line's 10 % (195) → order discount «5» typed (210) → saved, total counts
- * down to 40 764,50 ₽ (225–255).
+ * down (120) → «Добавить» (150; sheet closes at 153): the block lands in the estimate row by row,
+ * toast → camera on the summary (180) → the kit line's 10 % (195) → order-discount type «%» (210;
+ * switches at 213), «5» typed → saved, total counts down to 40 764,50 ₽ (225–255).
  */
 export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
@@ -364,7 +411,8 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
         <Fade opacity={fadeOut(frame, 110, 6)} z={50}>
           <Highlight rect={APPLY_LABOR} appearAt={GEN_AT} accent={accent} />
         </Fade>
-        <Fade opacity={state.modalOpacity} z={90}>
+        {/* One caption per beat: «generation» leaves once the oil count-down settles, before «block». */}
+        <Fade opacity={Math.min(state.modalOpacity, fadeOut(frame, 126, 6))} z={90}>
           {/* Right of the dialog, level with the labor line: clear of its price and the checkboxes. */}
           <Callout
             text={callouts.generation}
@@ -373,6 +421,8 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
             side="right"
             accent={accent}
           />
+        </Fade>
+        <Fade opacity={state.modalOpacity} z={90}>
           {/* Above the sheet, over the dimmed page title. */}
           <Callout
             text={callouts.block}
@@ -385,7 +435,12 @@ export function EstimateScene({ theme, brand, callouts, accent }: ShowcaseProps)
         {/* The same caption follows the block into the estimate: under the new work line, over the
             add-form placeholders (left of the «2200» rate input), clear of every amount. */}
         <Fade opacity={fadeOut(frame, 180, 6)} z={90}>
-          <Callout text={callouts.block} at={CLICK_CONFIRM} anchor={{ x: 330, y: 471 }} side="bottom" accent={accent} />
+          <Callout text={callouts.block} at={APPLY_AT} anchor={{ x: 330, y: 471 }} side="bottom" accent={accent} />
+        </Fade>
+        {/* The kit's 10 % on wo-hero.2: ring the discount cell (the row keeps its outline), gone
+            before the cursor reaches the order-discount type. */}
+        <Fade opacity={fadeOut(frame, CLICK_DISC_TYPE - 8, 6)} z={50}>
+          <Highlight rect={KIT_DISC_CELL} appearAt={SNAP2_AT} accent={accent} />
         </Fade>
         {/* At the summary's left edge, level with «Скидка на наряд»: the pill lies over the empty
             right half of the parts panel head, above the column heads and the kit's «−1 490 ₽». */}
