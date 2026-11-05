@@ -32,7 +32,7 @@ import type {
 } from '../types';
 import { overrideFor, resolveTemplatePartsPlan, taskByKey } from './catalog';
 import { buildOrderLines } from './lines';
-import { DayBoard, dailyCounts, windowStartDay } from './schedule';
+import { DayBoard, dailyCounts, windowStartDay, type Interval } from './schedule';
 import { odometerAt } from './vehicles';
 
 const MS_MIN = 60_000;
@@ -49,9 +49,13 @@ const SWAP_OFF_SEASON_FACTOR = 0.15;
 const BUSY_DAY_MIN = 9;
 const NEXT_DAY_MIN = 4;
 const OVERDUE_COUNT = 2;
-/** A target above 8 × median (the top 0.7%) is out of reach of 6 works; the carry stays within ±2 × median. */
+/** The hero F60 (the big order's car) is a regular, but ~20 visits in six months would look odd. */
+const HERO_F60_BULK_MAX = 4;
+/** Top-up works for the busy day and the next weekday: short enough to fit any remaining gap. */
+const QUICK_MAX_MIN = 60;
+/** A target above 8 × median (the top 0.7%) is out of reach of 6 works; the carry stays within ±4 × median. */
 const TICKET_CAP_X = 8;
-const OWED_LIMIT_X = 2;
+const OWED_LIMIT_X = 4;
 /** Works tied to the N14 engine only make sense on the R-series. */
 const R_SERIES_ONLY = new Set(['timing-chain-n14']);
 
@@ -147,6 +151,7 @@ const lastDayOfMonth = (day: string): string => {
   return addDays(m === 12 ? `${y + 1}-01-01` : `${y}-${String(m + 1).padStart(2, '0')}-01`, -1);
 };
 const monthOf = (day: string): number => Number(day.slice(5, 7));
+const monthKeyOf = (d: Date): string => mskDay(d).slice(0, 7);
 const roundUp30 = (min: number): number => Math.ceil(min / SLOT_MIN) * SLOT_MIN;
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
 const earliest = (...ds: Date[]): Date => new Date(Math.min(...ds.map((d) => d.getTime())));
@@ -306,10 +311,17 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
   };
 
   const out: WorkOrderPlan[] = [];
+  // Each car's bookings: DayBoard guards the masters, this guards the car (never in two orders at once).
+  const carBusy = new Map<string, Interval[]>();
+  const bookCar = (vehicleId: string, start: Date, durationMin: number): void => {
+    carBusy.set(vehicleId, [...(carBusy.get(vehicleId) ?? []), { from: start.getTime(), to: start.getTime() + durationMin * MS_MIN }]);
+  };
+  const carBusyIn = (vehicleId: string, from: number, to: number): boolean => (carBusy.get(vehicleId) ?? []).some((iv) => iv.from < to && from < iv.to);
 
   // ── 1. Hero pins: fixed time and master, occupied on the board before anything else ──
   const pin = (d: Omit<Draft, 'createdAt'>, createdAt: Date): void => {
     board.occupy(d.masterId, d.start, d.duration);
+    bookCar(d.vehicle.id, d.start, d.duration);
     out.push(finalize({ ...d, createdAt }));
   };
   const heroClient = must(clientById.get(HERO.client.id), 'hero client');
@@ -389,12 +401,13 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
     const works = lineDiscounts(TIRE_PEAK_MONTHS.includes(monthOf(day)) ? [...visit.works, 'tire-change'] : visit.works);
     const duration = durationOf(works, car.generationCode);
     const creationDay = bookingDay(day);
-    let slot = board.place(day, duration, { rng: f });
+    let slot = board.place(day, duration, { rng: f, avoid: carBusy.get(car.id) });
     while (!slot && day < last) {
       day = nextWorkdayAfter(day);
-      slot = board.place(day, duration, { rng: f });
+      slot = board.place(day, duration, { rng: f, avoid: carBusy.get(car.id) });
     }
     if (!slot) throw new Error(`no slot for hero visit ${i + 1}`);
+    bookCar(car.id, slot.start, duration);
     out.push(
       finalize({
         id: demoId('wo', `hero-visit-${i + 1}`),
@@ -435,32 +448,49 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
   // unpaid orders would otherwise make monthly revenue jitter by ±5%, hiding the 3–8% growth. Like the
   // rounding carry of dailyCounts, the gap is passed on to the month's next order (bounded, so one
   // unreachable target never snowballs into a run of oversized orders).
+  // Hero orders come on top of the bulk targets: their revenue is already in its month.
   const owed = new Map<string, number>();
+  for (const w of out) if (w.closed_at) owed.set(monthKeyOf(w.closed_at), (owed.get(monthKeyOf(w.closed_at)) ?? 0) - w.total_cached);
 
   const pickable = (gen: string | null) => catalog.tasks.filter((t) => !R_SERIES_ONLY.has(t.key) || (gen ?? '').startsWith('R'));
   const bulkClients = clients.filter((c) => c.id !== HERO.client.id);
   const firstCar = new Map(bulkClients.map((c) => [c.id, Math.min(...(carsOf.get(c.id) ?? []).map((v) => v.created_at.getTime()))]));
 
   let seq = 0;
-  for (const [day, n] of counts) {
-    const monthKey = day.slice(0, 7);
-    const month = monthOf(day);
-    const pool = must(targets.get(monthKey), `targets ${monthKey}`);
-    const owedLimit = OWED_LIMIT_X * must(medians.get(monthKey), `median ${monthKey}`);
-    for (let k = 0; k < n; k++) {
-      const base = must(pool.shift(), `target ${day}`);
-      const target = Math.max(0.3 * base, base + (owed.get(monthKey) ?? 0));
-      const creationDay = bookingDay(day);
-      // Client and car exist before the day the order is booked.
-      const bound = mskAt(creationDay, 0).getTime();
-      const candidates = bulkClients.filter((c) => (firstCar.get(c.id) ?? Infinity) <= bound);
-      if (!candidates.length) continue;
-      const client = candidates[weightedIndex(f, candidates.map((c) => (c.tier === 'regular' ? REGULAR_WEIGHT : 1)))];
-      const vehicle = f.helpers.arrayElement((carsOf.get(client.id) ?? []).filter((v) => v.created_at.getTime() <= bound));
-      const gen = vehicle.generationCode;
-      const rate = rateAt(demoNow, mskAt(creationDay, 12));
+  let f60Bulk = 0;
+  /** A car is free for a new order on `day` ([from, to)): not booked that day; the hero F60 sits out its busy day and is capped. */
+  const carFree = (v: VehiclePlan, day: string, from: number, to: number): boolean =>
+    !carBusyIn(v.id, from, to) && (v.id !== HERO.bigOrder.vehicleId || (day !== busyDay && f60Bulk < HERO_F60_BULK_MAX));
 
-      const picks: TaskPlan[] = [];
+  /**
+   * One ordinary order around `day`. Normal: works are drawn to the ticket target and the order moves to
+   * the next weekday when the day is full. `quick`: one short work, and only on `day` (the top-up).
+   */
+  const bulkOrder = (day: string, target: number, quick: boolean): WorkOrderPlan | null => {
+    const month = monthOf(day);
+    const creationDay = bookingDay(day);
+    // Client and car exist before the day the order is booked.
+    const bound = mskAt(creationDay, 0).getTime();
+    const dayFrom = mskAt(day, 0).getTime();
+    const dayTo = dayFrom + MS_DAY;
+    const free = new Map<string, VehiclePlan[]>();
+    for (const c of bulkClients) {
+      if ((firstCar.get(c.id) ?? Infinity) > bound) continue;
+      const cars = (carsOf.get(c.id) ?? []).filter((v) => v.created_at.getTime() <= bound && carFree(v, day, dayFrom, dayTo));
+      if (cars.length) free.set(c.id, cars);
+    }
+    const candidates = bulkClients.filter((c) => free.has(c.id));
+    if (!candidates.length) return null;
+    const client = candidates[weightedIndex(f, candidates.map((c) => (c.tier === 'regular' ? REGULAR_WEIGHT : 1)))];
+    const vehicle = f.helpers.arrayElement(must(free.get(client.id), 'free car'));
+    const gen = vehicle.generationCode;
+    const rate = rateAt(demoNow, mskAt(creationDay, 12));
+
+    const picks: TaskPlan[] = [];
+    if (quick) {
+      const short = pickable(gen).filter((t) => durationOf([{ taskKey: t.key }], gen) <= QUICK_MAX_MIN);
+      picks.push(short[weightedIndex(f, short.map((o) => o.weight * seasonFactor(o, month, false)))]);
+    } else {
       let sum = 0;
       while (sum < 0.9 * target && picks.length < MAX_PICKS) {
         const room = (target - sum) * 1.5 + 1000;
@@ -475,57 +505,97 @@ export function planWorkOrders(f: Faker, ctx: WorkOrdersContext): WorkOrderPlan[
         // the cheapest work, the more common one on a tie
         picks.push([...pickable(gen)].sort((a, b) => estimate(a, gen, rate) - estimate(b, gen, rate) || b.weight - a.weight)[0]);
       }
+    }
 
-      const works = lineDiscounts(picks.map((t) => t.key));
-      const duration = durationOf(works, gen);
+    const works = lineDiscounts(picks.map((t) => t.key));
+    const duration = durationOf(works, gen);
+    const avoid = carBusy.get(vehicle.id);
+    let slot: ReturnType<DayBoard['place']>;
+    if (quick) slot = board.place(day, duration, { rng: f, avoid });
+    else {
       const notBeforeMin = chance(f, 0.5) ? 8 * 60 + SLOT_MIN * f.number.int({ min: 0, max: 8 }) : undefined;
       let at = day;
-      let slot = board.place(at, duration, { rng: f, notBeforeMin }) ?? board.place(at, duration, { rng: f });
+      slot = board.place(at, duration, { rng: f, notBeforeMin, avoid }) ?? board.place(at, duration, { rng: f, avoid });
       while (!slot) {
         at = nextWorkdayAfter(at);
         if (at > windowEnd) break;
-        slot = board.place(at, duration, { rng: f });
+        slot = board.place(at, duration, { rng: f, avoid });
       }
-      if (!slot) continue;
-      seq++;
-      const wo = finalize({
-        id: demoId('wo', seq),
-        client,
-        vehicle,
-        masterId: slot.masterId,
-        start: slot.start,
-        duration,
-        works,
-        free: [],
-        createdAt: createdAtFor(creationDay, slot.start),
-        discount: orderDiscount(client),
-      });
+    }
+    if (!slot) return null;
+    bookCar(vehicle.id, slot.start, duration);
+    if (vehicle.id === HERO.bigOrder.vehicleId) f60Bulk++;
+    seq++;
+    return finalize({
+      id: demoId('wo', seq),
+      client,
+      vehicle,
+      masterId: slot.masterId,
+      start: slot.start,
+      duration,
+      works,
+      free: [],
+      createdAt: createdAtFor(creationDay, slot.start),
+      discount: orderDiscount(client),
+    });
+  };
+
+  for (const [day, n] of counts) {
+    const monthKey = day.slice(0, 7);
+    const pool = must(targets.get(monthKey), `targets ${monthKey}`);
+    const owedLimit = OWED_LIMIT_X * must(medians.get(monthKey), `median ${monthKey}`);
+    for (let k = 0; k < n; k++) {
+      const base = must(pool.shift(), `target ${day}`);
+      const target = Math.max(0.3 * base, base + (owed.get(monthKey) ?? 0));
+      const wo = bulkOrder(day, target, false);
+      if (!wo) continue;
       // Recent and future orders will be paid; only an old «done» is revenue lost for good.
-      const lost = wo.status === 'done' && nowMs - endOf({ start: slot.start, duration }) > 7 * MS_DAY;
+      const lost = wo.status === 'done' && nowMs - endOf({ start: wo.scheduled_at, duration: wo.scheduled_duration_min }) > 7 * MS_DAY;
       owed.set(monthKey, clamp(target - (lost ? 0 : wo.total_cached), -owedLimit, owedLimit));
       out.push(wo);
     }
   }
 
-  // ── 4. Exactly two bookings of the last two days nobody moved on: still «scheduled» ──
-  const recent = out.filter((w) => !heroClients.has(w.client_id) && w.scheduled_at.getTime() >= nowMs - 2 * MS_DAY && w.scheduled_at.getTime() < nowMs);
-  const finished = recent.filter((w) => endOf({ start: w.scheduled_at, duration: w.scheduled_duration_min }) <= nowMs);
-  const overdue = new Set(f.helpers.arrayElements(finished.length >= OVERDUE_COUNT ? finished : recent, OVERDUE_COUNT).map((w) => w.id));
-  if (overdue.size !== OVERDUE_COUNT) throw new Error(`need ${OVERDUE_COUNT} overdue candidates, have ${recent.length}`);
+  // Quotas are not guarantees: a long order that does not fit moves on. Top the two showcase days up
+  // with short works that fit the remaining gaps (the free slot itself stays free).
+  for (const [day, min] of [[busyDay, BUSY_DAY_MIN], [nextDay, NEXT_DAY_MIN]] as const) {
+    for (let tries = 0; onDay(day) < min; tries++) {
+      if (tries >= 50) throw new Error(`cannot fill ${day} up to ${min} orders`);
+      const wo = bulkOrder(day, 0, true);
+      if (wo) out.push(wo);
+    }
+  }
 
-  return out
-    .map((w) => {
-      if (!overdue.has(w.id)) return w;
-      return {
-        ...w,
-        status: 'scheduled' as const,
-        notes: w.notes?.split('\n').filter((l) => !l.startsWith('Ждёт запчасть')).join('\n') ?? null,
-        recommendation: null,
-        total_frozen: null,
-        paid_amount: 0,
-        closed_at: null,
-        updated_at: latest(w.created_at, w.scheduled_at),
-      };
-    })
-    .sort(byDateThenId);
+  // ── 4. Exactly two bookings of the last two days nobody moved on: still «scheduled» ──
+  // Only orders whose slot has already passed: a running one cannot still be waiting to start.
+  const endMs = (w: WorkOrderPlan) => endOf({ start: w.scheduled_at, duration: w.scheduled_duration_min });
+  const unpaid = (w: WorkOrderPlan, status: WorkOrderStatus): WorkOrderPlan => ({
+    ...w,
+    status,
+    notes: w.notes?.split('\n').filter((l) => !l.startsWith('Ждёт запчасть')).join('\n') ?? null,
+    recommendation: null,
+    total_frozen: null,
+    paid_amount: 0,
+    closed_at: null,
+    updated_at: latest(w.created_at, new Date(Math.min(w.scheduled_at.getTime(), nowMs))),
+  });
+  const ordinary = (w: WorkOrderPlan) => !heroClients.has(w.client_id);
+  const finished = out.filter((w) => ordinary(w) && w.scheduled_at.getTime() >= nowMs - 2 * MS_DAY && endMs(w) <= nowMs);
+  const overdue = new Set(f.helpers.arrayElements(finished, OVERDUE_COUNT).map((w) => w.id));
+  if (overdue.size !== OVERDUE_COUNT) throw new Error(`need ${OVERDUE_COUNT} overdue candidates, have ${finished.length}`);
+  let result = out.map((w) => (overdue.has(w.id) ? unpaid(w, 'scheduled') : w));
+
+  // At least one order waits for a part. If the status table drew none, the latest finished
+  // order of the last week waits.
+  if (!result.some((w) => w.status === 'waiting')) {
+    const pick = result
+      .filter((w) => ordinary(w) && !overdue.has(w.id) && endMs(w) <= nowMs && nowMs - endMs(w) <= 7 * MS_DAY)
+      .sort((a, b) => endMs(b) - endMs(a) || (a.id < b.id ? -1 : 1))[0];
+    if (!pick) throw new Error('no order can be waiting for a part');
+    const part = pick.parts.length ? pick.parts[0].name : WAITING_PARTS[0];
+    const waiting = unpaid(pick, 'waiting');
+    result = result.map((w) => (w.id === pick.id ? { ...waiting, notes: `${waiting.notes}\nЖдёт запчасть: ${part}` } : w));
+  }
+
+  return result.sort(byDateThenId);
 }

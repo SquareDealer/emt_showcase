@@ -84,6 +84,17 @@ export function planViolations(plan: DemoPlan): string[] {
   // Odometer: per vehicle, never back in time and never above the current mileage.
   const byVehicle = new Map<string, WorkOrderPlan[]>();
   for (const w of wos) byVehicle.set(w.vehicle_id, [...(byVehicle.get(w.vehicle_id) ?? []), w]);
+  // A car is never in two overlapping orders.
+  for (const list of byVehicle.values()) {
+    const sorted = [...list].sort((a, b) => a.scheduled_at.getTime() - b.scheduled_at.getTime());
+    for (let i = 1; i < sorted.length; i++) {
+      for (let j = i - 1; j >= 0; j--) {
+        if (overlaps(sorted[j].scheduled_at, sorted[j].scheduled_duration_min, sorted[i].scheduled_at, sorted[i].scheduled_duration_min)) bad(sorted[i], `same car as ${sorted[j].id}`);
+      }
+    }
+  }
+  const heroF60 = byVehicle.get(HERO.bigOrder.vehicleId)?.length ?? 0;
+  if (heroF60 > 6) out.push(`hero F60 has ${heroF60} orders`);
   for (const [vid, list] of byVehicle) {
     list.sort((a, b) => a.scheduled_at.getTime() - b.scheduled_at.getTime());
     list.forEach((w, i) => {
@@ -94,6 +105,8 @@ export function planViolations(plan: DemoPlan): string[] {
 
   const overdue = wos.filter((w) => w.status === 'scheduled' && w.scheduled_at < now);
   if (overdue.length !== 2) out.push(`overdue scheduled: ${overdue.length}`);
+  for (const w of overdue) if (w.scheduled_at.getTime() + w.scheduled_duration_min * MS_MIN > now.getTime()) bad(w, 'overdue order is still running');
+  if (!wos.some((w) => w.status === 'waiting')) out.push('no waiting order');
 
   const big = wos.find((w) => w.id === HERO.bigOrder.id);
   const diag = wos.find((w) => w.id === HERO.diagnosticsOrderId);

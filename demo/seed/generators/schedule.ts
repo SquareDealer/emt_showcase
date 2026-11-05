@@ -69,7 +69,8 @@ export function planBlocks(staff: StaffPlan[], demoNow: Date): BlockPlan[] {
   }));
 }
 
-interface Interval {
+/** Epoch-ms half-open interval [from, to). */
+export interface Interval {
   from: number;
   to: number;
 }
@@ -98,7 +99,8 @@ export class DayBoard {
   place(
     day: string,
     durationMin: number,
-    opts: { masterId?: string; notBeforeMin?: number; rng?: Faker } = {},
+    /** `avoid`: extra busy intervals for this booking only (e.g. the car's other orders). */
+    opts: { masterId?: string; notBeforeMin?: number; rng?: Faker; avoid?: Interval[] } = {},
   ): { masterId: string; start: Date } | null {
     const lo = Math.max(WORK_START_HOUR * 60, Math.ceil((opts.notBeforeMin ?? 0) / SLOT_MIN) * SLOT_MIN);
     const hi = WORK_END_HOUR * 60;
@@ -107,7 +109,7 @@ export class DayBoard {
       for (let m = lo; m + durationMin <= hi; m += SLOT_MIN) {
         const start = mskAt(day, 0, m);
         const iv = { from: start.getTime(), to: start.getTime() + durationMin * MS_MIN };
-        if (this.clash(iv, this.free) || list.some((o) => this.clash(iv, o))) continue;
+        if (this.clash(iv, this.free) || list.some((o) => this.clash(iv, o)) || opts.avoid?.some((o) => this.clash(iv, o))) continue;
         list.push(iv);
         return { masterId: id, start };
       }

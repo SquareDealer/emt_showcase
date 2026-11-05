@@ -70,3 +70,10 @@ it('DayBoard never double-books a master, never touches the free slot, respects 
   }
   expect(board.place('2026-11-03', 13 * 60)).toBeNull();
 });
+it('place() keeps clear of the extra intervals it is told to avoid (the car is busy)', () => {
+  const board = new DayBoard(staff.filter((s) => s.role === 'master'), [], freeSlot);
+  const carBusy = { from: mskAt('2026-11-03', 8).getTime(), to: mskAt('2026-11-03', 11).getTime() };
+  const p = board.place('2026-11-03', 60, { avoid: [carBusy] })!;
+  expect(p.start).toEqual(mskAt('2026-11-03', 11));
+  expect(board.place('2026-11-03', 60, { avoid: [{ from: mskAt('2026-11-03', 0).getTime(), to: mskAt('2026-11-04', 0).getTime() }] })).toBeNull();
+});
