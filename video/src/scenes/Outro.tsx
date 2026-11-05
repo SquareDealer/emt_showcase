@@ -15,7 +15,10 @@ export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
   const enter = (at: number) => spring({ frame: frame - at, fps, config: { damping: 200 }, durationInFrames: 18 });
   const mark = spring({ frame, fps, config: { damping: 200 }, durationInFrames: 15 });
   const fade = interpolate(frame, [105, 120], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const rise = (p: number) => ({ opacity: p, transform: `translateY(${(1 - p) * 24}px)` });
+  const rise = (at: number) => {
+    const p = frame >= at ? enter(at) : 0;
+    return { opacity: p, transform: `translateY(${(1 - p) * 24}px)` };
+  };
 
   return (
     <AbsoluteFill>
@@ -24,17 +27,17 @@ export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 34, maxWidth: social ? 960 : 1500 }}>
           <div
             style={{
-              opacity: interpolate(mark, [0, 1], [0.35, 1]),
+              opacity: interpolate(mark, [0, 1], [0.5, 1]),
               transform: `scale(${interpolate(mark, [0, 1], [0.94, 1])})`,
               marginBottom: 10,
             }}
           >
             <BrandMark name={brand.name} theme="dark" size={social ? 210 : 300} />
           </div>
-          {frame >= 15 && (
+          {(
             <div
               style={{
-                ...rise(enter(15)),
+                ...rise(15),
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 500,
                 fontSize: social ? 36 : 44,
@@ -46,8 +49,8 @@ export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
               {OUTRO_FEATURES}
             </div>
           )}
-          {frame >= 30 && outro.title !== '' && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28, ...rise(enter(30)) }}>
+          {outro.title !== '' && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28, ...rise(30) }}>
               <div style={{ width: 120, height: 4, borderRadius: 2, background: accent }} />
               <div
                 style={{
@@ -62,10 +65,10 @@ export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
               </div>
             </div>
           )}
-          {frame >= 45 && outro.subtitle !== '' && (
+          {outro.subtitle !== '' && (
             <div
               style={{
-                ...rise(enter(45)),
+                ...rise(45),
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 400,
                 fontSize: social ? 32 : 36,
@@ -76,10 +79,10 @@ export function OutroScene({ brand, outro, accent }: ShowcaseProps) {
               {outro.subtitle}
             </div>
           )}
-          {frame >= 45 && outro.cta !== '' && (
+          {outro.cta !== '' && (
             <div
               style={{
-                ...rise(enter(45)),
+                ...rise(45),
                 padding: '16px 34px',
                 borderRadius: 14,
                 background: accent,

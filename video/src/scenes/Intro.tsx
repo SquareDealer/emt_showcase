@@ -21,17 +21,17 @@ export function IntroScene({ brand, callouts, accent }: ShowcaseProps) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 44, maxWidth: social ? 900 : 1500 }}>
           <div
             style={{
-              opacity: interpolate(mark, [0, 1], [0.35, 1]),
+              opacity: interpolate(mark, [0, 1], [0.5, 1]),
               transform: `scale(${interpolate(mark, [0, 1], [0.94, 1])})`,
             }}
           >
             <BrandMark name={brand.name} theme="dark" size={social ? 170 : 230} />
           </div>
-          {frame >= 15 && (
+          {(
             <div
               style={{
-                opacity: line,
-                transform: `translateY(${(1 - line) * 36}px)`,
+                opacity: frame >= 15 ? line : 0,
+                transform: `translateY(${(frame >= 15 ? 1 - line : 1) * 36}px)`,
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 600,
                 fontSize: social ? 52 : 60,
@@ -45,9 +45,7 @@ export function IntroScene({ brand, callouts, accent }: ShowcaseProps) {
               {callouts.intro}
             </div>
           )}
-          {frame >= 30 && (
-            <div style={{ width: 160 * rule, height: 4, borderRadius: 2, background: accent }} />
-          )}
+          <div style={{ width: 160, height: 4, borderRadius: 2, background: accent, transform: `scaleX(${frame >= 30 ? rule : 0})` }} />
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

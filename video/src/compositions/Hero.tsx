@@ -21,13 +21,13 @@ const Placeholder = ({ scenes, props }: { scenes: readonly SceneDef[]; props: Sh
   };
   return (
     <VideoProviders theme={props.theme}>
-    <AbsoluteFill
-      style={{ background: props.theme === 'dark' ? '#111' : '#fff', color: '#888', justifyContent: 'center', alignItems: 'center', fontSize: 48 }}
-    >
-      {props.brand.name} · {active.id} [{start}–{start + active.dur}] · frame {frame}
-    </AbsoluteFill>
-    {real('intro', IntroScene)}
-    {real('outro', OutroScene)}
+      <AbsoluteFill
+        style={{ background: props.theme === 'dark' ? '#111' : '#fff', color: '#888', justifyContent: 'center', alignItems: 'center', fontSize: 48 }}
+      >
+        {props.brand.name} · {active.id} [{start}–{start + active.dur}] · frame {frame}
+      </AbsoluteFill>
+      {real('intro', IntroScene)}
+      {real('outro', OutroScene)}
     </VideoProviders>
   );
 };
