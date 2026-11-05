@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SOCIAL_FRAME, SOCIAL_STAGE, cameraAt, cameraCentre, clickState, countUp, cursorAt, frameToUi, loopLayers, pingPong, socialKeyForView, stageView, typed } from './math';
+import { SOCIAL_FRAME, SOCIAL_STAGE, cameraAt, cameraCentre, clickState, countUp, cursorAt, frameToUi, loopLayers, maxPointerStep, pingPong, socialKeyForView, stageView, typed } from './math';
 
 const keys = [
   { at: 0, x: 100, y: 200, zoom: 1 },
@@ -203,5 +203,51 @@ describe('socialKeyForView', () => {
   it('keeps the stated edges exact (the scenes\' views did not move)', () => {
     expect(socialKeyForView(488, 190, 1.8)).toEqual({ x: 788, y: 190 + 485 / 1.8, zoom: 1.8 });
     expect(socialKeyForView(770 - 540 / 1.7, 190, 1.7).x).toBe(770);
+  });
+});
+
+describe('cursor easing per segment', () => {
+  const path = [
+    { at: 0, x: 0, y: 0 },
+    { at: 1, x: 300, y: 100 },
+    { at: 1, x: 310, y: 100 },
+    { at: 2, x: 0, y: 400 },
+    { at: 3, x: 900, y: 50 },
+  ];
+  it('a path with a steady point gives exactly the cubic numbers on its other segments (old frames unchanged)', () => {
+    const mixed = path.map((p, i) => (i === 4 ? { ...p, ease: 'steady' as const } : p));
+    for (let f = 0; f <= 60; f++) expect(cursorAt(f, 30, mixed)).toEqual(cursorAt(f, 30, path));
+    for (const f of [0, 30, 60, 90, 120]) expect(cursorAt(f, 30, mixed)).toEqual(cursorAt(f, 30, path));
+    expect(cursorAt(70, 30, mixed)).not.toEqual(cursorAt(70, 30, path));
+  });
+  it('a steady hop tops out at π/2 × its average speed (cubic: 3×), still at rest at both ends', () => {
+    const hop = (ease?: 'steady') => [
+      { at: 0, x: 0, y: 0 },
+      { at: 1, x: 300, y: 0, ease },
+    ];
+    const peak = (p: ReturnType<typeof hop>) =>
+      Math.max(...Array.from({ length: 30 }, (_, f) => cursorAt(f + 1, 30, p).x - cursorAt(f, 30, p).x));
+    expect(peak(hop('steady'))).toBeLessThan(10 * 1.58);
+    expect(peak(hop())).toBeGreaterThan(10 * 2.5);
+    expect(cursorAt(1, 30, hop('steady')).x).toBeLessThan(1);
+    expect(300 - cursorAt(29, 30, hop('steady')).x).toBeLessThan(1);
+  });
+});
+
+describe('maxPointerStep', () => {
+  const cam = [{ at: 0, x: 0, y: 0, zoom: 2 }];
+  const path = [
+    { at: 0, x: 0, y: 0 },
+    { at: 1 / 30, x: 10, y: 0 },
+    { at: 2 / 30, x: 1000, y: 0 },
+  ];
+  it('is |Δ UI px| × zoom, at its frame', () => {
+    expect(maxPointerStep(path, cam, 30, 0, 1)).toEqual({ max: 20, at: 0 });
+    expect(maxPointerStep(path, cam, 30, 0, 2)).toEqual({ max: 1980, at: 1 });
+  });
+  it('skips steps the viewer never sees (out of view at both ends)', () => {
+    const seen = (_: number, p: { x: number }) => p.x < 100;
+    expect(maxPointerStep(path, cam, 30, 0, 3, seen).max).toBe(1980); // 10 → 1000 starts in view
+    expect(maxPointerStep([{ at: 0, x: 500, y: 0 }, { at: 1 / 30, x: 900, y: 0 }], cam, 30, 0, 1, seen).max).toBe(0);
   });
 });

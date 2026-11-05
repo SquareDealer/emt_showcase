@@ -3,11 +3,15 @@
 import { Easing, interpolate, spring } from 'remotion';
 
 export type CamKey = { at: number; x: number; y: number; zoom: number };
-export type CursorPoint = { at: number; x: number; y: number };
+/** `ease: 'steady'` — the trip arriving at this point eases in sine instead of cubic: still smooth at
+ *  both ends, but its top speed is π/2 × the average instead of 3× (for short hops between click
+ *  targets a beat apart, seen close up). */
+export type CursorPoint = { at: number; x: number; y: number; ease?: 'steady' };
 
 /** The camera's curve; scenes that move something with the camera (a board pan, a loop reset) share it. */
 export const CAM_EASE = Easing.bezier(0.65, 0, 0.35, 1);
 const CURSOR_EASE = Easing.inOut(Easing.cubic);
+const STEADY_EASE = Easing.inOut(Easing.sin);
 
 /** Round to kopecks via decimal-string shift (binary-float safe for x.xx5), symmetric for negatives. */
 function round2(v: number): number {
@@ -55,8 +59,29 @@ export function cameraAt(frame: number, fps: number, keys: CamKey[]): { x: numbe
 }
 
 export function cursorAt(frame: number, fps: number, path: CursorPoint[]): { x: number; y: number } {
+  if (path.some((p) => p.ease)) return cursorBySegment(frame / fps, path);
   const r = along(frame / fps, path, ['x', 'y'], CURSOR_EASE);
   return { x: r.x, y: r.y };
+}
+
+/** `along` per segment, each with its arriving point's easing. The segment is the one Remotion's
+ *  interpolate picks (the first key at or after t ends it) and each axis goes through interpolate over
+ *  that pair, so a cubic segment gives exactly the numbers `along` gives (tested). */
+function cursorBySegment(t: number, path: CursorPoint[]): { x: number; y: number } {
+  const keys = [...path].sort((a, b) => a.at - b.at);
+  if (keys.length === 1) return { x: keys[0].x, y: keys[0].y };
+  const times: number[] = [];
+  for (const k of keys) times.push(times.length && k.at <= times[times.length - 1] ? times[times.length - 1] + 1e-6 : k.at);
+  let i = 1;
+  while (i < times.length - 1 && times[i] < t) i++;
+  const [a, b] = [keys[i - 1], keys[i]];
+  const opts = {
+    easing: b.ease === 'steady' ? STEADY_EASE : CURSOR_EASE,
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  } as const;
+  const range = [times[i - 1], times[i]];
+  return { x: interpolate(t, range, [a.x, b.x], opts), y: interpolate(t, range, [a.y, b.y], opts) };
 }
 
 export type Layout = 'wide' | 'social';
@@ -166,4 +191,31 @@ export function pingPong(frame: number, from: number, to: number, amplitude: num
   if (frame >= peakFrom && frame <= peakTo) return amplitude;
   const p = frame < peakFrom ? (frame - from) / half : (to - frame) / half;
   return amplitude * CAM_EASE(p);
+}
+
+/**
+ * The pointer's pace: the largest per-frame step of `path` over frames from … to−1, in frame px
+ * relative to the page — |Δ UI px| × the camera's zoom (the larger of the two frames'), so the camera's
+ * own pans and pushes are not counted and every cut is judged at the size the viewer sees it.
+ * `seen(frame, point)` (optional) limits it to steps the viewer sees: a step counts when the pointer is
+ * in view at either end.
+ */
+export function maxPointerStep(
+  path: CursorPoint[],
+  cam: CamKey[],
+  fps: number,
+  from: number,
+  to: number,
+  seen?: (frame: number, p: { x: number; y: number }) => boolean,
+): { max: number; at: number } {
+  let max = 0;
+  let at = -1;
+  for (let t = from; t < to; t++) {
+    const [a, b] = [cursorAt(t, fps, path), cursorAt(t + 1, fps, path)];
+    if (seen && !seen(t, a) && !seen(t + 1, b)) continue;
+    const zoom = Math.max(cameraAt(t, fps, cam).zoom, cameraAt(t + 1, fps, cam).zoom);
+    const step = Math.hypot(b.x - a.x, b.y - a.y) * zoom;
+    if (step > max) [max, at] = [step, t];
+  }
+  return { max, at };
 }
