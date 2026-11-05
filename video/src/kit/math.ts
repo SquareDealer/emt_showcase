@@ -107,3 +107,18 @@ export function loopLayers(
   if (frame < overlap) layers.push({ clipFrame: D + frame, opacity: 1 - frame / overlap });
   return layers;
 }
+
+/**
+ * Out-and-back value: 0 until `from`, rises (camera ease) to `amplitude`, holds it `hold` frames,
+ * falls back to 0 at `to`, 0 after — the start and end states are the same (loop-friendly).
+ */
+export function pingPong(frame: number, from: number, to: number, amplitude: number, hold = 0): number {
+  const half = (to - from - hold) / 2;
+  if (!(half > 0)) throw new Error(`pingPong: no room to move (from ${from}, to ${to}, hold ${hold})`);
+  if (frame <= from || frame >= to) return 0;
+  const peakFrom = from + half;
+  const peakTo = peakFrom + hold;
+  if (frame >= peakFrom && frame <= peakTo) return amplitude;
+  const p = frame < peakFrom ? (frame - from) / half : (to - frame) / half;
+  return amplitude * CAM_EASE(p);
+}

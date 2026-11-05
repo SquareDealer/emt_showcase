@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cameraAt, clickState, countUp, cursorAt, loopLayers, typed } from './math';
+import { cameraAt, clickState, countUp, cursorAt, loopLayers, pingPong, typed } from './math';
 
 const keys = [
   { at: 0, x: 100, y: 200, zoom: 1 },
@@ -124,4 +124,37 @@ describe('round2 guards', () => {
     expect(Object.is(r(-1e-7), 0)).toBe(true);
   });
   it('huge values pass through', () => expect(r(1e21)).toBe(1e21));
+});
+
+describe('pingPong', () => {
+  // 0 at `from`, `amplitude` over [from + rise, from + rise + hold], back to 0 at `to`.
+  const pp = (f: number) => pingPong(f, 30, 130, 200, 20);
+  it('rests at 0 outside [from, to]', () => {
+    expect(pp(-5)).toBe(0);
+    expect(pp(30)).toBe(0);
+    expect(pp(130)).toBe(0);
+    expect(pp(500)).toBe(0);
+  });
+  it('reaches the amplitude after the rise and holds it', () => {
+    expect(pp(70)).toBe(200);
+    expect(pp(80)).toBe(200);
+    expect(pp(90)).toBe(200);
+  });
+  it('is eased and symmetric: mid-rise = mid-fall = half', () => {
+    expect(pp(50)).toBeCloseTo(100, 5);
+    expect(pp(110)).toBeCloseTo(100, 5);
+    expect(pp(35)).toBeCloseTo(pp(125), 9);
+    expect(pp(35)).toBeLessThan(200 * (5 / 40)); // ease-in: slower than linear at the start
+  });
+  it('monotone up, then down', () => {
+    for (let f = 30; f < 70; f++) expect(pp(f + 1)).toBeGreaterThanOrEqual(pp(f));
+    for (let f = 90; f < 130; f++) expect(pp(f + 1)).toBeLessThanOrEqual(pp(f));
+  });
+  it('no hold: peaks at the midpoint', () => {
+    expect(pingPong(50, 0, 100, 10)).toBe(10);
+    expect(pingPong(25, 0, 100, 10)).toBeCloseTo(5, 5);
+  });
+  it('rejects a hold that leaves no room to move', () => {
+    expect(() => pingPong(0, 0, 10, 1, 10)).toThrow();
+  });
 });

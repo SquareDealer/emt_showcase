@@ -2,6 +2,7 @@ import { Composition, Folder } from 'remotion';
 import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugLoop, DebugWorkOrder } from './compositions/Debug';
 import { DebugBoardScene, DebugBooking, DebugDashboardScene, DebugDocsScene, DebugEstimate, DebugSearchScene, DebugIntro, DebugOutro } from './compositions/DebugScenes';
 import { Hero, HeroSocial } from './compositions/Hero';
+import { MOBILE_FRAMES, MOBILE_H, MOBILE_W, MobileMaster } from './compositions/MobileMaster';
 import { defaultProps, showcaseSchema } from './schema';
 import { FPS, SCENES, SCENES_SOCIAL, totalDuration } from './timing';
 
@@ -33,7 +34,18 @@ export const RemotionRoot = () => {
         durationInFrames={SOCIAL_FRAMES}
         calculateMetadata={() => ({ durationInFrames: SOCIAL_FRAMES })}
       />
-      {/* TODO: Loop* (1600x1000), MobileMaster (390x844) and Stills are registered by their tasks. */}
+      {/* Pre-rendered by `npm run prerender` → public/prerender/mobile-master.mp4 (PhoneFrame plays it). */}
+      <Composition
+        id="MobileMaster"
+        component={MobileMaster}
+        schema={showcaseSchema}
+        defaultProps={defaultProps}
+        width={MOBILE_W}
+        height={MOBILE_H}
+        fps={FPS}
+        durationInFrames={MOBILE_FRAMES}
+      />
+      {/* TODO: Loop* (1600x1000) and Stills are registered by their tasks. */}
       <Folder name="Debug">
         <Composition id="Debug-BoardStatic" component={DebugBoard} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
         <Composition id="Debug-WorkOrder" component={DebugWorkOrder} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ theme: 'light' as const }} />
