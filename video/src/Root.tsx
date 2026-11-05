@@ -1,6 +1,6 @@
 import { Composition, Folder } from 'remotion';
 import { DebugBoard, DebugCalendar, DebugDashboard, DebugKit, DebugLoop, DebugWorkOrder } from './compositions/Debug';
-import { DebugBoardScene, DebugBooking, DebugEstimate, DebugIntro, DebugOutro } from './compositions/DebugScenes';
+import { DebugBoardScene, DebugBooking, DebugDocsScene, DebugEstimate, DebugIntro, DebugOutro } from './compositions/DebugScenes';
 import { Hero, HeroSocial } from './compositions/Hero';
 import { defaultProps, showcaseSchema } from './schema';
 import { FPS, SCENES, SCENES_SOCIAL, totalDuration } from './timing';
@@ -44,6 +44,7 @@ export const RemotionRoot = () => {
         <Composition id="Debug-Booking" component={DebugBooking} durationInFrames={180} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
         <Composition id="Debug-Estimate" component={DebugEstimate} durationInFrames={270} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
         <Composition id="Debug-Board" component={DebugBoardScene} durationInFrames={150} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
+        <Composition id="Debug-Docs" component={DebugDocsScene} durationInFrames={120} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
         <Composition id="Debug-Outro" component={DebugOutro} durationInFrames={120} fps={30} width={1920} height={1080} defaultProps={defaultProps} />
         <Composition id="Debug-Loop" component={DebugLoop} durationInFrames={60} fps={30} width={1920} height={1080} />
       </Folder>

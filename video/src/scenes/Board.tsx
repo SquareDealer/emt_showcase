@@ -51,6 +51,9 @@ const CALLOUT_ANCHOR_SOCIAL = { x: 760, y: 14 };
 /** Left edge of a column before the pan. */
 const colX = (status: WorkOrderStatus) => COL_X0 + COL_PITCH * STATUS_ORDER.indexOf(status);
 
+/** Last frame of the Board scene (SCENES: 150 f) — what the Docs scene shows blurred behind the paper. */
+export const BOARD_LAST_FRAME = 149;
+
 const [CLICK_PRESS, CLICK_DROP] = SCENE_CLICKS.board;
 // The press lands at 30 and the drag starts with it (ghost + floating card); the drop's effects
 // (data moved, counters, settle) land 3 frames after the drop press, like every scene's click.
@@ -263,7 +266,7 @@ const FINAL = { x: 905.6, y: 413, zoom: 1080 / 566 };
 const SOCIAL_ZOOM = 1080 / 768;
 const SOCIAL_START = { x: 642, y: 420, zoom: SOCIAL_ZOOM };
 const SOCIAL_FINAL = { x: 1038, y: 420, zoom: SOCIAL_ZOOM };
-const cameraKeys = (social: boolean): CamKey[] => {
+export const cameraKeys = (social: boolean): CamKey[] => {
   const [a, b] = social ? [SOCIAL_START, SOCIAL_FINAL] : [START, FINAL];
   return [
     { at: 0, ...a },
