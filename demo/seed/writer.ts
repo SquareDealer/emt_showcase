@@ -217,6 +217,14 @@ export async function writeDemoPlan(
   await ds.query(`UPDATE "settings" SET updated_at = $1`, [mskAt(windowStartDay(plan.demoNow), 9)]);
   await backdate(ds, 'calendar_blocks', ['created_at'], plan.blocks.map((b) => [b.id, b.created_at]));
 
+  // The API lists a template's parts without ORDER BY (resolveTemplateParts), i.e. in heap order, and
+  // apply-template inserts the lines in that order. The rekey UPDATEs above leave the heap order
+  // run-dependent, so the preview (and the hero's part lines) could reorder between seeds. Rewrite
+  // the heap in primary-key order — demo ids are deterministic — so every seed reads the same.
+  log.stage('cluster');
+  await ds.query(`CLUSTER "task_template_parts" USING "task_template_parts_pkey"`);
+  await ds.query(`ANALYZE "task_template_parts"`);
+
   const counts: Record<string, number> = {};
   for (const t of COUNTED) {
     const [row] = (await ds.query(`SELECT count(*)::int AS n FROM "${t}"`)) as { n: number }[];
