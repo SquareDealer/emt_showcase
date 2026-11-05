@@ -159,3 +159,14 @@ export interface FreeLabor {
   name: string;
   hours: number;
 }
+
+export interface BlockPlan {
+  id: string;
+  title: string | null;
+  starts_at: Date;
+  duration_min: number;
+  /** null: shared reserve (the lift), visible to everyone. */
+  user_id: string | null;
+  notes: string | null;
+  created_at: Date;
+}
