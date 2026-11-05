@@ -115,3 +115,47 @@ export interface VehiclePlan {
   mileage: number;
   created_at: Date;
 }
+
+export interface LaborLinePlan {
+  id: string;
+  template_id: string | null;
+  name: string;
+  hours: number | null;
+  rate_snapshot: number;
+  price_override: number | null;
+  discount_type: 'percent' | 'fixed' | null;
+  discount_value: number | null;
+  group_key: string | null;
+  group_name: string | null;
+  group_sort: number;
+  sort: number;
+  created_at: Date;
+}
+
+export interface PartLinePlan {
+  id: string;
+  part_template_id: string | null;
+  name: string;
+  manufacturer: string | null;
+  catalog_number: string | null;
+  qty: number;
+  unit: 'pcs' | 'l';
+  unit_price: number;
+  discount_type: 'percent' | 'fixed' | null;
+  discount_value: number | null;
+  group_key: string | null;
+  group_name: string | null;
+  group_sort: number;
+  sort: number;
+  created_at: Date;
+}
+
+export interface WorkPick {
+  taskKey: string;
+  laborDiscountPct?: number;
+}
+
+export interface FreeLabor {
+  name: string;
+  hours: number;
+}
