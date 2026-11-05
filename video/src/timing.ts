@@ -38,7 +38,7 @@ export function totalDuration(scenes: readonly SceneDef[] = SCENES): number {
 /** Scene-local click frames; filled by the scene tasks. Single source for cursor and click sounds. */
 export const SCENE_CLICKS: Record<SceneId, number[]> = {
   intro: [],
-  booking: [],
+  booking: [75, 105],
   estimate: [],
   board: [],
   docs: [],

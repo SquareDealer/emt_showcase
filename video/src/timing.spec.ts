@@ -20,6 +20,10 @@ describe('timing', () => {
     expect(offBeatClicks()).toEqual([]);
     expect(offBeatClicks(SCENES_SOCIAL)).toEqual([]);
   });
+  it('booking clicks: slot at 75, «Новая запись» at 105 (absolute 135/165, on the beat)', () => {
+    expect(SCENE_CLICKS.booking).toEqual([75, 105]);
+    expect(SCENE_CLICKS.booking.map((f) => f + sceneStart('booking'))).toEqual([135, 165]);
+  });
   it('offBeatClicks detects off-grid clicks in an injected table', () => {
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [20] })).toEqual([80]);
     expect(offBeatClicks(SCENES, { ...SCENE_CLICKS, booking: [15] })).toEqual([]);
