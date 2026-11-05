@@ -168,24 +168,33 @@ describe('sound effects', () => {
     expect(bookingState(LAND_AT - 1, FPS).selection).not.toBeNull();
     expect(bookingState(LAND_AT, FPS).selection).toBeNull();
     expect(bookingState(LAND_AT, FPS).events.length).toBe(bookingState(LAND_AT - 1, FPS).events.length + 1);
-    // Estimate: the sheet closes, wo-hero.1 (the block) arrives.
-    expect(APPLY_AT).toBe(153);
-    expect(estimateState(APPLY_AT - 1, FPS).wo.id).toBe(estimateState(APPLY_AT, FPS).wo.id);
-    expect(estimateState(APPLY_AT - 1, FPS).wo).not.toBe(estimateState(APPLY_AT, FPS).wo);
-    expect(estimateState(APPLY_AT, FPS).modalOpacity).toBe(0);
-    expect(estimateState(APPLY_AT - 1, FPS).modalOpacity).toBeGreaterThan(0);
     // Board: the drop's effects, 3 frames after the drop click.
     expect(DROP_AT).toBe(SCENE_CLICKS.board[1] + 3);
     expect(boardState(DROP_AT - 1, FPS).columns).toBe(COLUMNS_BEFORE);
     expect(boardState(DROP_AT, FPS).columns).toBe(COLUMNS_AFTER);
-    expect(contentLandings()).toEqual([sceneStart('booking') + LAND_AT, sceneStart('estimate') + APPLY_AT, sceneStart('board') + DROP_AT]);
-    expect(contentLandings()).toEqual([180, 378, 648]);
-    expect(contentLandings(SCENES_SOCIAL)).toEqual([120, 288, 558]);
+    expect(contentLandings()).toEqual([sceneStart('booking') + LAND_AT, sceneStart('board') + DROP_AT]);
+    expect(contentLandings()).toEqual([180, 648]);
+    expect(contentLandings(SCENES_SOCIAL)).toEqual([120, 558]);
   });
-  it('pop SFX: POP_LEAD (1) frame before each landing, so the peak (≈ 42 ms) is on it', () => {
+  it('pop SFX: POP_LEAD (1) frame before each landing, so the peak (≈ 42 ms) is on it; pop_1 then pop_2', () => {
     expect(POP_LEAD).toBe(1);
     for (const scenes of [SCENES, SCENES_SOCIAL]) expect(heroPopSfx(scenes)).toEqual(contentLandings(scenes).map((f) => f - 1));
-    expect(heroPopSfx()).toEqual([179, 377, 647]);
+    expect(heroPopSfx()).toEqual([179, 647]);
+  });
+  it('the estimate block landing has no pop: the ding, 2 frames later, marks it', () => {
+    // Estimate: the sheet closes, wo-hero.1 (the block) arrives at APPLY_AT.
+    expect(APPLY_AT).toBe(153);
+    expect(estimateState(APPLY_AT - 1, FPS).wo).not.toBe(estimateState(APPLY_AT, FPS).wo);
+    expect(estimateState(APPLY_AT, FPS).modalOpacity).toBe(0);
+    expect(estimateState(APPLY_AT - 1, FPS).modalOpacity).toBeGreaterThan(0);
+    expect(TOAST_IN - APPLY_AT).toBe(2);
+    for (const scenes of [SCENES, SCENES_SOCIAL]) {
+      const est = sceneStart('estimate', scenes);
+      const landing = est + APPLY_AT;
+      const near = sfxCues(scenes).filter((c) => Math.abs(c.at - landing) <= 6);
+      expect(near.map((c) => c.name).sort()).toEqual(['click', 'ding']);
+      expect(heroDingSfx(scenes)).toEqual([landing + 2]);
+    }
   });
   it('ding SFX: when the success toast («Блок добавлен в смету») appears', () => {
     expect(estimateState(TOAST_IN - 1, FPS).toastOpacity).toBe(0);
@@ -231,7 +240,7 @@ describe('sfxCues: the single list the assembly renders', () => {
     expect(pick(SCENES, 'click')).toEqual([135, 165, 270, 300, 345, 375, 450, 465, 495, 525, 600, 645, 870]);
     expect(pick(SCENES, 'key')).toEqual([473, 478, 533, 830, 835, 840, 845, 850, 855, 860]);
     expect(pick(SCENES, 'whoosh')).toEqual([573, 708, 948]);
-    expect(pick(SCENES, 'pop')).toEqual([179, 377, 647]);
+    expect(pick(SCENES, 'pop')).toEqual([179, 647]);
     expect(pick(SCENES, 'ding')).toEqual([380]);
   });
   it('social: every cue frame', () => {
@@ -244,7 +253,7 @@ describe('sfxCues: the single list the assembly renders', () => {
     const kinds = assemblyPlan(SCENES_SOCIAL).flatMap((p) => (p.type === 'transition' ? [`${p.from}>${p.to}:${p.kind}`] : []));
     expect(kinds).toEqual(['booking>estimate:fade', 'estimate>board:slide', 'board>search:fade', 'search>dashboard:slide', 'dashboard>outro:fade']);
     expect(pick(SCENES_SOCIAL, 'whoosh')).toEqual([483, 708]);
-    expect(pick(SCENES_SOCIAL, 'pop')).toEqual([119, 287, 557]);
+    expect(pick(SCENES_SOCIAL, 'pop')).toEqual([119, 557]);
     expect(pick(SCENES_SOCIAL, 'ding')).toEqual([290]);
   });
   it('takes alternate by cue index: click_1/click_2, key_1…4 round-robin, pop_1/pop_2', () => {
@@ -262,7 +271,7 @@ describe('sfxCues: the single list the assembly renders', () => {
   it('every cue carries its take\'s src / level / frames, is on a whole frame and ends inside the composition', () => {
     for (const scenes of [SCENES, SCENES_SOCIAL]) {
       const cues = sfxCues(scenes);
-      expect(cues.length).toBe(clicksAbsolute(scenes).length + 10 + heroWhooshSfx(scenes).length + 3 + 1);
+      expect(cues.length).toBe(clicksAbsolute(scenes).length + 10 + heroWhooshSfx(scenes).length + 2 + 1);
       for (const c of cues) {
         const take = SFX_TAKES[c.name].find((t) => t.src === c.src)!;
         expect(take).toBeDefined();
@@ -288,7 +297,7 @@ describe('sfxCues: the single list the assembly renders', () => {
     expect(sfxCues(noSearch).filter((c) => c.name === 'key')).toHaveLength(3);
     const fadesOnly = SCENES.filter((s) => ['intro', 'booking', 'estimate'].includes(s.id));
     expect(sfxCues(fadesOnly).some((c) => c.name === 'whoosh')).toBe(false);
-    expect(sfxCues(fadesOnly).filter((c) => c.name === 'pop')).toHaveLength(2);
+    expect(sfxCues(fadesOnly).filter((c) => c.name === 'pop')).toHaveLength(1);
   });
 });
 

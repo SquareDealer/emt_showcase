@@ -6,7 +6,7 @@ import { interpolate } from 'remotion';
 import { DROP_AT } from '../scenes/Board';
 import { LAND_AT } from '../scenes/Booking';
 import { DC_KEY_FRAMES } from '../scenes/discounts';
-import { APPLY_AT, DISCOUNTS_FROM, TOAST_IN } from '../scenes/Estimate';
+import { DISCOUNTS_FROM, TOAST_IN } from '../scenes/Estimate';
 import { TYPE_KEY_FRAMES } from '../scenes/Search';
 import { FPS, SCENES, TRANSITION, clicksAbsolute, sceneStart, type SceneDef, type SceneId } from '../timing';
 
@@ -55,8 +55,8 @@ export function planDuration(plan: readonly PlanItem[], fps: number): number {
 
 /** Level of each sound (Audio `volume`, linear) — the one table, set by earshot readings of the hero mix
  *  (change S): clicks and keys ≥ 8 LU under the pops, the ding and the whooshes; the bright clicks no
- *  longer the mix's peaks (0.45 → 0.32); the ding up (0.25 → 0.32) and the pop down (0.32 → 0.28) so
- *  the toast's ding keeps its own onset 3 frames after the estimate block's pop. */
+ *  longer the mix's peaks (0.45 → 0.32); the ding (0.25 → 0.32) carries the estimate block's landing on
+ *  its own, the pop (0.32 → 0.28) the booking and board landings. */
 export const SFX_VOLUME = { click: 0.32, key: 0.22, whoosh: 0.28, pop: 0.28, ding: 0.32 } as const;
 
 export type SfxName = keyof typeof SFX_VOLUME;
@@ -73,8 +73,8 @@ export const SFX_TAKES: Record<SfxName, readonly { src: string; samples: number 
   ],
   key: [
     { src: 'audio/key_1.wav', samples: 7646 },
-    { src: 'audio/key_2.wav', samples: 7995 },
-    { src: 'audio/key_3.wav', samples: 7507 },
+    { src: 'audio/key_2.wav', samples: 7613 },
+    { src: 'audio/key_3.wav', samples: 7174 },
     { src: 'audio/key_4.wav', samples: 6830 },
   ],
   whoosh: [{ src: 'audio/whoosh_1.wav', samples: 36960 }],
@@ -121,15 +121,12 @@ export function heroWhooshSfx(scenes: readonly SceneDef[] = SCENES): number[] {
   );
 }
 
-/** Where content lands, from each scene's own constant: the booked order replaces the ghost (Booking
- *  LAND_AT), the block arrives in the estimate (Estimate APPLY_AT: wo-hero.1), the dragged card drops
- *  into «В работе» (Board DROP_AT, 3 frames after the drop click). */
+/** Where content lands with a pop, from each scene's own constant: the booked order replaces the ghost
+ *  (Booking LAND_AT), the dragged card drops into «В работе» (Board DROP_AT, 3 frames after the drop
+ *  click). The estimate block (Estimate APPLY_AT) gets no pop: its success toast's ding, 2 frames
+ *  later, marks it — a pop there piled click, pop and ding into 170 ms. */
 export function contentLandings(scenes: readonly SceneDef[] = SCENES): number[] {
-  return [
-    ...absolute(scenes, 'booking', [LAND_AT]),
-    ...absolute(scenes, 'estimate', [APPLY_AT]),
-    ...absolute(scenes, 'board', [DROP_AT]),
-  ].sort((a, b) => a - b);
+  return [...absolute(scenes, 'booking', [LAND_AT]), ...absolute(scenes, 'board', [DROP_AT])].sort((a, b) => a - b);
 }
 
 /** Pop: a frame before each landing (POP_LEAD). */
@@ -137,7 +134,8 @@ export function heroPopSfx(scenes: readonly SceneDef[] = SCENES): number[] {
   return contentLandings(scenes).map((f) => f - POP_LEAD);
 }
 
-/** Ding: the success toast appears (Estimate TOAST_IN, «Блок добавлен в смету»; Booking has no toast). */
+/** Ding: the success toast appears (Estimate TOAST_IN, «Блок добавлен в смету», 2 frames after the block
+ *  lands at APPLY_AT — the ding marks that landing; Booking has no toast). */
 export function heroDingSfx(scenes: readonly SceneDef[] = SCENES): number[] {
   return absolute(scenes, 'estimate', [TOAST_IN]);
 }
