@@ -37,17 +37,17 @@
     {
       "name": "Лебедев Роман Игоревич",
       "hours": 94.5,
-      "capacityHours": 264
+      "capacityHours": 176
     },
     {
       "name": "Морозов Илья Николаевич",
       "hours": 105,
-      "capacityHours": 264
+      "capacityHours": 176
     },
     {
       "name": "Соколов Денис Александрович",
       "hours": 99,
-      "capacityHours": 264
+      "capacityHours": 176
     }
   ],
   "topWorks": [

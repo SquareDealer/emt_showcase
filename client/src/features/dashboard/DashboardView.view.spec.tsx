@@ -134,4 +134,13 @@ describe('DashboardView', () => {
       expect(h(renderToStaticMarkup(<DashboardView data={partial} progress={0.5} />))).toBeCloseTo(h(html) / 2, 1);
     });
   });
+
+  it('значения рядом со столбцами и полосами и динамика проявляются с progress', () => {
+    const op = (html: string) =>
+      [...html.matchAll(/class="(dash-delta[^"]*|dash-val[^"]*|dash-row-num[^"]*)"[^>]*style="[^"]*opacity:([\d.]+)/g)].map((m) => Number(m[2]));
+    const zero = op(render({ progress: 0 }));
+    expect(zero).toHaveLength(1 + 6 + 2 + 5);
+    expect(zero.every((o) => o === 0)).toBe(true);
+    expect(op(render()).every((o) => o === 1)).toBe(true);
+  });
 });

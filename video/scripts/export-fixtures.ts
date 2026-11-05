@@ -220,7 +220,8 @@ async function buildDashboard(db: pg.Client, demoNow: Date): Promise<DashboardDa
       revenueDeltaPct: prev > 0 ? round1(((revenue - prev) / prev) * 100) : 0,
     },
     revenueByMonth: months.map((r) => ({ month: MONTH_SHORT[Number(r.month.slice(5, 7)) - 1], revenue: round2(Number(r.revenue)) })),
-    partialLast: true,
+    // The chart's last point is the current month, partial whenever it isn't the report month itself.
+    partialLast: months.at(-1)!.month !== kpi.month,
     masterLoad: load.map((r) => ({ name: r.name, hours: round1(Number(r.hours)), capacityHours: r.capacity_hours })),
     topWorks: top.map((r) => ({ name: r.name, count: r.count, revenue: round2(Number(r.revenue)) })),
   };

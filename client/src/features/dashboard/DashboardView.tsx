@@ -5,7 +5,7 @@ import './dashboard.css';
 
 export interface DashboardViewProps {
   data: DashboardData;
-  /** Доля «вырастания» столбцов и полос, 0..1. */
+  /** Доля «вырастания» столбцов и полос, 0..1; с ней же проявляются их подписи-значения и динамика. */
   progress?: number;
   /** Demo: marks the block with data-highlight. */
   highlight?: 'revenue' | 'load' | 'top';
@@ -51,7 +51,7 @@ export function DashboardView({ data, progress = 1, highlight, deltaLabel = 'к 
         <div className="dash-kpi">
           <span className="dash-kpi-label">Выручка</span>
           <span className="dash-kpi-val mono">{money(kpi.revenue)}</span>
-          <span className={`dash-delta mono ${up ? 'up' : 'down'}`}>
+          <span className={`dash-delta mono ${up ? 'up' : 'down'}`} style={{ opacity: p }}>
             {up ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
             {up ? '+' : '−'}
             {num(Math.abs(kpi.revenueDeltaPct))}% {deltaLabel}
@@ -142,7 +142,7 @@ export function DashboardView({ data, progress = 1, highlight, deltaLabel = 'к 
                 <li key={m.name + i} className="dash-row">
                   <div className="dash-row-head">
                     <span className="dash-row-name">{m.name}</span>
-                    <span className="dash-row-num mono">
+                    <span className="dash-row-num mono" style={{ opacity: p }}>
                       {num(m.hours)} / {num(m.capacityHours)} ч · {Math.round(ratio * 100)}%
                     </span>
                   </div>
@@ -172,7 +172,7 @@ export function DashboardView({ data, progress = 1, highlight, deltaLabel = 'к 
               <li key={w.name + i} className="dash-row">
                 <div className="dash-row-head">
                   <span className="dash-row-name">{w.name}</span>
-                  <span className="dash-row-num mono">
+                  <span className="dash-row-num mono" style={{ opacity: p }}>
                     {num(w.count)} шт · {money(w.revenue)}
                   </span>
                 </div>

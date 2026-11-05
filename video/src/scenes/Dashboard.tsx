@@ -50,13 +50,30 @@ const owner = users.find((u) => u.role === 'owner');
 if (!owner) throw new Error('fixtures/users.json: no owner');
 
 // ---- data (fixtures only): the geometry above was measured on this shape ----
+/** The plot (y 345.4–805.5): the view's scale tops out at 1.06 × the highest month. */
+const PLOT_BOTTOM = 805.5;
+const PLOT_H = 460.1;
+const LABEL_H = 19.5;
+const LABEL_GAP = 6;
+/** Top edge (window px) of a month's value label — DashboardView's `bottom: calc(h% + 6px)`. */
+export const labelTop = (v: number, max: number) => PLOT_BOTTOM - (v / (max * 1.06)) * PLOT_H - LABEL_GAP - LABEL_H;
+/** The wide callout (dot y 412): pill 60 screen px tall (30-px type + 2×12 padding), ≤ 37.5 UI px from the
+ *  moment it is visible (zoom ≥ 1.6 from frame 61), so its bottom edge is at most at 412 + 18.75. */
+export const PILL_BOTTOM = 412 + 60 / 1.6 / 2;
+/** Clearance between the pill and the Jun–Sep value labels under it. */
+const PILL_CLEAR = 8;
 {
   const rev = dashboard.revenueByMonth.map((m) => m.revenue);
   const top = Math.max(...rev);
   if (rev.length !== 6 || !dashboard.partialLast) throw new Error('Dashboard: expected 6 months with the current one partial — re-measure');
-  if (rev[4] !== top || rev.slice(0, 4).some((v) => v > top * 0.75)) {
-    throw new Error('Dashboard: October is no longer the clear maximum — the callout sits over the Jun–Sep bars; re-measure');
-  }
+  // The callout's dot sits left of October's bar and the pill spans the Jun–Sep slots: October must be
+  // the highest bar, and every Jun–Sep label must stay under the pill (Sep today: 463.3 vs ≤ 438.75).
+  if (rev[4] !== top) throw new Error('Dashboard: October is not the highest month — the callout sits beside its bar; re-measure');
+  rev.slice(0, 4).forEach((v, i) => {
+    if (labelTop(v, top) < PILL_BOTTOM + PILL_CLEAR) {
+      throw new Error(`Dashboard: month ${i} label (top ${labelTop(v, top).toFixed(1)}) would touch the callout — re-measure`);
+    }
+  });
   if (dashboard.masterLoad.length !== 3 || dashboard.topWorks.length !== 5) throw new Error('Dashboard: 3 masters / 5 top works expected — re-measure');
 }
 
@@ -158,9 +175,9 @@ export const CALLOUT_OUT = LOAD_AT - 6;
 const CALLOUT_FADE = 6;
 /** The callout's dot (window px). Wide: in the gap left of October's bar (745.8), the pill to its left
  *  over the chart's empty band — under the top gridline (371.4), above September's label (463.3), and
- *  right of the panel's left edge (pill ~355 UI px at 1.66×: x ~368–723). Social: on the content's
- *  background under the panel (876–900), the pill below it in the band under the window. */
-export const calloutAnchor = (social: boolean) => (social ? { x: 617, y: 888 } : { x: 738, y: 412 });
+ *  right of the panel's left edge (pill ~355 UI px at 1.66×: x ~368–723). Social: in the band of
+ *  background under the window (900–1010), 12 px below its edge, the pill under it (to ~975). */
+export const calloutAnchor = (social: boolean) => (social ? { x: 617, y: 912 } : { x: 738, y: 412 });
 export const calloutOpacity = (frame: number) =>
   frame < CALLOUT_AT ? 0 : interpolate(frame, [CALLOUT_OUT, CALLOUT_OUT + CALLOUT_FADE], [1, 0], clamp);
 

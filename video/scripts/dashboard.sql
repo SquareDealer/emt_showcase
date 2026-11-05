@@ -37,7 +37,8 @@ GROUP BY b.mon;
 
 -- name: master_load
 -- Booked hours of each active master in the report month's working days (Mon–Fri, any status) against
--- the shop's opening hours (settings working_hours_*) × the month's Mon–Fri count.
+-- one master's capacity: an 8-hour shift × the month's Mon–Fri count. (The shop's opening hours, settings
+-- working_hours_*, are the calendar window, not a master's shift.)
 WITH b AS (
   SELECT date_trunc('month', $1::timestamptz AT TIME ZONE 'Europe/Moscow') - interval '1 month' AS mon
 ), d AS (
@@ -45,13 +46,12 @@ WITH b AS (
   FROM b CROSS JOIN generate_series(b.mon, b.mon + interval '1 month' - interval '1 day', interval '1 day') AS day
   WHERE extract(isodow FROM day) <= 5
 ), s AS (
-  SELECT (SELECT value::int FROM settings WHERE key = 'working_hours_end')
-       - (SELECT value::int FROM settings WHERE key = 'working_hours_start') AS day_h,
+  SELECT 8 AS shift_h,
          (SELECT value::int FROM settings WHERE key = 'default_appointment_min') AS def_min
 )
 SELECT u.name,
        (coalesce(sum(coalesce(w.scheduled_duration_min, s.def_min)), 0) / 60.0)::text AS hours,
-       (s.day_h * d.days)::int AS capacity_hours
+       (s.shift_h * d.days)::int AS capacity_hours
 FROM users u
 CROSS JOIN b
 CROSS JOIN d
@@ -62,7 +62,7 @@ LEFT JOIN work_orders w
  AND w.scheduled_at AT TIME ZONE 'Europe/Moscow' < b.mon + interval '1 month'
  AND extract(isodow FROM w.scheduled_at AT TIME ZONE 'Europe/Moscow') <= 5
 WHERE u.role = 'master' AND u.is_active
-GROUP BY u.id, u.name, s.day_h, d.days
+GROUP BY u.id, u.name, s.shift_h, d.days
 ORDER BY u.name;
 
 -- name: top_works

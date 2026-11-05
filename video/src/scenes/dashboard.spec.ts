@@ -9,6 +9,8 @@ import {
   cameraKeys,
   dashboardState,
   GROW,
+  labelTop,
+  PILL_BOTTOM,
   LOAD_AT,
   MOVE,
   REVENUE_AT,
@@ -85,5 +87,13 @@ describe('dashboard scene state', () => {
       expect(y - 540 / zoom).toBeGreaterThanOrEqual(0);
       expect(y + 540 / zoom).toBeLessThanOrEqual(900);
     }
+  });
+
+  it('labelTop matches the measured labels (Sep 463.3, Oct 345.9) and Jun–Sep clear the wide pill', () => {
+    const rev = dashboard.revenueByMonth.map((m) => m.revenue);
+    const top = Math.max(...rev);
+    expect(labelTop(rev[3], top)).toBeCloseTo(463.3, 0);
+    expect(labelTop(rev[4], top)).toBeCloseTo(345.9, 0);
+    for (const v of rev.slice(0, 4)) expect(labelTop(v, top)).toBeGreaterThan(PILL_BOTTOM + 8);
   });
 });
