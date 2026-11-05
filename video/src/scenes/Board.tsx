@@ -53,7 +53,7 @@ export const BOARD_LAST_FRAME = 149;
 const [CLICK_PRESS, CLICK_DROP] = SCENE_CLICKS.board;
 // The press lands at 30 and the drag starts with it (ghost + floating card); the drop's effects
 // (data moved, counters, settle) land 3 frames after the drop press, like every scene's click.
-const DROP_AT = CLICK_DROP + 3;
+export const DROP_AT = CLICK_DROP + 3;
 /** Floating card glides into the slot over SETTLE frames, then cross-fades into the real card. */
 const SETTLE = 10;
 const SWAP_AT = DROP_AT + SETTLE;

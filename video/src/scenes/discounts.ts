@@ -21,6 +21,11 @@ const [DC_PENCIL, DC_INPUT, DC_SAVE, DC_TYPE] = DC_CLICKS;
 export const DC_HOVER = 25;
 /** The kit line's edit form opens. */
 export const DC_EDIT = DC_PENCIL + FX;
+/** Typing pace of both discount fields (kit `typed()`): frames per character. */
+export const DC_PER_CHAR = 5;
+/** What is typed: the kit line's discount, then the order's (both in %). */
+export const DC_KIT_VALUE = '10';
+export const DC_ORDER_VALUE = '5';
 /** «10» is typed into its discount field, 5 frames a character: «1» at 53, «10» at 58. */
 export const DC_TYPE_10 = DC_INPUT + FX;
 /** ✓: wo-hero.2 — the row shows «−1 490 ₽ (10%)», «Итого» counts 44 400 → 42 910 over DC_COUNT. */
@@ -29,6 +34,12 @@ export const DC_SNAP2 = DC_SAVE + FX;
 export const DC_DTYPE = DC_TYPE + FX;
 /** The order discount applies (the app's onBlur), a beat after the type click: wo-hero.3. */
 export const DC_SNAP3 = DC_TYPE + 15;
+/** The frames (t) where a typed discount gains a character — one key sound each: «1» 53, «10» 58,
+ *  «5» 113. The same constants `discountsAt` types with. */
+export const DC_KEY_FRAMES: readonly number[] = [
+  ...Array.from(DC_KIT_VALUE, (_, i) => DC_TYPE_10 + (i + 1) * DC_PER_CHAR),
+  ...Array.from(DC_ORDER_VALUE, (_, i) => DC_DTYPE + (i + 1) * DC_PER_CHAR),
+];
 /** Both count-downs last a beat. */
 export const DC_COUNT = 15;
 /** «Итого» settles on 40 764,50 ₽. */
@@ -58,9 +69,9 @@ export function discountsAt(t: number): DiscountsState {
         : snap === 2
           ? countUp(t, DC_SNAP2, DC_SNAP2 + DC_COUNT, DISCOUNT_TOTALS[0], DISCOUNT_TOTALS[1])
           : countUp(t, DC_SNAP3, DC_SETTLED, DISCOUNT_TOTALS[1], DISCOUNT_TOTALS[2]),
-    edit: t >= DC_EDIT && t < DC_SNAP2 ? typed(t, DC_TYPE_10, '10', 5) : null,
+    edit: t >= DC_EDIT && t < DC_SNAP2 ? typed(t, DC_TYPE_10, DC_KIT_VALUE, DC_PER_CHAR) : null,
     hoverKit: t >= DC_HOVER && t < DC_EDIT,
-    discountDraft: t >= DC_DTYPE ? { type: 'percent', value: typed(t, DC_DTYPE, '5', 5) } : null,
+    discountDraft: t >= DC_DTYPE ? { type: 'percent', value: typed(t, DC_DTYPE, DC_ORDER_VALUE, DC_PER_CHAR) } : null,
     kitOutline: t >= DC_SNAP2,
   };
 }

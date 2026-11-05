@@ -1,18 +1,31 @@
 # Звук шоукейса
 
-Все файлы сгенерированы `ffmpeg` (синтез: синус + отфильтрованный шум с фиксированным `seed`),
-48 кГц — без лицензионных ограничений.
+Минималистичные «SaaS»-звуки, **сделанные кодом с помощью [earshot](https://github.com/Leonxlnx/earshot)**
+(банк `earshot sfx`, v0.4.0, commit `591fa3e`): это не записи, а синтез; файлы — наши, без лицензионных
+ограничений. Все — 48 кГц, стерео, 24 бит, как их отдал earshot (без перекодирования).
 
-| Файл         | Что                                               | Где звучит (`src/compositions/assembly.ts`)       |
-|--------------|---------------------------------------------------|---------------------------------------------------|
-| `click.wav`  | клик мыши, 60 мс                                  | `sfxCues()` `click` = `clicksAbsolute()`, громкость 0.5 |
-| `key.wav`    | клавиша, 30 мс, тише и выше                       | `sfxCues()` `key` — каждый символ ⌘K в Search, 0.2 |
-| `whoosh.wav` | «вжух», 400 мс, розовый шум в полосе + чирп       | `sfxCues()` `whoosh` — начало каждого `slide`, 0.3 |
-| `music.mp3`  | **плейсхолдер: тишина** 40,0 с (1200 кадров)      | вся композиция, огибающая `musicVolume()`         |
+Sounds made in code with earshot (MIT) by Leon Lin, github.com/Leonxlnx/earshot
 
-Звуки обеих версий — один список `sfxCues(scenes)`: `ShowcaseAssembly` рендерит ровно его
-(`Hero` — по `SCENES`, `HeroSocial` — по `SCENES_SOCIAL`). Длина: hero 40,0 с (1200 кадров),
-social 30,0 с (900 кадров).
+| Файл           | earshot id (seed)            | Роль                                    | Громкость | Где звучит (`src/compositions/assembly.ts`) |
+|----------------|------------------------------|-----------------------------------------|-----------|---------------------------------------------|
+| `click_1.wav`  | `pro_hover_tick/soft` (0)    | клик курсора, 32 мс                     | 0.32      | `click` = `clicksAbsolute()`, чётные        |
+| `click_2.wav`  | `pro_hover_tick/soft` (1)    | клик курсора, второй дубль              | 0.32      | `click`, нечётные                           |
+| `key_1.wav`    | `typing_key/light` (0)       | клавиша, ~160 мс                        | 0.22      | `key` — каждый набранный символ: «10», «5» в скидках Estimate и VIN в ⌘K Search; дубли по кругу 1…4 |
+| `key_2.wav`    | `typing_key/light` (1)       | клавиша                                 | 0.22      | `key`                                       |
+| `key_3.wav`    | `typing_key/light` (2)       | клавиша                                 | 0.22      | `key`                                       |
+| `key_4.wav`    | `typing_key/light` (3)       | клавиша                                 | 0.22      | `key`                                       |
+| `whoosh_1.wav` | `whoosh_fast/heavy` (0)      | «вжух», 770 мс, пик ≈ 135 мс            | 0.28      | `whoosh` — каждый `slide`, со 3-го кадра перехода (пик — на середине) |
+| `pop_1.wav`    | `ui_pop/soft` (0)            | «поп»: контент встал на место, 180 мс   | 0.28      | `pop` — за кадр до: запись в слоте (Booking `LAND_AT`), блок в смете (Estimate `APPLY_AT`), карточка на доске (Board `DROP_AT`); дубли через один |
+| `pop_2.wav`    | `ui_pop/soft` (1)            | «поп», второй дубль                     | 0.28      | `pop`                                       |
+| `ding_1.wav`   | `notify/mid_wood` (0)        | успех: тост, 317 мс                     | 0.32      | `ding` — тост «Блок добавлен в смету» (Estimate `TOAST_IN`) |
+| `music.mp3`    | —                            | **плейсхолдер: тишина** 40,0 с (1200 кадров) | 0.8 (огибающая) | вся композиция, `musicVolume()`   |
+
+Громкости — одна таблица `SFX_VOLUME` рядом с `sfxCues()`, выставлены по замерам earshot (клики и
+клавиши на ≥ 8 LU тише попов, «динга» и «вжухов»; «динг» тоста слышен отдельно от попа блока за 3 кадра до
+него; true peak микса hero −10,3 dBTP); длины файлов (в сэмплах) — `SFX_TAKES`
+(тест сверяет их с заголовками WAV). Звуки обеих версий — один список `sfxCues(scenes)`:
+`ShowcaseAssembly` рендерит ровно его (`Hero` — по `SCENES`, `HeroSocial` — по `SCENES_SOCIAL`).
+Длина: hero 40,0 с (1200 кадров), social 30,0 с (900 кадров). Лупы рендерятся без звука (`--muted`).
 
 ## Замена музыки
 
@@ -30,13 +43,28 @@ social 30,0 с (900 кадров).
    композиции, поэтому задержанный трек вступает сразу с её текущей громкостью (при −8 — 0,21, при
    −30 и больше — полные 0,8), без своего нарастания.
 3. Записать источник и лицензию трека в этот README.
+4. С музыкой эффекты перестанут быть всем миксом: перепроверить уровни `SFX_VOLUME` (`earshot measure`,
+   `earshot timeline … --cues`) против музыкальной подложки.
 
 ## Перегенерация SFX
 
+Нужен earshot (`pip install -e /path/to/earshot`; банк звуков моделей не грузит). Из `video/public/audio`:
+
 ```bash
-cd video/public/audio
-ffmpeg -y -filter_complex "aevalsrc='(0.6*sin(2*PI*2300*t)+0.3*sin(2*PI*4700*t))*exp(-t*110)':s=48000:d=0.06[a];anoisesrc=d=0.06:r=48000:a=0.45:c=white:seed=11,highpass=f=1800,lowpass=f=8000,afade=t=out:st=0:d=0.05:curve=exp[n];[a][n]amix=inputs=2:normalize=0,afade=t=in:d=0.0015,afade=t=out:st=0.05:d=0.01,alimiter=limit=0.9:level=disabled" -ar 48000 -ac 1 -c:a pcm_s16le -fflags +bitexact -flags:a +bitexact click.wav
-ffmpeg -y -filter_complex "aevalsrc='(0.45*sin(2*PI*3600*t)+0.2*sin(2*PI*6100*t))*exp(-t*200)':s=48000:d=0.03[a];anoisesrc=d=0.03:r=48000:a=0.3:c=white:seed=23,highpass=f=3000,lowpass=f=9000,afade=t=out:st=0:d=0.025:curve=exp[n];[a][n]amix=inputs=2:normalize=0,afade=t=in:d=0.001,afade=t=out:st=0.024:d=0.006,alimiter=limit=0.7:level=disabled" -ar 48000 -ac 1 -c:a pcm_s16le -fflags +bitexact -flags:a +bitexact key.wav
-ffmpeg -y -filter_complex "anoisesrc=d=0.4:r=48000:a=0.6:c=pink:seed=37,bandpass=f=1200:width_type=o:w=2.5,afade=t=in:st=0:d=0.24:curve=qsin,afade=t=out:st=0.24:d=0.16:curve=exp[n];aevalsrc='0.12*sin(2*PI*(250*t+700*t*t))*sin(PI*t/0.4)':s=48000:d=0.4[c];[n][c]amix=inputs=2:normalize=0,alimiter=limit=0.8:level=disabled" -ar 48000 -ac 1 -c:a pcm_s16le -fflags +bitexact -flags:a +bitexact whoosh.wav
+earshot sfx render pro_hover_tick/soft -o click_1.wav --seed 0
+earshot sfx render pro_hover_tick/soft -o click_2.wav --seed 1
+earshot sfx render typing_key/light    -o key_1.wav   --seed 0
+earshot sfx render typing_key/light    -o key_2.wav   --seed 1
+earshot sfx render typing_key/light    -o key_3.wav   --seed 2
+earshot sfx render typing_key/light    -o key_4.wav   --seed 3
+earshot sfx render whoosh_fast/heavy   -o whoosh_1.wav --seed 0
+earshot sfx render ui_pop/soft         -o pop_1.wav   --seed 0
+earshot sfx render ui_pop/soft         -o pop_2.wav   --seed 1
+earshot sfx render notify/mid_wood     -o ding_1.wav  --seed 0
+```
+
+Другая длина файла — обновить `samples` в `SFX_TAKES` (тест подскажет). Музыкальная заглушка:
+
+```bash
 ffmpeg -y -f lavfi -i anullsrc=r=48000:cl=stereo -t 40 -c:a libmp3lame -b:a 128k -fflags +bitexact -flags:a +bitexact music.mp3
 ```

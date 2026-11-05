@@ -37,7 +37,7 @@ const presentation = (kind: TransitionKind) => PRESENTATIONS[kind];
 /**
  * The scenes in a TransitionSeries — each scene enters at `sceneStart()`, since every transition
  * overlaps its neighbours by TRANSITION (scene-local frames stay valid) — plus the music and exactly
- * the `sfxCues(scenes)` sounds (click / key / whoosh, from the same timing tables the scenes draw
+ * the `sfxCues(scenes)` sounds (click / key / whoosh / pop / ding, from the same timing tables the scenes draw
  * from). `overlay` is drawn over the scenes (the social cut's brand band).
  */
 export function ShowcaseAssembly({

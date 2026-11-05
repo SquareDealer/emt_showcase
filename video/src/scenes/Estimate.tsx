@@ -105,7 +105,8 @@ export const GEN_CAPTION_OUT = 126;
 export const BLOCK_CAPTION_OUT = 180;
 /** The block caption in the estimate: under the new work line, over the add-form placeholders. */
 export const BLOCK_ANCHOR = { x: 330, y: 471 };
-const TOAST_IN = 155;
+/** «Блок добавлен в смету» springs in (a success toast: the ding). */
+export const TOAST_IN = 155;
 const TOAST_OUT = 200;
 /** The discount sequence (./discounts — the one LoopDiscounts plays) runs on t = frame − DISCOUNTS_FROM:
  *  ✎ 225, the discount field 240, «10», ✓ 270 (wo-hero.2, «Итого» 44 400 → 42 910 by 288), the

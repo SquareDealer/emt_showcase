@@ -3,8 +3,12 @@
 // these values: assemblyPlan() and sfxCues().
 import { linearTiming, type TransitionTiming } from '@remotion/transitions';
 import { interpolate } from 'remotion';
+import { DROP_AT } from '../scenes/Board';
+import { LAND_AT } from '../scenes/Booking';
+import { DC_KEY_FRAMES } from '../scenes/discounts';
+import { APPLY_AT, DISCOUNTS_FROM, TOAST_IN } from '../scenes/Estimate';
 import { TYPE_KEY_FRAMES } from '../scenes/Search';
-import { SCENES, TRANSITION, clicksAbsolute, sceneStart, type SceneDef, type SceneId } from '../timing';
+import { FPS, SCENES, TRANSITION, clicksAbsolute, sceneStart, type SceneDef, type SceneId } from '../timing';
 
 export type TransitionKind = 'fade' | 'slide';
 
@@ -47,42 +51,117 @@ export function planDuration(plan: readonly PlanItem[], fps: number): number {
 }
 
 // ---- sound effects (absolute frames) ----
+// Minimal SaaS sounds rendered with earshot's bank (public/audio/README.md: id, seed, role per file).
 
-export const SFX = {
-  click: { src: 'audio/click.wav', volume: 0.5, frames: 15 },
-  key: { src: 'audio/key.wav', volume: 0.2, frames: 5 },
-  whoosh: { src: 'audio/whoosh.wav', volume: 0.3, frames: 15 },
-} as const;
+/** Level of each sound (Audio `volume`, linear) — the one table, set by earshot readings of the hero mix
+ *  (change S): clicks and keys ≥ 8 LU under the pops, the ding and the whooshes; the bright clicks no
+ *  longer the mix's peaks (0.45 → 0.32); the ding up (0.25 → 0.32) and the pop down (0.32 → 0.28) so
+ *  the toast's ding keeps its own onset 3 frames after the estimate block's pop. */
+export const SFX_VOLUME = { click: 0.32, key: 0.22, whoosh: 0.28, pop: 0.28, ding: 0.32 } as const;
+
+export type SfxName = keyof typeof SFX_VOLUME;
+
+/** Sample rate of every SFX file (earshot renders 48 kHz stereo 24-bit). */
+export const SFX_RATE = 48000;
+
+/** Each sound's takes, used round-robin by cue index: the file and its length in samples
+ *  (assembly.spec reads the WAV headers). */
+export const SFX_TAKES: Record<SfxName, readonly { src: string; samples: number }[]> = {
+  click: [
+    { src: 'audio/click_1.wav', samples: 1554 },
+    { src: 'audio/click_2.wav', samples: 1554 },
+  ],
+  key: [
+    { src: 'audio/key_1.wav', samples: 7646 },
+    { src: 'audio/key_2.wav', samples: 7995 },
+    { src: 'audio/key_3.wav', samples: 7507 },
+    { src: 'audio/key_4.wav', samples: 6830 },
+  ],
+  whoosh: [{ src: 'audio/whoosh_1.wav', samples: 36960 }],
+  pop: [
+    { src: 'audio/pop_1.wav', samples: 8621 },
+    { src: 'audio/pop_2.wav', samples: 8662 },
+  ],
+  ding: [{ src: 'audio/ding_1.wav', samples: 15216 }],
+};
+
+/** Whole frames a file needs to play to its end. */
+export const takeFrames = (samples: number) => Math.ceil((samples * FPS) / SFX_RATE);
+
+/** A whoosh starts this many frames into its slide: its apex (≈ 135 ms ≈ 4 f in) lands mid-transition. */
+export const WHOOSH_LEAD = 3;
+/** A pop starts a frame before its landing: its peak (≈ 42 ms) is on the landing frame. */
+export const POP_LEAD = 1;
+
+const absolute = (scenes: readonly SceneDef[], id: SceneId, local: readonly number[]): number[] => {
+  const s = scenes.find((x) => x.id === id);
+  if (!s) return [];
+  const start = sceneStart(id, scenes);
+  return local.filter((f) => f >= 0 && f < s.dur).map((f) => start + f);
+};
 
 /** Click sounds: the same table the cursors press on (Review Focus 5). */
 export function heroClickSfx(scenes: readonly SceneDef[] = SCENES): number[] {
   return clicksAbsolute(scenes);
 }
 
-/** Key sounds: one per character Search types into the palette. */
+/** Key sounds: one per typed character — the discounts Estimate types («10», «5»; ./discounts) and
+ *  the VIN Search types into the palette — in time order. */
 export function heroKeySfx(scenes: readonly SceneDef[] = SCENES): number[] {
-  if (!scenes.some((s) => s.id === 'search')) return [];
-  const start = sceneStart('search', scenes);
-  return TYPE_KEY_FRAMES.map((f) => start + f);
+  return [
+    ...absolute(scenes, 'estimate', DC_KEY_FRAMES.map((t) => DISCOUNTS_FROM + t)),
+    ...absolute(scenes, 'search', TYPE_KEY_FRAMES),
+  ].sort((a, b) => a - b);
 }
 
-/** Whoosh: at the start of each slide transition, i.e. the entering scene's first frame. */
+/** Whoosh: WHOOSH_LEAD frames into each slide transition (the entering scene's start + 3). */
 export function heroWhooshSfx(scenes: readonly SceneDef[] = SCENES): number[] {
-  return assemblyPlan(scenes).flatMap((p) => (p.type === 'transition' && p.kind === 'slide' ? [sceneStart(p.to, scenes)] : []));
+  return assemblyPlan(scenes).flatMap((p) =>
+    p.type === 'transition' && p.kind === 'slide' ? [sceneStart(p.to, scenes) + WHOOSH_LEAD] : [],
+  );
 }
 
-export type SfxName = keyof typeof SFX;
+/** Where content lands, from each scene's own constant: the booked order replaces the ghost (Booking
+ *  LAND_AT), the block arrives in the estimate (Estimate APPLY_AT: wo-hero.1), the dragged card drops
+ *  into «В работе» (Board DROP_AT, 3 frames after the drop click). */
+export function contentLandings(scenes: readonly SceneDef[] = SCENES): number[] {
+  return [
+    ...absolute(scenes, 'booking', [LAND_AT]),
+    ...absolute(scenes, 'estimate', [APPLY_AT]),
+    ...absolute(scenes, 'board', [DROP_AT]),
+  ].sort((a, b) => a - b);
+}
+
+/** Pop: a frame before each landing (POP_LEAD). */
+export function heroPopSfx(scenes: readonly SceneDef[] = SCENES): number[] {
+  return contentLandings(scenes).map((f) => f - POP_LEAD);
+}
+
+/** Ding: the success toast appears (Estimate TOAST_IN, «Блок добавлен в смету»; Booking has no toast). */
+export function heroDingSfx(scenes: readonly SceneDef[] = SCENES): number[] {
+  return absolute(scenes, 'estimate', [TOAST_IN]);
+}
+
 export type SfxCue = { name: SfxName; src: string; volume: number; frames: number; at: number };
 
-/** Every sound of the cut, in one list: clicks, then keys, then whooshes (absolute frames). The
- *  assembly renders exactly this list, so a test on it is a test on what plays. */
+const SFX_FRAMES: Record<SfxName, (scenes: readonly SceneDef[]) => number[]> = {
+  click: heroClickSfx,
+  key: heroKeySfx,
+  whoosh: heroWhooshSfx,
+  pop: heroPopSfx,
+  ding: heroDingSfx,
+};
+
+/** Every sound of the cut, in one list: clicks, keys, whooshes, pops, then dings (absolute frames;
+ *  each role's takes alternate by cue index). The assembly renders exactly this list, so a test on it
+ *  is a test on what plays. */
 export function sfxCues(scenes: readonly SceneDef[]): SfxCue[] {
-  const cue = (name: SfxName) => (at: number): SfxCue => ({ name, ...SFX[name], at });
-  return [
-    ...heroClickSfx(scenes).map(cue('click')),
-    ...heroKeySfx(scenes).map(cue('key')),
-    ...heroWhooshSfx(scenes).map(cue('whoosh')),
-  ];
+  return (Object.keys(SFX_FRAMES) as SfxName[]).flatMap((name) =>
+    SFX_FRAMES[name](scenes).map((at, i): SfxCue => {
+      const take = SFX_TAKES[name][i % SFX_TAKES[name].length];
+      return { name, src: take.src, volume: SFX_VOLUME[name], frames: takeFrames(take.samples), at };
+    }),
+  );
 }
 
 // ---- music ----
