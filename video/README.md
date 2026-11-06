@@ -46,6 +46,10 @@ export REMOTION_BROWSER=/path/to/chrome-headless-shell  # скрипты пер�
 - Глобально подключены все CSS фич CRM в порядке приложения (`src/providers/crm-styles.ts`) —
   в приложении они глобальные (`.back-link` наряда живёт в `clients/card.css`).
 - Шрифты — `@fontsource` (Inter, JetBrains Mono с кириллицей) из бандла, без сети.
+- Hero 1470 кадров (49,0 с), social 1200 (40,0 с). Титры глав — `src/kit/ChapterTitle.tsx` (текст —
+  `chapters` в `src/schema.ts`; кадры появления — `TITLES` каждой сцены, таблица — `titles.spec.ts`),
+  переходы — одно семейство «непрерывной камеры» `src/kit/CameraWipe.tsx` (чёткая маска с латунной
+  кромкой, без размытия и наплыва; бронь → смета раскрывает карточку записи), 30 кадров.
 - id композиций — только `a-z A-Z 0-9 -` (Remotion запрещает `_`): `Debug-Board`, не `Debug_Board`.
 - Лого сайдбара — обрезанные `public/brand/garage-crm-logo-{light,dark}-sidebar.png`.
 - `npm run prerender:mobile` — композиция `MobileMaster` (390×844, 6 с, h264 без звука) →
