@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { typed } from '../kit/math';
+import { CAM_EASE, typed } from '../kit/math';
 import { COLUMNS_AFTER, COLUMNS_BEFORE, DROP_AT, boardState } from '../scenes/Board';
 import { LAND_AT, bookingState } from '../scenes/Booking';
 import { DC_DTYPE, DC_KEY_FRAMES, DC_KIT_VALUE, DC_ORDER_VALUE, DC_PER_CHAR, DC_TYPE_10 } from '../scenes/discounts';
@@ -14,6 +14,7 @@ import {
   SFX_RATE,
   SFX_TAKES,
   SFX_VOLUME,
+  WHOOSH_APEX,
   WHOOSH_LEAD,
   assemblyPlan,
   contentLandings,
@@ -52,20 +53,34 @@ function readWav(file: string) {
 }
 
 describe('transitionFor', () => {
-  it('plan pairs: fade intro/booking, booking/estimate, docs/search, dashboard/outro', () => {
-    expect(transitionFor('intro', 'booking')).toBe('fade');
-    expect(transitionFor('booking', 'estimate')).toBe('fade');
-    expect(transitionFor('docs', 'search')).toBe('fade');
-    expect(transitionFor('dashboard', 'outro')).toBe('fade');
+  it('one family: a crisp wipe everywhere, the card opening from booking into estimate', () => {
+    expect(transitionFor('booking', 'estimate')).toEqual({ kind: 'card' });
+    for (const [a, b] of [
+      ['intro', 'booking'],
+      ['estimate', 'board'],
+      ['docs', 'search'],
+      ['search', 'dashboard'],
+      ['dashboard', 'outro'],
+      ['board', 'search'],
+    ] as const) {
+      expect(transitionFor(a, b)).toMatchObject({ kind: 'wipe', from: 'right' });
+    }
+    // The documents rise from below, as paper does.
+    expect(transitionFor('board', 'docs')).toMatchObject({ kind: 'wipe', from: 'bottom' });
   });
-  it('plan pairs: slide from-right estimate/board, board/docs, search/dashboard', () => {
-    expect(transitionFor('estimate', 'board')).toBe('slide');
-    expect(transitionFor('board', 'docs')).toBe('slide');
-    expect(transitionFor('search', 'dashboard')).toBe('slide');
+  it('every push-in focus is inside the frame', () => {
+    for (const scenes of [SCENES, SCENES_SOCIAL]) {
+      for (const p of assemblyPlan(scenes)) {
+        if (p.type !== 'transition' || p.spec.kind !== 'wipe') continue;
+        for (const v of [p.spec.focus.x, p.spec.focus.y]) {
+          expect(v).toBeGreaterThanOrEqual(0);
+          expect(v).toBeLessThanOrEqual(1);
+        }
+      }
+    }
   });
-  it('any pair not in the plan (social board→search) falls back to fade', () => {
-    expect(transitionFor('board', 'search')).toBe('fade');
-    expect(transitionFor('outro', 'intro')).toBe('fade');
+  it('a pair no cut has is an error, not a silent default', () => {
+    expect(() => transitionFor('outro', 'intro')).toThrow();
   });
 });
 
@@ -77,17 +92,17 @@ describe('assembly plan', () => {
     plan.forEach((p, i) => expect(p.type).toBe(i % 2 === 0 ? 'scene' : 'transition'));
   });
   it('hero: the 7 transitions in plan order', () => {
-    const kinds = assemblyPlan(SCENES).flatMap((p) => (p.type === 'transition' ? [p.kind] : []));
-    expect(kinds).toEqual(['fade', 'fade', 'slide', 'slide', 'fade', 'slide', 'fade']);
+    const kinds = assemblyPlan(SCENES).flatMap((p) => (p.type === 'transition' ? [p.spec.kind] : []));
+    expect(kinds).toEqual(['wipe', 'card', 'wipe', 'wipe', 'wipe', 'wipe', 'wipe']);
   });
   it('every transition lasts TRANSITION frames (linearTiming)', () => {
     for (const p of assemblyPlan(SCENES)) if (p.type === 'transition') expect(p.timing.getDurationInFrames({ fps: FPS })).toBe(TRANSITION);
   });
-  it('TransitionSeries total equals totalDuration (hero 1200 = 40.0 s, social 900 = 30.0 s)', () => {
+  it('TransitionSeries total equals totalDuration (hero 1470 = 49.0 s, social 1200 = 40.0 s)', () => {
     expect(planDuration(assemblyPlan(SCENES), FPS)).toBe(totalDuration(SCENES));
-    expect(planDuration(assemblyPlan(SCENES), FPS)).toBe(1200);
+    expect(planDuration(assemblyPlan(SCENES), FPS)).toBe(1470);
     expect(planDuration(assemblyPlan(SCENES_SOCIAL), FPS)).toBe(totalDuration(SCENES_SOCIAL));
-    expect(planDuration(assemblyPlan(SCENES_SOCIAL), FPS)).toBe(900);
+    expect(planDuration(assemblyPlan(SCENES_SOCIAL), FPS)).toBe(1200);
   });
   it('each scene enters the series at sceneStart()', () => {
     for (const scenes of [SCENES, SCENES_SOCIAL]) {
@@ -146,22 +161,24 @@ describe('sound effects', () => {
       expect(heroKeySfx(scenes)).toHaveLength(QUERY.length + 3);
     }
   });
-  it('key SFX in the hero: discounts 473 / 478 / 533, VIN 830…860 every 5 frames', () => {
-    expect(heroKeySfx()).toEqual([473, 478, 533, 830, 835, 840, 845, 850, 855, 860]);
+  it('key SFX in the hero: discounts 563 / 568 / 623, VIN 1025…1055 every 5 frames', () => {
+    expect(heroKeySfx()).toEqual([563, 568, 623, 1025, 1030, 1035, 1040, 1045, 1050, 1055]);
   });
-  it('whoosh SFX: 3 frames into each slide transition, so the file\'s apex (≈ 135 ms) is mid-transition', () => {
-    expect(WHOOSH_LEAD).toBe(3);
-    expect(heroWhooshSfx()).toEqual([sceneStart('board'), sceneStart('docs'), sceneStart('dashboard')].map((f) => f + 3));
-    expect(heroWhooshSfx(SCENES_SOCIAL)).toEqual([sceneStart('board', SCENES_SOCIAL), sceneStart('dashboard', SCENES_SOCIAL)].map((f) => f + 3));
+  it('whoosh SFX: one per transition, its apex (≈ 135 ms = 4 f into the file) on the transition\'s midpoint', () => {
+    expect(WHOOSH_APEX).toBe(4);
+    expect(WHOOSH_LEAD).toBe(TRANSITION / 2 - WHOOSH_APEX);
+    expect(WHOOSH_LEAD).toBe(11);
     for (const scenes of [SCENES, SCENES_SOCIAL]) {
-      const slides = assemblyPlan(scenes).flatMap((p) => (p.type === 'transition' && p.kind === 'slide' ? [sceneStart(p.to, scenes)] : []));
+      const starts = assemblyPlan(scenes).flatMap((p) => (p.type === 'transition' ? [sceneStart(p.to, scenes)] : []));
+      expect(heroWhooshSfx(scenes)).toHaveLength(scenes.length - 1);
       heroWhooshSfx(scenes).forEach((at, i) => {
-        const apex = at + 0.135 * FPS;
-        // The middle third of the 15-frame overlap.
-        expect(apex).toBeGreaterThanOrEqual(slides[i] + TRANSITION / 3);
-        expect(apex).toBeLessThanOrEqual(slides[i] + (2 * TRANSITION) / 3);
+        // The midpoint of the presentation's linear progress is also its eased midpoint (CAM_EASE is
+        // symmetric: CAM_EASE(0.5) = 0.5), where the wipe's edge crosses the frame's centre.
+        expect(at + WHOOSH_APEX).toBe(starts[i] + TRANSITION / 2);
+        expect(Math.abs(0.135 * FPS - WHOOSH_APEX)).toBeLessThan(0.1);
       });
     }
+    expect(CAM_EASE(0.5)).toBeCloseTo(0.5, 6);
   });
   it('content landings: each scene\'s own constant, and the frame its state actually changes on', () => {
     // Booking: the ghost → the booked order.
@@ -173,13 +190,13 @@ describe('sound effects', () => {
     expect(boardState(DROP_AT - 1, FPS).columns).toBe(COLUMNS_BEFORE);
     expect(boardState(DROP_AT, FPS).columns).toBe(COLUMNS_AFTER);
     expect(contentLandings()).toEqual([sceneStart('booking') + LAND_AT, sceneStart('board') + DROP_AT]);
-    expect(contentLandings()).toEqual([180, 648]);
-    expect(contentLandings(SCENES_SOCIAL)).toEqual([120, 558]);
+    expect(contentLandings()).toEqual([180, 753]);
+    expect(contentLandings(SCENES_SOCIAL)).toEqual([120, 693]);
   });
   it('pop SFX: POP_LEAD (1) frame before each landing, so the peak (≈ 42 ms) is on it; pop_1 then pop_2', () => {
     expect(POP_LEAD).toBe(1);
     for (const scenes of [SCENES, SCENES_SOCIAL]) expect(heroPopSfx(scenes)).toEqual(contentLandings(scenes).map((f) => f - 1));
-    expect(heroPopSfx()).toEqual([179, 647]);
+    expect(heroPopSfx()).toEqual([179, 752]);
   });
   it('the estimate block landing has no pop: the ding, 2 frames later, marks it', () => {
     // Estimate: the sheet closes, wo-hero.1 (the block) arrives at APPLY_AT.
@@ -200,8 +217,8 @@ describe('sound effects', () => {
     expect(estimateState(TOAST_IN - 1, FPS).toastOpacity).toBe(0);
     expect(estimateState(TOAST_IN + 1, FPS).toastOpacity).toBeGreaterThan(0);
     expect(heroDingSfx()).toEqual([sceneStart('estimate') + TOAST_IN]);
-    expect(heroDingSfx()).toEqual([380]);
-    expect(heroDingSfx(SCENES_SOCIAL)).toEqual([290]);
+    expect(heroDingSfx()).toEqual([395]);
+    expect(heroDingSfx(SCENES_SOCIAL)).toEqual([335]);
   });
   it('volumes: one table — clicks and keys under pops, the ding and the whooshes', () => {
     expect(Object.keys(SFX_VOLUME).sort()).toEqual(['click', 'ding', 'key', 'pop', 'whoosh']);
@@ -237,24 +254,23 @@ describe('sfxCues: the single list the assembly renders', () => {
   const pick = (scenes: Parameters<typeof sfxCues>[0], name: string) => sfxCues(scenes).filter((c) => c.name === name).map((c) => c.at);
   it('hero: every cue frame', () => {
     expect(pick(SCENES, 'click')).toEqual(clicksAbsolute(SCENES));
-    expect(pick(SCENES, 'click')).toEqual([135, 165, 270, 300, 345, 375, 450, 465, 495, 525, 600, 645, 870]);
-    expect(pick(SCENES, 'key')).toEqual([473, 478, 533, 830, 835, 840, 845, 850, 855, 860]);
-    expect(pick(SCENES, 'whoosh')).toEqual([573, 708, 948]);
-    expect(pick(SCENES, 'pop')).toEqual([179, 647]);
-    expect(pick(SCENES, 'ding')).toEqual([380]);
+    expect(pick(SCENES, 'click')).toEqual([135, 165, 285, 315, 360, 390, 540, 555, 585, 615, 705, 750, 1065]);
+    expect(pick(SCENES, 'key')).toEqual([563, 568, 623, 1025, 1030, 1035, 1040, 1045, 1050, 1055]);
+    expect(pick(SCENES, 'whoosh')).toEqual([71, 251, 686, 836, 986, 1181, 1361]);
+    expect(pick(SCENES, 'pop')).toEqual([179, 752]);
+    expect(pick(SCENES, 'ding')).toEqual([395]);
   });
   it('social: every cue frame', () => {
     expect(pick(SCENES_SOCIAL, 'click')).toEqual(clicksAbsolute(SCENES_SOCIAL));
-    expect(pick(SCENES_SOCIAL, 'click')).toEqual([75, 105, 180, 210, 255, 285, 360, 375, 405, 435, 510, 555, 645]);
+    expect(pick(SCENES_SOCIAL, 'click')).toEqual([75, 105, 225, 255, 300, 330, 480, 495, 525, 555, 645, 690, 855]);
     const s = sceneStart('search', SCENES_SOCIAL);
-    expect(s).toBe(585);
-    expect(pick(SCENES_SOCIAL, 'key')).toEqual([383, 388, 443, ...[20, 25, 30, 35, 40, 45, 50].map((f) => s + f)]);
-    // Social transitions: booking>estimate fade, estimate>board slide, board>search fade, search>dashboard slide, dashboard>outro fade.
-    const kinds = assemblyPlan(SCENES_SOCIAL).flatMap((p) => (p.type === 'transition' ? [`${p.from}>${p.to}:${p.kind}`] : []));
-    expect(kinds).toEqual(['booking>estimate:fade', 'estimate>board:slide', 'board>search:fade', 'search>dashboard:slide', 'dashboard>outro:fade']);
-    expect(pick(SCENES_SOCIAL, 'whoosh')).toEqual([483, 708]);
-    expect(pick(SCENES_SOCIAL, 'pop')).toEqual([119, 557]);
-    expect(pick(SCENES_SOCIAL, 'ding')).toEqual([290]);
+    expect(s).toBe(765);
+    expect(pick(SCENES_SOCIAL, 'key')).toEqual([503, 508, 563, ...[50, 55, 60, 65, 70, 75, 80].map((f) => s + f)]);
+    const kinds = assemblyPlan(SCENES_SOCIAL).flatMap((p) => (p.type === 'transition' ? [`${p.from}>${p.to}:${p.spec.kind}`] : []));
+    expect(kinds).toEqual(['booking>estimate:card', 'estimate>board:wipe', 'board>search:wipe', 'search>dashboard:wipe', 'dashboard>outro:wipe']);
+    expect(pick(SCENES_SOCIAL, 'whoosh')).toEqual([191, 626, 776, 971, 1121]);
+    expect(pick(SCENES_SOCIAL, 'pop')).toEqual([119, 692]);
+    expect(pick(SCENES_SOCIAL, 'ding')).toEqual([335]);
   });
   it('takes alternate by cue index: click_1/click_2, key_1…4 round-robin, pop_1/pop_2', () => {
     for (const scenes of [SCENES, SCENES_SOCIAL]) {
@@ -292,25 +308,25 @@ describe('sfxCues: the single list the assembly renders', () => {
       }
     }
   });
-  it('a scene list without search has only the discount keys; without slides, no whooshes', () => {
-    const noSearch = SCENES.filter((s) => s.id !== 'search');
+  it('a scene list without search has only the discount keys; a single scene has no whoosh', () => {
+    const noSearch = SCENES.filter((s) => ['booking', 'estimate', 'board'].includes(s.id));
     expect(sfxCues(noSearch).filter((c) => c.name === 'key')).toHaveLength(3);
-    const fadesOnly = SCENES.filter((s) => ['intro', 'booking', 'estimate'].includes(s.id));
-    expect(sfxCues(fadesOnly).some((c) => c.name === 'whoosh')).toBe(false);
-    expect(sfxCues(fadesOnly).filter((c) => c.name === 'pop')).toHaveLength(1);
+    const one = SCENES.filter((s) => s.id === 'booking');
+    expect(sfxCues(one).some((c) => c.name === 'whoosh')).toBe(false);
+    expect(sfxCues(one).filter((c) => c.name === 'pop')).toHaveLength(1);
   });
 });
 
 describe('music', () => {
   it('volume envelope: 0 → 0.8 over the first second, holds, 0 over the last 3 s', () => {
-    const v = (f: number) => musicVolume(f, 1200);
+    const v = (f: number) => musicVolume(f, 1470);
     expect(v(0)).toBe(0);
     expect(v(15)).toBeCloseTo(0.4);
     expect(v(30)).toBe(0.8);
     expect(v(500)).toBe(0.8);
-    expect(v(1110)).toBe(0.8);
-    expect(v(1155)).toBeCloseTo(0.4);
-    expect(v(1200)).toBe(0);
+    expect(v(1380)).toBe(0.8);
+    expect(v(1425)).toBeCloseTo(0.4);
+    expect(v(1470)).toBe(0);
     expect(v(2000)).toBe(0);
     expect(v(-5)).toBe(0);
   });

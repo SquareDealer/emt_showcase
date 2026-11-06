@@ -1,14 +1,35 @@
 // Pure timeline of the social cut's own chrome (the scenes and sounds are the shared assembly's).
-import { interpolate } from 'remotion';
-import { sceneStart, type SceneDef } from '../timing';
+import { CAM_EASE } from '../kit/math';
+import { wipeNormal, wipeOffset, wipePolygon, type Pt } from '../kit/CameraWipe';
+import { SOCIAL_FRAME } from '../kit/math';
+import { TRANSITION, sceneStart, type SceneDef } from '../timing';
+import { transitionFor } from './assembly';
 
-/** The band's fade: the first BAND_FADE frames of the dashboard → outro transition — gone before the
- *  outro's own large mark (which enters at 0.5 opacity) shows through the cross-fade: no double logo. */
-export const BAND_FADE = 6;
-
-/** BrandBand opacity at an absolute frame: on until the outro enters, gone BAND_FADE frames into it. */
-export function brandBandOpacity(frame: number, scenes: readonly SceneDef[]): number {
-  if (!scenes.some((s) => s.id === 'outro')) return 1;
+/**
+ * The brand band over the frame at an absolute frame: whole until the outro's transition starts, then
+ * the part of the band the incoming outro has not yet covered — it leaves with the wipe's edge, so the
+ * outro's own large mark (on the revealed side) and the band's never show side by side. `null` once the
+ * wipe has passed (the outro has the frame), else the band's visible polygon (frame px).
+ */
+export function brandBandRegion(frame: number, scenes: readonly SceneDef[]): Pt[] | null {
+  const { width: w, height: h } = SOCIAL_FRAME;
+  const full: Pt[] = [
+    { x: 0, y: 0 },
+    { x: w, y: 0 },
+    { x: w, y: h },
+    { x: 0, y: h },
+  ];
+  const i = scenes.findIndex((s) => s.id === 'outro');
+  if (i < 1) return full;
+  const spec = transitionFor(scenes[i - 1].id, 'outro');
+  if (spec.kind !== 'wipe') throw new Error('the outro is wiped in');
   const from = sceneStart('outro', scenes);
-  return interpolate(frame, [from, from + BAND_FADE], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  if (frame < from) return full;
+  if (frame >= from + TRANSITION) return null;
+  const e = CAM_EASE((frame - from) / TRANSITION);
+  const n = wipeNormal(spec.from);
+  // The band keeps the side the edge has not reached: p·n ≤ c, i.e. p·(−n) ≥ −c.
+  const c = wipeOffset(e, n, w, h);
+  const rest = wipePolygon(-c, { x: -n.x, y: -n.y }, w, h);
+  return rest.length >= 3 ? rest : null;
 }

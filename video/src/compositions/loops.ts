@@ -4,28 +4,23 @@ import type { PriceListRow, VehicleGeneration, WorkOrderStatus } from '@crm/lib/
 import { generations, priceList } from '../fixtures';
 import { CAM_EASE, countUp, type CamKey, type CursorPoint } from '../kit/math';
 import { FPS, SCENE_CLICKS } from '../timing';
+import { TITLE_OUT, titleVisible } from '../kit/ChapterTitle';
+import type { TitleCue } from '../kit/SceneTitles';
 import {
-  CALLOUT_AT as BOOKING_CALLOUT_AT,
   CAM as BOOKING_CAM,
+  PUSH_FROM as BOOKING_PUSH_FROM,
   CURSOR as BOOKING_CURSOR,
   SCROLL as BOOKING_SCROLL,
   bookingScroll,
 } from '../scenes/Booking';
 import {
-  APPLY_AT,
-  BLOCK_AT,
-  BLOCK_CAPTION_OUT,
   CAM as ESTIMATE_CAM,
   CURSOR as ESTIMATE_CURSOR,
   GEN_AT,
-  GEN_CAPTION_OUT,
   GEN_RING_OUT,
-  estimateState,
 } from '../scenes/Estimate';
 import { DC_CLICKS, discountsAt, discountsCursor, type DiscountsState } from '../scenes/discounts';
 import {
-  CALLOUT_AT as BOARD_CALLOUT_AT,
-  CALLOUT_OUT as BOARD_CALLOUT_OUT,
   CAM as BOARD_CAM,
   COLUMNS_AFTER,
   CURSOR as BOARD_CURSOR,
@@ -73,23 +68,33 @@ export type LoopSpec<S> = {
   clicks: number[];
   /** Data state at loop frame t — plain data, so the loop's ends compare with toEqual. */
   frame: (t: number) => S;
-  /** Opacity of each caption/highlight wrapper at loop frame t (0 before it appears) — what
-   *  Loops.tsx draws them with, so the spec tests the drawn values. */
+  /** The loop's chapter title (kit/ChapterTitle, unnumbered: a loop is not a chapter of the film). */
+  titles: readonly TitleCue[];
+  /** Opacity of each highlight wrapper at loop frame t (0 before it appears) — what Loops.tsx draws
+   *  them with, so the spec tests the drawn values; `title` is 1 while the slate is drawn at all. */
   overlays: (t: number) => Record<string, number>;
 };
+
+/** 1 while any of the loop's titles is drawn. */
+const titleOn = (titles: readonly TitleCue[], t: number) => (titles.some((c) => titleVisible(t, c.at, c.out)) ? 1 : 0);
 
 /** The strongest overlay at t (0 = nothing drawn over the window). */
 export const overlayMax = (spec: LoopSpec<unknown>, t: number) => Math.max(0, ...Object.values(spec.overlays(t)));
 
 // ---- LoopBooking (180): the Booking scene 0–149 (the timeline scrolls to Thursday 30–60, slot 75,
-// «Новая запись» 105, the order lands 120, caption 90), then the landed order fades out while the camera
-// pulls back to the week and the timeline scrolls back up to Monday with it (150–170). ----
+// «Новая запись» 105, the order lands 120, its title 30–135), then the landed order fades out while the
+// camera pulls back to the week and the timeline scrolls back up to Monday with it (150–170). ----
 const BK_FADE_FROM = 150;
 const BK_FADE = 15;
 const BK_BACK_TO = 170;
-const BK_CAPTION_OUT = 140;
+const BK_TITLES: readonly TitleCue[] = [{ key: 'booking', at: 30, out: BK_FADE_FROM - 15 }];
 const [, BK_CLICK_BOOKING] = SCENE_CLICKS.booking;
-const bookingKeys = BOOKING_CAM.wide.filter((k) => k.at <= 5).map(toLoop);
+/** The scene's wide keys up to its hold on Wednesday–Thursday (the push into the card is not looped),
+ *  the hold ending at 5 s where the pull-back starts. */
+const bookingKeys = [
+  ...BOOKING_CAM.wide.filter((k) => k.at < BOOKING_PUSH_FROM / FPS && k.at <= 2),
+  { ...BOOKING_CAM.wide.find((k) => k.at === BOOKING_PUSH_FROM / FPS)!, at: s(BK_FADE_FROM) },
+].map(toLoop);
 /** `scroll`: the timeline's scroll (UI px) — the scene's up to 149, then back to 0 with the camera. */
 export type BookingFrame = { scene: number; heroFade: number; scroll: number };
 export const BOOKING_LOOP: LoopSpec<BookingFrame> = {
@@ -109,14 +114,17 @@ export const BOOKING_LOOP: LoopSpec<BookingFrame> = {
       return { scene: BK_FADE_FROM - 1, heroFade: interpolate(t, [BK_FADE_FROM, BK_FADE_FROM + BK_FADE], [1, 0]), scroll: back };
     return { scene: 0, heroFade: 1, scroll: back };
   },
-  overlays: (t) => ({ caption: shown(t, BOOKING_CALLOUT_AT, BK_CAPTION_OUT) }),
+  titles: BK_TITLES,
+  overlays: (t) => ({ title: titleOn(BK_TITLES, t) }),
 };
 
 // ---- LoopEstimate (240): the Estimate scene 0–193 («+ Из прайса…» 45, the work 75, the sheet with
-// its generation price, the oil unticked 120, «Добавить» 150, the block lands, toast), then the order
-// dissolves back to wo-hero.0 (194–208) while the camera returns. ----
+// its generation price, the oil unticked 120, «Добавить» 150, the block lands on the block shot, toast),
+// then the order dissolves back to wo-hero.0 (194–208) while the camera returns. One title — the
+// block, from the sheet through the landing (the generation price has its own loop). ----
 const ES_END = 194;
 const ES_RESET = 15;
+const ES_TITLES: readonly TitleCue[] = [{ key: 'block', at: 75, out: ES_END - TITLE_OUT - 2 }];
 const [, , ES_OIL, ES_CONFIRM] = SCENE_CLICKS.estimate;
 const estimateKeys = ESTIMATE_CAM.wide.filter((k) => k.at <= s(180)).map(toLoop);
 export type EstimateFrame = { scene: number; reset: number };
@@ -146,24 +154,16 @@ export const ESTIMATE_LOOP: LoopSpec<EstimateFrame> = {
     if (t < ES_END + ES_RESET) return { scene: ES_END, reset: CAM_EASE((t - ES_END) / ES_RESET) };
     return { scene: 0, reset: 0 };
   },
-  // The Estimate scene's wide overlays, with its own timings: the generation-price ring, the
-  // generation caption (only while the sheet is up), «block» over the sheet, «block» under the line.
-  overlays: (t) => {
-    const sheet = t < ES_END ? estimateState(fromScene(t), FPS).modalOpacity : 0;
-    return {
-      ring: shown(t, GEN_AT, GEN_RING_OUT),
-      generation: Math.min(sheet, shown(t, GEN_AT, GEN_CAPTION_OUT)),
-      blockSheet: t < BLOCK_AT ? 0 : sheet,
-      blockLine: shown(t, APPLY_AT, BLOCK_CAPTION_OUT),
-    };
-  },
+  titles: ES_TITLES,
+  // The Estimate scene's generation-price ring, with its own timings, and the title.
+  overlays: (t) => ({ ring: shown(t, GEN_AT, GEN_RING_OUT), title: titleOn(ES_TITLES, t) }),
 };
 
 // ---- LoopDiscounts (180): the discount sequence of the Estimate scene (./scenes/discounts, the same
 // pure timeline the scene plays from its frame 195) on wo-hero.1: the chain kit's ✎ (30), its discount
 // field (45), «10» typed, ✓ (75): wo-hero.2, «Итого» counts 44 400 → 42 910 → the order discount «%»
 // (105), «5», applied (120): wo-hero.3, «Итого» counts to 40 764,50 by 135 and holds → dissolve back
-// to wo-hero.1 (165–174). No caption. ----
+// to wo-hero.1 (165–174). No title (the discounts have none in the film either). ----
 /** The dissolve back to wo-hero.1 (the settled total holds from DC_SETTLED to it). */
 export const DC_RESET = 165;
 const DC_RESET_LEN = 10;
@@ -200,6 +200,7 @@ export const DISCOUNTS_LOOP: LoopSpec<DiscountsFrame> = {
     if (t >= DC_RESET) return discountsFrame(DC_RESET - 1, CAM_EASE((t - DC_RESET) / DC_RESET_LEN));
     return discountsFrame(t, 0);
   },
+  titles: [],
   // Nothing drawn over the window: the kit line is marked by the app's own row outline (kitOutline),
   // not a dimming ring — «Итого» counts down at the same time and must stay bright.
   overlays: () => ({}),
@@ -248,8 +249,10 @@ export const PL_HIGHLIGHT = (() => {
   if (i < 0) throw new Error('price-list fixtures: no generation-dependent price');
   return priceList.R56[i].template.id;
 })();
-export const PL_CAPTION = 60;
-const PL_CAPTION_OUT = 150;
+/** The generation-price title: in on the first pick's landing beat, out before the camera pulls back. */
+export const PL_TITLES: readonly TitleCue[] = [{ key: 'generation', at: 45, out: 150 }];
+/** The pump's outline lasts while the prices change (to the title's exit). */
+const PL_HIGHLIGHT_OUT = 150;
 export type PriceListFrame = { gen: GenCode; from: GenCode; p: number; highlight: boolean };
 /** The rows PriceListView shows: the generation's fixture, prices counting from the previous one. */
 export function plRows(f: PriceListFrame): PriceListRow[] {
@@ -303,21 +306,23 @@ export const PRICE_LIST_LOOP: LoopSpec<PriceListFrame> = {
   clicks: PL_PICKS.flatMap((p) => [p.open, p.pick]),
   frame: (t) => {
     const last = [...PL_PICKS].reverse().find((p) => t >= p.at);
-    const highlight = t >= PL_PICKS[0].at && t < PL_CAPTION_OUT;
+    const highlight = t >= PL_PICKS[0].at && t < PL_HIGHLIGHT_OUT;
     if (!last) return { gen: 'R56', from: 'R56', p: 1, highlight };
     const p = Math.min(1, (t - last.at) / PL_COUNT);
     return { gen: last.to, from: p < 1 ? last.from : last.to, p, highlight };
   },
-  overlays: (t) => ({ caption: shown(t, PL_CAPTION, PL_CAPTION_OUT) }),
+  titles: PL_TITLES,
+  overlays: (t) => ({ title: titleOn(PL_TITLES, t) }),
 };
 
-// ---- LoopBoard (180): the Board scene's drag 0–119 (press 30, drop 75, settled by 92; caption
-// 60–102) without its pan, then a reset: 120–129 the hero fades out of «В работе», its gap closes and
+// ---- LoopBoard (180): the Board scene's drag 0–119 (press 30, drop 75, settled by 92; its title
+// 30–135) without its pan, then a reset: 120–129 the hero fades out of «В работе», its gap closes and
 // «Запланирована» makes room (the scene's settle in reverse); 130–139 it fades back in on top of
 // «Запланирована». ----
 const BD_RESET = 120;
 const BD_HALF = 10;
 const BD_REST = { x: 514, y: 480 };
+const BD_TITLES: readonly TitleCue[] = [{ key: 'board', at: 30, out: 135 }];
 export type BoardFrame = { scene: number; out: number; heroIn: number };
 export const BOARD_LOOP: LoopSpec<BoardFrame> = {
   id: 'LoopBoard',
@@ -341,7 +346,8 @@ export const BOARD_LOOP: LoopSpec<BoardFrame> = {
     if (t < BD_RESET + 2 * BD_HALF) return { scene: 0, out: 0, heroIn: (t - BD_RESET - BD_HALF) / BD_HALF };
     return { scene: 0, out: 0, heroIn: 1 };
   },
-  overlays: (t) => ({ caption: shown(t, BOARD_CALLOUT_AT, BOARD_CALLOUT_OUT) }),
+  titles: BD_TITLES,
+  overlays: (t) => ({ title: titleOn(BD_TITLES, t) }),
 };
 
 /** BoardWindow's state for a loop frame: the scene's state, never panned, plus the reset. */

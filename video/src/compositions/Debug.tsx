@@ -31,7 +31,8 @@ import { LoopCrossfade } from '../kit/LoopCrossfade';
 import { Camera } from '../kit/Camera';
 import { Cursor } from '../kit/Cursor';
 import { Highlight } from '../kit/Highlight';
-import { Callout } from '../kit/Callout';
+import { ChapterTitle } from '../kit/ChapterTitle';
+import { defaultProps } from '../schema';
 import { TypeText } from '../kit/TypeText';
 import { CountUp } from '../kit/CountUp';
 import { FakeSelect } from '../kit/FakeSelect';
@@ -243,12 +244,6 @@ export function DebugKit({ theme }: DebugProps) {
               }}
             />
             <Highlight rect={{ x: 80, y: 520, w: 360, h: 80 }} appearAt={45} />
-            <Callout
-              text="Цена — под поколение"
-              at={45}
-              anchor={{ x: 440, y: 560 }}
-              side="right"
-            />
             <Cursor
               path={[
                 { at: 0, x: 200, y: 250 },
@@ -260,6 +255,7 @@ export function DebugKit({ theme }: DebugProps) {
           </div>
         </AppWindow>
       </Camera>
+      <ChapterTitle copy={defaultProps.chapters.generation} index={{ n: 2, total: 7 }} at={45} out={66} />
     </VideoProviders>
   );
 }

@@ -8,14 +8,14 @@ export type CameraState = { x: number; y: number; zoom: number; centre: { x: num
 const CameraContext = createContext<CameraState | null>(null);
 /** Current camera zoom — overlays use it to keep their text size constant on screen. */
 export const useCameraZoom = () => useContext(CameraContext)?.zoom ?? 1;
-/** The camera the overlay is drawn under (null outside a Camera) — Callout's social plaque pins itself
- *  to the frame with it. */
+/** The camera an overlay is drawn under (null outside a Camera) — for overlays that pin themselves to
+ *  the frame (frameToUi). */
 export const useCameraState = () => useContext(CameraContext);
 
 /**
  * Pans/zooms its children (a 1440×900 UI-pixel stage). Key (x, y) is the UI point that sits at the
  * frame centre — in the social layout, at the centre of the stage between the brand band and the
- * caption plaque — so cursor/callouts placed in UI pixels inside the Camera follow the window.
+ * chapter band — so cursor/overlays placed in UI pixels inside the Camera follow the window.
  */
 export function Camera({ keys, children }: { keys: CamKey[]; children: ReactNode }) {
   const frame = useCurrentFrame();

@@ -10,8 +10,8 @@ import type { ShowcaseProps } from '../schema';
 import { AppWindow } from '../kit/AppWindow';
 import { Background } from '../kit/Background';
 import { Camera } from '../kit/Camera';
-import { Callout } from '../kit/Callout';
 import { Cursor } from '../kit/Cursor';
+import { SceneTitles, type TitleCue } from '../kit/SceneTitles';
 import { CAM_EASE, SOCIAL_STAGE, cursorAt, socialKeyForView, typed, type CamKey, type CursorPoint } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS, SCENE_CLICKS } from '../timing';
@@ -40,29 +40,26 @@ export const ROW_Y0 = 324.8;
 export const ROW_H = 54.5;
 /** `.card-grid` top: the end view's top edge sits in the gap above it. */
 export const GRID_TOP = 280;
-/** Empty right part of the `.client-meta` row (x 631–1406, y 184.5–256): the wide callout's pill. */
-const META_Y = 220;
-
 const [CLICK_HIT] = SCENE_CLICKS.search;
+/** ⌘K: the palette opens a beat after the transition has revealed the board (0–30), so the app's own
+ *  dimmed, 2-px-blurred backdrop is a state the viewer sees the app enter — never part of a transition. */
+export const PALETTE_AT = 30;
 /** The app's `palette-in` (150 ms) as a spring. */
 export const OPEN_FRAMES = 5;
-/** «WMWSV32» typed 15–50: a character every 5 frames (TypeText's default). */
-export const TYPE_FROM = 15;
+/** «WMWSV32» typed 45–80: a character every 5 frames (TypeText's default). */
+export const TYPE_FROM = PALETTE_AT + 15;
 export const FRAMES_PER_CHAR = 5;
 /** The click's effects land 3 frames after the press: the palette closes, the route switches. */
 export const SWITCH_AT = CLICK_HIT + 3;
-export const MOVE_FROM = 75;
-export const MOVE_TO = 135;
-/** Social: the camera holds on the card head until 90, then settles on the orders by SOCIAL_SETTLE (a
- *  15-frame move, as the other social moves) and holds them a beat before the slide (social dur 135). */
-export const SOCIAL_MOVE_FROM = 90;
-export const SOCIAL_SETTLE = 105;
-/** «Любая машина по VIN — за секунду» appears beside the hit as the hits narrow to the hero (45: «WMWSV3»,
- *  one hit) and stays through the switch; wide: gone by 75, before the camera moves; social: the bottom
- *  plaque, independent of the camera, stays to the end. */
-export const CALLOUT_AT = 45;
-const CALLOUT_OUT = 69;
-const CALLOUT_FADE = 6;
+export const MOVE_FROM = 105;
+export const MOVE_TO = 165;
+/** Social: the camera holds on the card head until 120, then settles on the orders by SOCIAL_SETTLE (a
+ *  15-frame move, as the other social moves) and holds them to the transition (195). */
+export const SOCIAL_MOVE_FROM = 120;
+export const SOCIAL_SETTLE = 135;
+/** Chapter 06: in as the hits narrow to the hero (75: «WMWSV3», one hit — the palette is short again,
+ *  frame y ≤ 345, far above the slate), through the click and down the order history; out at 180. */
+export const TITLES: readonly TitleCue[] = [{ key: 'vin', at: 75, out: 180 }];
 /** `.content` scroll at the end (UI px): wide — just enough for row 10 to clear the window's bottom
  *  edge; social — none (its orders shot is the panel head and the first nine rows). */
 export const SCROLL = { wide: 40, social: 0 } as const;
@@ -111,16 +108,16 @@ const s = (f: number) => f / FPS;
 // ---- cursor ----
 /** Click point on the hero hit: its vertical centre (between the VIN and the owner's name), left of its middle. */
 export const CLICK_POINT = { x: HIT.x + 190, y: HIT.y + HIT.h / 2 };
-// Rests below the window (out of view) while the first characters are typed, comes up from 34 as the
-// hits narrow to the hero and rests on it from 52 (hover), presses at 60; from the switch (63) it heads
+// Rests below the window (out of view) while the first characters are typed, comes up from 64 as the
+// hits narrow to the hero and rests on it from 82 (hover), presses at 90; from the switch (93) it heads
 // down-left — past the vehicles panel, through the empty page under it — and is out of every view (left
-// of x 264, below the window) by 84, so it never rests on the card's text.
-export const CURSOR_GONE = 84;
+// of x 264, below the window) by 114, so it never rests on the card's text.
+export const CURSOR_GONE = 114;
 /** Window px left of every view (wide ≥ 264, social ≥ 263) and below the window. */
 export const CURSOR_PARK = { x: 200, y: 1000 };
 const CURSOR: CursorPoint[] = [
   { at: 0, x: 1180, y: 1000 },
-  { at: s(34), x: 1180, y: 1000 },
+  { at: s(64), x: 1180, y: 1000 },
   { at: s(CLICK_HIT - 8), ...CLICK_POINT },
   { at: s(SWITCH_AT), ...CLICK_POINT },
   { at: s(CURSOR_GONE), ...CURSOR_PARK },
@@ -131,10 +128,12 @@ export function searchState(frame: number, fps: number, social = false) {
   const q = typed(frame, TYPE_FROM, QUERY, FRAMES_PER_CHAR);
   return {
     open: frame < SWITCH_AT,
+    /** The palette is up (⌘K pressed): from PALETTE_AT to the switch. */
+    palette: frame >= PALETTE_AT && frame < SWITCH_AT,
     q,
     hits: q ? searchByPrefix[q] : [],
     /** 0 → 1: the palette's fade/drop-in. */
-    openP: spring({ frame, fps, config: { damping: 200 }, durationInFrames: OPEN_FRAMES }),
+    openP: spring({ frame: frame - PALETTE_AT, fps, config: { damping: 200 }, durationInFrames: OPEN_FRAMES }),
     cursor: cursorAt(frame, fps, CURSOR),
     scroll: interpolate(frame, [social ? SOCIAL_MOVE_FROM : MOVE_FROM, MOVE_TO], [0, social ? SCROLL.social : SCROLL.wide], {
       ...clamp,
@@ -170,6 +169,7 @@ export function SearchWindow({
         brandName={brandName}
         state={state.board}
         overlays={
+          state.palette ? (
           <div data-demo="search-open" style={{ display: 'contents' }}>
             {/* The app's `palette-in` keyframes (fade, −6 px, 0.99 scale), driven by the frame. The
                 backdrop's own `backdrop-filter: blur(2px)` mirrors the board's clipped (panned) left
@@ -191,6 +191,7 @@ export function SearchWindow({
               onClose={noop}
             />
           </div>
+          ) : undefined
         }
       />
     );
@@ -236,12 +237,13 @@ export function SearchWindow({
 // ---- camera (seconds, UI px at frame centre) ----
 // WIDE. TOP 1.6× (view 1200×675): x 240–1440 — the content area right of the sidebar to the window's
 // edge; y 76.5–751.5 — from just above the back link (81) down past the palette's foot at its tallest
-// (738). The palette (410–1030) sits left, the callout's pill fills the right (1046–~1400) level with
-// the hit. After the switch the same view shows the back link, the card head (actions end at 1406), the
+// (738; the long lists of the first prefixes only — from 75, one hit, the palette ends at frame y 345,
+// far above the chapter slate). After the switch the same view shows the back link, the card head (actions end at 1406), the
 // stats and the top of both panels.
 // END 1.667× (view 1152×648): x 264–1416 — both panels whole (274–1406); y in the page: 276.3–924.3 —
 // from the gap above the panels (grid at 280) to the line under row 10 (324.8 + 54.5·11 = 924.3):
-// the panel head and rows 0–10, every row whole. The page is scrolled by 40 (window y = page y − 40),
+// the panel head and rows 0–10, every row whole (the slate, out by 192, covers the left of rows 9–10
+// during 165–192 only). The page is scrolled by 40 (window y = page y − 40),
 // so the view's bottom (884.3) stays inside the 900-px window.
 const TOP = { x: 840, y: 414, zoom: 1.6 };
 const END_ZOOM = 1920 / 1152;
@@ -249,12 +251,12 @@ const END_TOP_PAGE = ROW_Y0 + ROW_H * 11 - 1080 / END_ZOOM;
 const END = { x: 840, y: END_TOP_PAGE + 540 / END_ZOOM - SCROLL.wide, zoom: END_ZOOM };
 // SOCIAL (stage 1080×970 between the bands), one zone at a time:
 //   PALETTE 1.7 (view 635×571): x 402–1038 — the palette (410–1030) edge to edge; y 100–670 — its input
-//           and the hits (the one hero hit from 45; the 50-hit list of the first prefixes runs past the
+//           and the hits (the one hero hit from 75; the 50-hit list of the first prefixes runs past the
 //           stage's bottom edge).
-//   HEAD    2.45 by 76 (view 441×396): x 264–704 — the back link, avatar, name, phone, stats and the
+//   HEAD    2.45 by 106 (view 441×396): x 264–704 — the back link, avatar, name, phone, stats and the
 //           vehicles panel (274–694), short of the orders panel (710); y 75–471 — back link (81) to the
 //           vehicles panel's bottom (461).
-//   ORDERS  1.95 from 90 by 105 (view 554×498): x 704–1258 — the orders panel from its left edge: titles,
+//   ORDERS  1.95 from 120 by 135 (view 554×498): x 704–1258 — the orders panel from its left edge: titles,
 //           cars, dates and the status chips (end 1251); the amounts (from 1267) are left out whole, not
 //           cut; y 263–760.8 — under the stats (256), the panel head and rows 0–7, the bottom edge on the
 //           line under row 7. The page doesn't scroll.
@@ -280,54 +282,32 @@ export const CAM: { wide: CamKey[]; social: CamKey[] } = {
   social: [
     { at: 0, ...SOCIAL_PALETTE },
     { at: s(SWITCH_AT), ...SOCIAL_PALETTE },
-    { at: s(76), ...SOCIAL_HEAD },
+    { at: s(SWITCH_AT + 13), ...SOCIAL_HEAD },
     { at: s(SOCIAL_MOVE_FROM), ...SOCIAL_HEAD },
     { at: s(SOCIAL_SETTLE), ...SOCIAL_ORDERS },
   ],
 };
 
-/** The wide callout's dot (window px): right of the palette level with the hit; after the switch the
- *  same spot is the empty right part of the stats row: below «Изменить»/«Удалить» (end 152.5), above the
- *  panels (280). It rides with the page's scroll, so it never slides over the panels. (Social: the
- *  bottom plaque, no anchor.) */
-export const calloutAnchor = (scroll: number) => ({ x: HIT.x + HIT.w + 9, y: META_Y - scroll });
-
-/** The callout's opacity on top of its own spring-in (0 before CALLOUT_AT, fades out by CALLOUT_OUT + 6). */
-export const calloutOpacity = (frame: number, social: boolean) => {
-  if (frame < CALLOUT_AT) return 0;
-  return social ? 1 : interpolate(frame, [CALLOUT_OUT, CALLOUT_OUT + CALLOUT_FADE], [1, 0], clamp);
-};
-
 /**
- * Search (150 f): ⌘K palette opens over the board (0) → «WMWSV32» typed 15–50, the hits narrow with
- * each prefix to the hero R56 — callout «Любая машина по VIN — за секунду» beside the hit from 45 →
- * click on it (60; effects 63): the palette closes, the client's card opens → 75–135 down the order
- * history: the timing chain in progress on top, the R56's diagnostics and the past visits under it.
+ * Search (225 f): the board (revealed by the transition, 0–30) → ⌘K palette opens over it (30) →
+ * «WMWSV32» typed 45–80, the hits narrow with each prefix to the hero R56, chapter 06 (75–180) →
+ * click on it (90; effects 93): the palette closes, the client's card opens → 105–165 down the order
+ * history: the timing chain in progress on top, the R56's diagnostics and the past visits under it,
+ * held to the transition (195).
  */
-export function SearchScene({ theme, brand, callouts, accent }: ShowcaseProps) {
+export function SearchScene({ theme, brand, chapters, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
   const state = searchState(frame, fps, social);
-  const callout = calloutOpacity(frame, social);
   return (
     <AbsoluteFill>
       <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <SearchWindow theme={theme} brandName={brand.name} state={state} />
-        {callout > 0 ? (
-          <div style={{ position: 'absolute', left: 0, top: 0, opacity: callout, zIndex: 90 }}>
-            <Callout
-              text={callouts.vin}
-              at={CALLOUT_AT}
-              anchor={calloutAnchor(state.scroll)}
-              side="right"
-              accent={accent}
-            />
-          </div>
-        ) : null}
         <Cursor path={CURSOR} clicks={SCENE_CLICKS.search} accent={accent} />
       </Camera>
+      <SceneTitles cues={TITLES} chapters={chapters} accent={accent} />
     </AbsoluteFill>
   );
 }

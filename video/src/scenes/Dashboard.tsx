@@ -9,7 +9,7 @@ import type { ShowcaseProps } from '../schema';
 import { AppWindow } from '../kit/AppWindow';
 import { Background } from '../kit/Background';
 import { Camera } from '../kit/Camera';
-import { Callout } from '../kit/Callout';
+import { SceneTitles, type TitleCue } from '../kit/SceneTitles';
 import { countUp, type CamKey } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS } from '../timing';
@@ -36,9 +36,16 @@ import { FPS } from '../timing';
 
 /** Bars, load and top bars grow and the KPIs count up over 0–GROW (spring). */
 export const GROW = 45;
-/** `highlight='revenue'` from REVENUE_AT, `highlight='load'` from LOAD_AT to the end. */
+/** `highlight='revenue'` from REVENUE_AT, `highlight='load'` from the load beat to the end: wide
+ *  LOAD_AT (after chapter 07 has gone), social SOCIAL_LOAD_AT (the title is in the band there). */
 export const REVENUE_AT = 45;
-export const LOAD_AT = 90;
+export const LOAD_AT = 150;
+export const SOCIAL_LOAD_AT = 90;
+export const loadAt = (social: boolean) => (social ? SOCIAL_LOAD_AT : LOAD_AT);
+/** Chapter 07. Wide: in as the camera settles on the revenue chart (framed above the slate), out as it
+ *  moves on to the load. Social (the bottom band): from 30, out before the transition (150). */
+export const TITLES: readonly TitleCue[] = [{ key: 'dashboard', at: 45, out: 150 }];
+export const SOCIAL_TITLES: readonly TitleCue[] = [{ key: 'dashboard', at: 30, out: 135 }];
 
 const brandFor = (name: string): Brand => ({
   name,
@@ -57,23 +64,9 @@ const LABEL_H = 19.5;
 const LABEL_GAP = 6;
 /** Top edge (window px) of a month's value label — DashboardView's `bottom: calc(h% + 6px)`. */
 export const labelTop = (v: number, max: number) => PLOT_BOTTOM - (v / (max * 1.06)) * PLOT_H - LABEL_GAP - LABEL_H;
-/** The wide callout (dot y 412): pill 60 screen px tall (30-px type + 2×12 padding), ≤ 37.5 UI px from the
- *  moment it is visible (zoom ≥ 1.6 from frame 61), so its bottom edge is at most at 412 + 18.75. */
-export const PILL_BOTTOM = 412 + 60 / 1.6 / 2;
-/** Clearance between the pill and the Jun–Sep value labels under it. */
-const PILL_CLEAR = 8;
 {
   const rev = dashboard.revenueByMonth.map((m) => m.revenue);
-  const top = Math.max(...rev);
   if (rev.length !== 6 || !dashboard.partialLast) throw new Error('Dashboard: expected 6 months with the current one partial — re-measure');
-  // The callout's dot sits left of October's bar and the pill spans the Jun–Sep slots: October must be
-  // the highest bar, and every Jun–Sep label must stay under the pill (Sep today: 463.3 vs ≤ 438.75).
-  if (rev[4] !== top) throw new Error('Dashboard: October is not the highest month — the callout sits beside its bar; re-measure');
-  rev.slice(0, 4).forEach((v, i) => {
-    if (labelTop(v, top) < PILL_BOTTOM + PILL_CLEAR) {
-      throw new Error(`Dashboard: month ${i} label (top ${labelTop(v, top).toFixed(1)}) would touch the callout — re-measure`);
-    }
-  });
   if (dashboard.masterLoad.length !== 3 || dashboard.topWorks.length !== 5) throw new Error('Dashboard: 3 masters / 5 top works expected — re-measure');
 }
 
@@ -99,7 +92,7 @@ export function dashboardState(frame: number, fps: number, social = false) {
     },
   };
   const highlight: 'revenue' | 'load' | undefined =
-    frame >= LOAD_AT ? 'load' : frame >= REVENUE_AT && !social ? 'revenue' : undefined;
+    frame >= loadAt(social) ? 'load' : frame >= REVENUE_AT && !social ? 'revenue' : undefined;
   return { progress, data, highlight };
 }
 
@@ -141,15 +134,16 @@ export function DashboardWindow({
 
 // ---- camera (seconds, UI px at frame centre) ----
 // WIDE. OVERVIEW 1.15× — the whole window with a margin, while the KPIs count up and the bars grow.
-// REVENUE 1.66× (view 1157×651): x 241–1398 — from the sidebar's edge, the revenue panel on the left and
-// the right column past its numbers (end 1381; its own border at 1406 is cut); y 249–899 — under the KPI
-// cards (end 245.7), the whole panel (269.7–876) with ~20 px around it.
+// REVENUE 1.45× (view 1324×745): x 116–1440 — the revenue panel on the left and the right column to the
+// window's edge; y 246–991 — under the KPI cards (end 245.7), the whole panel (269.7–876 → frame
+// 35–916) above the chapter slate (frame y ≥ 924); the window's bottom edge (frame 948) shows over the
+// backdrop right of the slate.
 // LOAD 2.32× (view 828×466): x 608–1436 — between August's and September's labels (599.4 | 635.3) to the
 // window's edge, the load panel with its margin; y 120–585.5 — the KPI cards whole (the first one cut in
 // its empty right part), the load panel, the top works' title and first row; the edge under it crops
 // only bar bodies (Sep–Nov).
 const OVERVIEW = { x: 720, y: 450, zoom: 1.15 };
-const REVENUE = { x: 819.3, y: 574, zoom: 1.66 };
+const REVENUE = { x: 1440 - 960 / 1.45, y: 877 - 375 / 1.45, zoom: 1.45 };
 const LOAD = { x: 1022, y: 352.75, zoom: 2.32 };
 // SOCIAL (stage 1080×970 between the bands), one zone at a time:
 //   KPI   1.7 (view 635×571): x 273.4–908.6 — the revenue card whole (274–640.7) counting up, the orders
@@ -180,7 +174,7 @@ const keysThrough = ([a, b, c]: { x: number; y: number; zoom: number }[]): CamKe
 /** Social moves take a beat each, on the beat (chart 45→60, load 75→90), so every settled shot holds
  *  a beat in the social cut's 120 frames: the chart 60–75, the load 90–105 (then the fade). */
 export const SOCIAL_MOVE = 15;
-export const SOCIAL_LOAD_FROM = LOAD_AT - SOCIAL_MOVE;
+export const SOCIAL_LOAD_FROM = SOCIAL_LOAD_AT - SOCIAL_MOVE;
 export const CAM: { wide: CamKey[]; social: CamKey[] } = {
   wide: keysThrough([OVERVIEW, REVENUE, LOAD]),
   social: [
@@ -188,55 +182,28 @@ export const CAM: { wide: CamKey[]; social: CamKey[] } = {
     { at: s(REVENUE_AT), ...SOCIAL_KPI },
     { at: s(REVENUE_AT + SOCIAL_MOVE), ...SOCIAL_CHART },
     { at: s(SOCIAL_LOAD_FROM), ...SOCIAL_CHART },
-    { at: s(LOAD_AT), ...SOCIAL_LOAD },
+    { at: s(SOCIAL_LOAD_AT), ...SOCIAL_LOAD },
   ],
 };
 
-/** «Владелец видит выручку и загрузку» from 60 (on the beat), gone before the camera leaves the chart. */
-export const CALLOUT_AT = 60;
-export const CALLOUT_OUT = LOAD_AT - 6;
-const CALLOUT_FADE = 6;
-/** The wide callout's dot (window px): in the gap left of October's bar (745.8), the pill to its left
- *  over the chart's empty band — under the top gridline (371.4), above September's label (463.3), and
- *  right of the panel's left edge (pill ~355 UI px at 1.66×: x ~368–723). Social: the bottom plaque. */
-export const CALLOUT_ANCHOR = { x: 738, y: 412 };
-/** Wide: gone before the camera leaves the chart; social: the plaque (independent of the camera) stays
- *  through the load shot — the caption names both. */
-export const calloutOpacity = (frame: number, social: boolean) =>
-  frame < CALLOUT_AT
-    ? 0
-    : social
-      ? 1
-      : interpolate(frame, [CALLOUT_OUT, CALLOUT_OUT + CALLOUT_FADE], [1, 0], clamp);
-
 /**
- * Dashboard (150 f): the owner's overview for the last full month — the bars, load and top works grow
- * and the KPIs count up 0–45 → camera on the revenue chart (45, ring) with «Владелец видит выручку и
- * загрузку» at 60 → camera on the masters' load (90, ring), held to the end.
+ * Dashboard (wide 210 f, social 180): the owner's overview for the last full month — the bars, load and
+ * top works grow and the KPIs count up 0–45 → camera on the revenue chart (45, ring), chapter 07
+ * (45–150) → camera on the masters' load (150, ring), held to the transition (180). Social: chart 45–60,
+ * load 75–90, title 30–135 in the band.
  */
-export function DashboardScene({ theme, brand, callouts, accent, dashboardDeltaLabel }: ShowcaseProps) {
+export function DashboardScene({ theme, brand, chapters, accent, dashboardDeltaLabel }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
   const state = dashboardState(frame, fps, social);
-  const callout = calloutOpacity(frame, social);
   return (
     <AbsoluteFill>
       <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <DashboardWindow theme={theme} brandName={brand.name} deltaLabel={dashboardDeltaLabel} state={state} />
-        {callout > 0 ? (
-          <div style={{ position: 'absolute', left: 0, top: 0, opacity: callout, zIndex: 90 }}>
-            <Callout
-              text={callouts.dashboard}
-              at={CALLOUT_AT}
-              anchor={CALLOUT_ANCHOR}
-              side="left"
-              accent={accent}
-            />
-          </div>
-        ) : null}
       </Camera>
+      <SceneTitles cues={social ? SOCIAL_TITLES : TITLES} chapters={chapters} accent={accent} />
     </AbsoluteFill>
   );
 }

@@ -1,24 +1,34 @@
 import { describe, expect, it } from 'vitest';
 import { SCENES_SOCIAL, TRANSITION, sceneStart, totalDuration } from '../timing';
-import { BAND_FADE, brandBandOpacity } from './social';
+import { brandBandRegion } from './social';
+import { SOCIAL_FRAME } from '../kit/math';
 import { outroFade } from '../scenes/Outro';
 
 describe('social brand band', () => {
   const outro = sceneStart('outro', SCENES_SOCIAL);
-  it('is on from the first frame through the dashboard', () => {
-    expect(outro).toBe(810);
-    for (const f of [0, 1, 300, outro]) expect(brandBandOpacity(f, SCENES_SOCIAL)).toBe(1);
+  const area = (pts: { x: number; y: number }[]) =>
+    Math.abs(pts.reduce((a, p, i) => a + p.x * pts[(i + 1) % pts.length].y - pts[(i + 1) % pts.length].x * p.y, 0)) / 2;
+  const FULL = SOCIAL_FRAME.width * SOCIAL_FRAME.height;
+  it('is whole from the first frame until the outro\'s transition starts', () => {
+    expect(outro).toBe(1110);
+    for (const f of [0, 1, 300, outro - 1, outro]) expect(area(brandBandRegion(f, SCENES_SOCIAL)!)).toBeCloseTo(FULL, 3);
   });
-  it('fades out in the first 6 frames of the dashboard → outro transition, before the outro\'s own mark shows', () => {
-    expect(BAND_FADE).toBeLessThanOrEqual(6);
-    expect(BAND_FADE).toBeLessThan(TRANSITION);
-    expect(brandBandOpacity(outro + BAND_FADE / 2, SCENES_SOCIAL)).toBeCloseTo(0.5);
-    for (let f = outro + BAND_FADE; f <= outro + TRANSITION; f++) expect(brandBandOpacity(f, SCENES_SOCIAL)).toBe(0);
-    expect(brandBandOpacity(totalDuration(SCENES_SOCIAL) - 1, SCENES_SOCIAL)).toBe(0);
+  it('leaves with the wipe\'s edge: the uncovered part shrinks every frame, gone once the outro has the frame', () => {
+    let prev = FULL + 1;
+    for (let f = outro + 1; f < outro + TRANSITION; f++) {
+      const r = brandBandRegion(f, SCENES_SOCIAL);
+      const a = r ? area(r) : 0;
+      expect(a).toBeLessThanOrEqual(prev);
+      prev = a;
+    }
+    // Half the frame is covered at the transition's midpoint (the eased curve is symmetric).
+    expect(area(brandBandRegion(outro + TRANSITION / 2, SCENES_SOCIAL)!) / FULL).toBeCloseTo(0.5, 1);
+    expect(brandBandRegion(outro + TRANSITION, SCENES_SOCIAL)).toBeNull();
+    expect(brandBandRegion(totalDuration(SCENES_SOCIAL) - 1, SCENES_SOCIAL)).toBeNull();
   });
   it('a cut without an outro keeps the band to the end', () => {
     const noOutro = SCENES_SOCIAL.filter((s) => s.id !== 'outro');
-    expect(brandBandOpacity(totalDuration(noOutro) - 1, noOutro)).toBe(1);
+    expect(brandBandRegion(totalDuration(noOutro) - 1, noOutro)).not.toBeNull();
   });
 });
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { SCENE_CLICKS } from '../timing';
-import { BLOCK, CALLOUT_ANCHOR, docsState, ORDER_DX, SMETA_DX, DOCS_CAMERA, SHEET_H, SHEET_W, toScreen, ZOOM_BLOCK, ZOOM_PAIR } from './Docs';
+import { SLATE_TOP, TITLE_OUT } from '../kit/ChapterTitle';
+import { BLOCK, TITLES, docsState, ORDER_DX, SMETA_DX, DOCS_CAMERA, SHEET_H, SHEET_W, toScreen, ZOOM_BLOCK, ZOOM_PAIR } from './Docs';
 
 const at = (f: number) => docsState(f, 30);
 
@@ -17,16 +18,19 @@ describe('docs scene state', () => {
     expect(at(119).orderX).toBeCloseTo(ORDER_DX, 0);
   });
 
-  it('callout: shown until 72, gone by 78', () => {
-    expect(at(60).calloutOpacity).toBe(1);
-    expect(at(78).calloutOpacity).toBe(0);
+  it('chapter 05 never covers the block the camera settles on (45–75): it sits above the slate', () => {
+    const [t] = TITLES;
+    for (let f = Math.max(t.at, 45); f <= 75; f++) {
+      expect(toScreen(f, { x: BLOCK.x, y: BLOCK.y + BLOCK.h }).y).toBeLessThanOrEqual(SLATE_TOP);
+    }
+    expect(t.out + TITLE_OUT).toBeLessThanOrEqual(150);
   });
 
   it('never upscales the raster past 1:1', () => {
     for (const k of DOCS_CAMERA) expect(k.zoom).toBeLessThanOrEqual(1);
   });
 
-  it('at 45 the whole block is on screen and the callout dot is right of the paper, clear of the block', () => {
+  it('at 45 the whole block is on screen, centred', () => {
     const tl = toScreen(45, { x: BLOCK.x, y: BLOCK.y });
     const br = toScreen(45, { x: BLOCK.x + BLOCK.w, y: BLOCK.y + BLOCK.h });
     expect(tl.x).toBeGreaterThanOrEqual(0);
@@ -34,9 +38,7 @@ describe('docs scene state', () => {
     expect(br.x).toBeLessThanOrEqual(1920);
     expect(br.y).toBeLessThanOrEqual(1080);
     expect(br.x - tl.x).toBeCloseTo(BLOCK.w * ZOOM_BLOCK, 3);
-    const dot = toScreen(45, CALLOUT_ANCHOR);
-    expect(dot.x).toBeGreaterThan(toScreen(45, { x: SHEET_W, y: 0 }).x);
-    expect(dot.x).toBeGreaterThan(br.x);
+    expect((tl.x + br.x) / 2).toBeCloseTo(960, 3);
   });
 
   it('final view holds both sheets (left of the order, right of the fanned smeta)', () => {

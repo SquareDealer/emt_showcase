@@ -13,8 +13,8 @@ export function captionBandFits(layout: Layout, width: number, height: number): 
  *
  * `captionBand`: in the social cut (a 1080×1350 composition — not any portrait one, so MobileMaster's
  * 390×844 is untouched) the bottom SOCIAL_FRAME.captionH px are painted PLAQUE_BG, so the caption zone
- * stays dark between plaques instead of showing the gradient. It sits under the window; the Callout
- * plaques draw on top as before. Wide layouts render exactly as without it.
+ * stays dark between chapter titles instead of showing the gradient. It sits under the window; the
+ * titles draw on top. Wide layouts render exactly as without it.
  */
 export function Background({ theme, captionBand = false }: { theme: 'light' | 'dark'; captionBand?: boolean }) {
   const layout = useLayout();

@@ -4,8 +4,9 @@ import { Background } from '../kit/Background';
 import { BrandMark } from '../kit/BrandMark';
 import { useLayout } from '../kit/useLayout';
 
-/** Intro (75 f): mark 0–15, tagline on beat 15 (spring from below), brass rule on beat 30. */
-export function IntroScene({ brand, callouts, accent }: ShowcaseProps) {
+/** Intro (90 f): mark 0–15, tagline on beat 15 (spring from below), brass rule on beat 30; the
+ *  booking is wiped in over 60–90. */
+export function IntroScene({ brand, tagline, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
@@ -42,7 +43,7 @@ export function IntroScene({ brand, callouts, accent }: ShowcaseProps) {
                 textWrap: 'balance',
               }}
             >
-              {callouts.intro}
+              {tagline}
             </div>
           )}
           <div style={{ width: 160, height: 4, borderRadius: 2, background: accent, transform: `scaleX(${frame >= 30 ? rule : 0})` }} />

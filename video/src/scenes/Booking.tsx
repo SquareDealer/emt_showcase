@@ -16,8 +16,8 @@ import { AppWindow } from '../kit/AppWindow';
 import { Background } from '../kit/Background';
 import { Camera } from '../kit/Camera';
 import { Cursor } from '../kit/Cursor';
-import { Callout, type Side } from '../kit/Callout';
-import { CAM_EASE, socialKeyForView, type CamKey, type CursorPoint } from '../kit/math';
+import { SceneTitles, type TitleCue } from '../kit/SceneTitles';
+import { CAM_EASE, cameraAt, cameraCentre, socialKeyForView, type CamKey, type CursorPoint, type Layout } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS, SCENE_CLICKS } from '../timing';
 
@@ -44,8 +44,7 @@ import { FPS, SCENE_CLICKS } from '../timing';
 // fixtures with the app's row formula (BANDS) and checked against these numbers in booking.spec.
 // The 7 rows (1348 px) do not fit the 630-px box: the timeline scrolls (0 → SCROLL, frames 30–60)
 // until Thursday's row ends at the box's bottom — Wednesday (today, the now-line) and Thursday whole,
-// Tuesday's lower lanes under the time axis — so the empty page strip under the box (818.5–900) is
-// right below the slot, for the callout. The app scrolls `.stl-scroll`; here the rows slide by the same amount inside
+// Tuesday's lower lanes under the time axis. The app scrolls `.stl-scroll`; here the rows slide by the same amount inside
 // its clip (a scrollTop set in a still doesn't paint), under the sticky time axis, as in the app.
 // ---------------------------------------------------------------------------------------------
 /** Left of the lanes = the 08:00 line. */
@@ -65,8 +64,13 @@ const bandPx = (lanes: number) => Math.max(120, lanes * 80);
 
 const [CLICK_SLOT, CLICK_BOOKING] = SCENE_CLICKS.booking;
 export const MENU_IN = 82;
-export const CALLOUT_AT = 90;
 export const LAND_AT = 120;
+/** Chapter 01, in on the beat as the camera settles on Wednesday–Thursday, out once the order has
+ *  landed and is outlined; then the order holds alone a beat before the camera pushes into it. */
+export const TITLES: readonly TitleCue[] = [{ key: 'booking', at: 45, out: 150 }];
+/** The push into the landed order (5.5 → 7 s): the estimate opens out of its card (the transition). */
+export const PUSH_FROM = 165;
+export const PUSH_TO = 210;
 /** The timeline's scroll to Thursday: with the camera's push (1 → 2 s). */
 const SCROLL_FROM = 30;
 const SCROLL_TO = 60;
@@ -167,47 +171,60 @@ const slotCentre = { x: SLOT.x + SLOT.w / 2, y: SLOT.y + SLOT.h / 2 };
 export const MENU = { x: SLOT.x - 14 - 420, y: slotCentre.y - 205 / 2, w: 420, h: 205 };
 /** «Новая запись»: the pointer tip on its label text (left part of the row, as before). */
 const BOOKING = { x: 546, y: 685 };
-/** Wide callout: its dot on the middle of the slot's bottom edge, the pill below it in the empty page
- *  strip under the timeline box — clear of the slot, the menu, every order. */
-export const CALLOUT_ANCHOR = { x: slotCentre.x, y: SLOT.y + SLOT.h };
-export const CALLOUT_SIDE: Side = 'bottom';
 
 // ---- camera (seconds, UI px at frame centre) and cursor ----
 // Wide 0–1 s (the week from Monday) → 1.5× on Wednesday–Thursday by 2 s while the timeline scrolls
-// down to them → hold → dive into the landed order 5–6 s. At 1.5 the frame shows 1280×720 UI px:
-// FOCUS x 160–1440 (the window's right edge at the frame's edge; the day labels at 265–329, the menu
-// at 438), y 180–900 (the time axis 189.5 to the window's bottom: the callout pill below the box ends
-// at ≈ 872, 42 px above the frame's edge). The dive keeps the window's bottom at the frame's bottom.
-const FOCUS = { x: 1440 - 960 / 1.5, y: 900 - 540 / 1.5, zoom: 1.5 };
-const DIVE = { x: slotCentre.x, y: 900 - 540 / 2.6, zoom: 2.6 };
+// down to them → hold (chapter 01 lower-left from 45) → push into the landed order 5.5–7 s. At 1.5 the
+// frame shows 1280×720 UI px: FOCUS x 160–1440 (the window's right edge at the frame's edge; the day
+// labels at 265–329, the menu at 438), y 188–908 (the time axis 189.5 to just past the window's bottom:
+// a 12-px strip of backdrop at the frame's bottom edge). The slot (frame x 1068–1340, right of the
+// slate's 1041) and the menu (bottom 918, above the slate's 925) stay clear of chapter 01 (booking.spec). The push centres the order's card at 2.6×
+// (470×611 px on screen): the estimate opens out of that card (kit/CameraWipe `card`).
+const FOCUS = { x: 1440 - 960 / 1.5, y: 548, zoom: 1.5 };
+/** The card centred (its centre 698; the view's bottom kept on the window's edge, 692). */
+const CARD_PUSH = { x: slotCentre.x, y: Math.min(slotCentre.y, 900 - 540 / 2.6), zoom: 2.6 };
 const wideKeys = (wideZoom: number): CamKey[] => [
   { at: 0, x: 720, y: 450, zoom: wideZoom },
   { at: 1, x: 720, y: 450, zoom: wideZoom },
   { at: 2, ...FOCUS },
-  { at: 5, ...FOCUS },
-  { at: 6, ...DIVE },
+  { at: PUSH_FROM / FPS, ...FOCUS },
+  { at: PUSH_TO / FPS, ...CARD_PUSH },
 ];
 // SOCIAL (1080×1350; the stage between the brand band and the caption plaque is 1080×970). One zone,
 // 1.7× (635×571 UI px): x 428–1063 — the menu (438–858) and the slot (872–1053) side by side — and
 // y 300–871: Wednesday (from its top, 337.5) and Thursday whole. The hours are above it; the ghost
 // («14:00–16:00») and the menu («19 ноября, 14:00») say when. The camera holds while the timeline
-// scrolls Thursday up into it (30–60); from the landing (120) a push to 2.2 on the landed order
-// (491×441, the window's bottom at the stage's) to the social end (150; the hero's dive is not in the cut).
+// scrolls Thursday up into it (30–60); held through the landing and the chapter title (the bottom
+// band), then the same push as the wide cut into the landed order's card (165–210).
 const SOCIAL_ZONE = socialKeyForView(MENU.x - 10, 300, 1.7);
-const SOCIAL_LANDED = { x: slotCentre.x, y: 900 - 485 / 2.2, zoom: 2.2 };
+const SOCIAL_CARD = { x: slotCentre.x, y: slotCentre.y, zoom: 3 };
 export const CAM: { wide: CamKey[]; social: CamKey[] } = {
   wide: wideKeys(1),
   social: [
     { at: 0, ...SOCIAL_ZONE },
-    { at: LAND_AT / FPS, ...SOCIAL_ZONE },
-    { at: 150 / FPS, ...SOCIAL_LANDED },
+    { at: PUSH_FROM / FPS, ...SOCIAL_ZONE },
+    { at: PUSH_TO / FPS, ...SOCIAL_CARD },
   ],
 };
+
+/** The landed order's card on screen (frame px) at a scene frame, under the scene's camera. */
+export function landedCardRect(frame: number, layout: Layout, width: number, height: number) {
+  const cam = cameraAt(frame, FPS, layout === 'social' ? CAM.social : CAM.wide);
+  const c = cameraCentre(layout, width, height);
+  return {
+    x: c.x + (SLOT.x - cam.x) * cam.zoom,
+    y: c.y + (SLOT.y - cam.y) * cam.zoom,
+    w: SLOT.w * cam.zoom,
+    h: SLOT.h * cam.zoom,
+    /** The event's own radius (`--r-sm` 6 px) on screen. */
+    radius: 6 * cam.zoom,
+  };
+}
 
 const s = (f: number) => f / FPS;
 // Cursor: idles low-right, glides onto the slot once the timeline has scrolled, then — the menu opens
 // on the slot's left — a steady hop onto «Новая запись», then straight down out of the frame (left of
-// the slot and the callout) so it never sits on the landed order.
+// the slot, behind the chapter slate) so it never sits on the landed order.
 export const CURSOR: CursorPoint[] = [
   { at: 0, x: 1120, y: 780 },
   { at: s(30), x: 1120, y: 780 },
@@ -354,11 +371,12 @@ ${scope} :is(.stl-rowhead, .stl-lane) { transform: translateY(${-state.scroll}px
 }
 
 /**
- * Booking (180 f): the week in rows → the timeline scrolls to Thursday (30–60) → click the free
- * Thursday 14:00 slot (75) → ghost + slot menu (82) → callout (90) → «Новая запись» (105) → the hero
- * order springs into the slot (120) → camera dives into it (150–180).
+ * Booking (210 f): the week in rows → the timeline scrolls to Thursday (30–60), chapter 01 (45–150) →
+ * click the free Thursday 14:00 slot (75) → ghost + slot menu (82) → «Новая запись» (105) → the hero
+ * order springs into the slot (120), outlined (135) → held → the camera pushes into its card (165–210)
+ * and the estimate opens out of it (the transition, 180–210).
  */
-export function BookingScene({ theme, brand, callouts, accent }: ShowcaseProps) {
+export function BookingScene({ theme, brand, chapters, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
@@ -368,10 +386,9 @@ export function BookingScene({ theme, brand, callouts, accent }: ShowcaseProps) 
       <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <BookingWindow theme={theme} brandName={brand.name} state={state} />
-        {/* Wide: right of the slot (CALLOUT_ANCHOR). Social: the bottom plaque. */}
-        <Callout text={callouts.booking} at={CALLOUT_AT} anchor={CALLOUT_ANCHOR} side={CALLOUT_SIDE} accent={accent} />
         <Cursor path={CURSOR} clicks={SCENE_CLICKS.booking} accent={accent} />
       </Camera>
+      <SceneTitles cues={TITLES} chapters={chapters} accent={accent} />
     </AbsoluteFill>
   );
 }

@@ -1,12 +1,10 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Audio } from '@remotion/media';
 import { TransitionSeries } from '@remotion/transitions';
-import { fade } from '@remotion/transitions/fade';
-import { slide } from '@remotion/transitions/slide';
 import { Sequence, staticFile } from 'remotion';
 import { VideoProviders } from '../providers/VideoProviders';
 import { IntroScene } from '../scenes/Intro';
-import { BookingScene } from '../scenes/Booking';
+import { BookingScene, landedCardRect } from '../scenes/Booking';
 import { EstimateScene } from '../scenes/Estimate';
 import { BoardScene } from '../scenes/Board';
 import { DocsScene } from '../scenes/Docs';
@@ -14,8 +12,10 @@ import { SearchScene } from '../scenes/Search';
 import { DashboardScene } from '../scenes/Dashboard';
 import { OutroScene } from '../scenes/Outro';
 import type { ShowcaseProps } from '../schema';
-import { SCENES, totalDuration, type SceneDef, type SceneId } from '../timing';
-import { assemblyPlan, musicPlacement, musicVolume, sfxCues, type TransitionKind } from './assembly';
+import { cameraTransition, type CameraProps } from '../kit/CameraWipe';
+import type { Layout } from '../kit/math';
+import { TRANSITION, SCENES, totalDuration, type SceneDef, type SceneId } from '../timing';
+import { assemblyPlan, musicPlacement, musicVolume, sfxCues, type TransitionSpec } from './assembly';
 
 const SCENE_COMPONENTS: Record<SceneId, ComponentType<ShowcaseProps>> = {
   intro: IntroScene,
@@ -28,15 +28,36 @@ const SCENE_COMPONENTS: Record<SceneId, ComponentType<ShowcaseProps>> = {
   outro: OutroScene,
 };
 
-const PRESENTATIONS = {
-  fade: fade(),
-  slide: slide({ direction: 'from-right' }),
-} as const;
-const presentation = (kind: TransitionKind) => PRESENTATIONS[kind];
+/** Scenes drawn on the brand's dark ground (their Background theme); the CRM scenes use the theme prop. */
+const DARK_SCENES: readonly SceneId[] = ['intro', 'docs', 'outro'];
+
+/** The presentation of a planned transition (kit/CameraWipe). The card opens out of the landed order's
+ *  on-screen rect in the outgoing booking — its camera at the transition's frame (dur − T + p·T). */
+function presentation(spec: TransitionSpec, from: SceneDef, to: SceneId, props: ShowcaseProps) {
+  const layout = (w: number, h: number): Layout => (w < h ? 'social' : 'wide');
+  const fromFrame = (p: number) => from.dur - TRANSITION + p * TRANSITION;
+  const camera: CameraProps =
+    spec.kind === 'card'
+      ? {
+          kind: 'card',
+          rect: (p, w, h) => landedCardRect(fromFrame(p), layout(w, h), w, h),
+          radius: (p, w, h) => landedCardRect(fromFrame(p), layout(w, h), w, h).radius,
+          accent: props.accent,
+        }
+      : {
+          kind: 'wipe',
+          from: spec.from,
+          focus: spec.focus,
+          backdrop: DARK_SCENES.includes(to) ? 'dark' : props.theme,
+          accent: props.accent,
+        };
+  return cameraTransition(camera);
+}
 
 /**
  * The scenes in a TransitionSeries — each scene enters at `sceneStart()`, since every transition
- * overlaps its neighbours by TRANSITION (scene-local frames stay valid) — plus the music and exactly
+ * overlaps its neighbours by TRANSITION (scene-local frames stay valid), joined by the continuous-camera
+ * presentations of assemblyPlan() (kit/CameraWipe) — plus the music and exactly
  * the `sfxCues(scenes)` sounds (click / key / whoosh / pop / ding, from the same timing tables the scenes draw
  * from). `overlay` is drawn over the scenes (the social cut's brand band).
  */
@@ -56,8 +77,13 @@ export function ShowcaseAssembly({
       <TransitionSeries>
         {assemblyPlan(scenes).map((p) => {
           if (p.type === 'transition') {
+            const from = scenes.find((x) => x.id === p.from)!;
             return (
-              <TransitionSeries.Transition key={`${p.from}>${p.to}`} presentation={presentation(p.kind)} timing={p.timing} />
+              <TransitionSeries.Transition
+                key={`${p.from}>${p.to}`}
+                presentation={presentation(p.spec, from, p.to, props)}
+                timing={p.timing}
+              />
             );
           }
           const Scene = SCENE_COMPONENTS[p.id];

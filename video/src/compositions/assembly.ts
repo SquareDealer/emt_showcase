@@ -10,30 +10,44 @@ import { DISCOUNTS_FROM, TOAST_IN } from '../scenes/Estimate';
 import { TYPE_KEY_FRAMES } from '../scenes/Search';
 import { FPS, SCENES, TRANSITION, clicksAbsolute, sceneStart, type SceneDef, type SceneId } from '../timing';
 
-export type TransitionKind = 'fade' | 'slide';
+export type TransitionKind = 'wipe' | 'card';
+/** One transition of the «continuous camera» family (kit/CameraWipe): `wipe` — the incoming shot from
+ *  `from`, the outgoing pushing in on `focus` (shares of the frame); `card` — the incoming shot opens
+ *  out of the landed order's card (booking → estimate: «открыли запись → её наряд»). */
+export type TransitionSpec = { kind: 'wipe'; from: 'right' | 'bottom'; focus: { x: number; y: number } } | { kind: 'card' };
 
-/** The plan's pairs; `slide` is `slide({ direction: 'from-right' })`. */
-const PAIRS: Partial<Record<`${SceneId}>${SceneId}`, TransitionKind>> = {
-  'intro>booking': 'fade',
-  'booking>estimate': 'fade',
-  'estimate>board': 'slide',
-  'board>docs': 'slide',
-  'docs>search': 'fade',
-  'search>dashboard': 'slide',
-  'dashboard>outro': 'fade',
+/** Each pair's move. The camera travels on through the film — to the right, except into the
+ *  documents, which rise from below as paper does; each outgoing shot pushes in on what it showed last. */
+const PAIRS: Partial<Record<`${SceneId}>${SceneId}`, TransitionSpec>> = {
+  'intro>booking': { kind: 'wipe', from: 'right', focus: { x: 0.5, y: 0.5 } },
+  'booking>estimate': { kind: 'card' },
+  // The discounts shot's «Итого» (summary column, right).
+  'estimate>board': { kind: 'wipe', from: 'right', focus: { x: 0.82, y: 0.58 } },
+  // The moved card on top of «В работе» (left of the final board view).
+  'board>docs': { kind: 'wipe', from: 'bottom', focus: { x: 0.24, y: 0.27 } },
+  'docs>search': { kind: 'wipe', from: 'right', focus: { x: 0.5, y: 0.45 } },
+  // The order history's top rows.
+  'search>dashboard': { kind: 'wipe', from: 'right', focus: { x: 0.55, y: 0.3 } },
+  // The masters' load.
+  'dashboard>outro': { kind: 'wipe', from: 'right', focus: { x: 0.5, y: 0.45 } },
+  // Social only (no docs): the board's moved card into the search.
+  'board>search': { kind: 'wipe', from: 'right', focus: { x: 0.35, y: 0.35 } },
 };
 
-/** Transition between two adjacent scenes; a pair the plan doesn't list (social board→search) fades. */
-export function transitionFor(a: SceneId, b: SceneId): TransitionKind {
-  return PAIRS[`${a}>${b}`] ?? 'fade';
+/** Transition between two adjacent scenes (every pair a cut can have is listed). */
+export function transitionFor(a: SceneId, b: SceneId): TransitionSpec {
+  const spec = PAIRS[`${a}>${b}`];
+  if (!spec) throw new Error(`no transition for ${a} → ${b}`);
+  return spec;
 }
 
-/** Every transition: linear, TRANSITION frames — the overlap `sceneStart()` already assumes. */
+/** Every transition: linear time over TRANSITION frames — the overlap `sceneStart()` already assumes;
+ *  the presentation eases it (CAM_EASE), so its midpoint is the timing's midpoint. */
 export const TRANSITION_TIMING: TransitionTiming = linearTiming({ durationInFrames: TRANSITION });
 
 export type PlanItem =
   | { type: 'scene'; id: SceneId; dur: number }
-  | { type: 'transition'; kind: TransitionKind; timing: TransitionTiming; from: SceneId; to: SceneId };
+  | { type: 'transition'; spec: TransitionSpec; timing: TransitionTiming; from: SceneId; to: SceneId };
 
 /** TransitionSeries children in order: scene, transition, scene, … */
 export function assemblyPlan(scenes: readonly SceneDef[]): PlanItem[] {
@@ -41,7 +55,7 @@ export function assemblyPlan(scenes: readonly SceneDef[]): PlanItem[] {
     const scene: PlanItem = { type: 'scene', id: s.id, dur: s.dur };
     if (i === 0) return [scene];
     const prev = scenes[i - 1].id;
-    return [{ type: 'transition', kind: transitionFor(prev, s.id), timing: TRANSITION_TIMING, from: prev, to: s.id }, scene];
+    return [{ type: 'transition', spec: transitionFor(prev, s.id), timing: TRANSITION_TIMING, from: prev, to: s.id }, scene];
   });
 }
 
@@ -88,8 +102,10 @@ export const SFX_TAKES: Record<SfxName, readonly { src: string; samples: number 
 /** Whole frames a file needs to play to its end. */
 export const takeFrames = (samples: number) => Math.ceil((samples * FPS) / SFX_RATE);
 
-/** A whoosh starts this many frames into its slide: its apex (≈ 135 ms ≈ 4 f in) lands mid-transition. */
-export const WHOOSH_LEAD = 3;
+/** The whoosh file's apex, frames after its start (≈ 135 ms, earshot reading of whoosh_1). */
+export const WHOOSH_APEX = 4;
+/** A whoosh starts this many frames into its transition: its apex lands on the wipe's midpoint. */
+export const WHOOSH_LEAD = TRANSITION / 2 - WHOOSH_APEX;
 /** A pop starts a frame before its landing: its peak (≈ 42 ms) is on the landing frame. */
 export const POP_LEAD = 1;
 
@@ -114,11 +130,10 @@ export function heroKeySfx(scenes: readonly SceneDef[] = SCENES): number[] {
   ].sort((a, b) => a - b);
 }
 
-/** Whoosh: WHOOSH_LEAD frames into each slide transition (the entering scene's start + 3). */
+/** Whoosh: one per transition, WHOOSH_LEAD frames in (the entering scene's start + 11), so its apex is
+ *  the wipe's (or the card's opening) midpoint. */
 export function heroWhooshSfx(scenes: readonly SceneDef[] = SCENES): number[] {
-  return assemblyPlan(scenes).flatMap((p) =>
-    p.type === 'transition' && p.kind === 'slide' ? [sceneStart(p.to, scenes) + WHOOSH_LEAD] : [],
-  );
+  return assemblyPlan(scenes).flatMap((p) => (p.type === 'transition' ? [sceneStart(p.to, scenes) + WHOOSH_LEAD] : []));
 }
 
 /** Where content lands with a pop, from each scene's own constant: the booked order replaces the ghost

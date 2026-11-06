@@ -80,7 +80,7 @@ export const Cover = ({ theme, brand }: ShowcaseProps) => (
 const OG_CROP = { x: 1083.5, y: 428, zoom: 1.85 };
 const OG_PANEL_W = 500;
 const OG_CARD = { left: OG_PANEL_W + 16, top: 55, width: 640, height: 520 };
-export const OG = ({ theme, brand, callouts, accent }: ShowcaseProps) => (
+export const OG = ({ theme, brand, tagline, accent }: ShowcaseProps) => (
   <VideoProviders theme={theme}>
     <Background theme="dark" />
     <div
@@ -110,7 +110,7 @@ export const OG = ({ theme, brand, callouts, accent }: ShowcaseProps) => (
           textWrap: 'balance',
         }}
       >
-        {callouts.intro}
+        {tagline}
       </div>
     </div>
     <div

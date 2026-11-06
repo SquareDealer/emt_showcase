@@ -12,7 +12,7 @@ import { AppWindow } from '../kit/AppWindow';
 import { Background } from '../kit/Background';
 import { Camera } from '../kit/Camera';
 import { Cursor } from '../kit/Cursor';
-import { Callout } from '../kit/Callout';
+import { SceneTitles, type TitleCue } from '../kit/SceneTitles';
 import { CAM_EASE, cursorAt, type CamKey, type CursorPoint } from '../kit/math';
 import { useLayout } from '../kit/useLayout';
 import { FPS, SCENE_CLICKS } from '../timing';
@@ -41,13 +41,11 @@ const CARD = { x: 273, y: 208, w: 226, h: 155 };
 export const SLOT_STEP = CARD.h + 8;
 const SLOT = { x: CARD.x + COL_PITCH, y: CARD.y };
 const PAN = 116;
-/** «В работе»'s counter `.board-count`: x 727 y 167 w 24 h 20 — the callout dot sits 33 px above its centre. */
-export const CALLOUT_ANCHOR = { x: 739, y: 134 };
 
 /** Left edge of a column before the pan. */
 const colX = (status: WorkOrderStatus) => COL_X0 + COL_PITCH * STATUS_ORDER.indexOf(status);
 
-/** Last frame of the Board scene (SCENES: 150 f) — what the Docs scene shows blurred behind the paper. */
+/** The board settled and panned (the pan ends at 140) — what the Search scene opens its palette over. */
 export const BOARD_LAST_FRAME = 149;
 
 const [CLICK_PRESS, CLICK_DROP] = SCENE_CLICKS.board;
@@ -58,8 +56,8 @@ export const DROP_AT = CLICK_DROP + 3;
 const SETTLE = 10;
 const SWAP_AT = DROP_AT + SETTLE;
 const SWAP = 4;
-export const CALLOUT_AT = 60;
-export const CALLOUT_OUT = 102;
+/** Chapter 04: in with the press (30), out after the pan has settled (140). */
+export const TITLES: readonly TitleCue[] = [{ key: 'board', at: 30, out: 135 }];
 const PAN_FROM = 90;
 const PAN_TO = 140;
 
@@ -254,7 +252,7 @@ export function BoardWindow({
 
 // ---- camera (seconds, UI px at frame centre) ----
 // START 1.75× (view 1097×617 UI px): x 258–1355 from the gap between the sidebar and «Запланирована»
-// across «В работе» to the callout right of it; y 75–692 shows the page title, the column heads and
+// across «В работе» and «Ожидание»; y 75–692 shows the page title, the column heads and
 // three card rows and ends inside the 8-px gap under the 3rd row (689–697).
 // From 90 the board pans by 116 while the camera slides right and pushes in a little, so the columns
 // pass one pitch to the left. FINAL 1.908× (view 1006×566): y 130–696 — below the page subtitle (it
@@ -278,36 +276,26 @@ export const CAM: { wide: CamKey[]; social: CamKey[] } = {
   social: [{ at: 0, ...SOCIAL_TWO_COLS }],
 };
 
-/** 1 → 0 over `dur` frames from `from` (the callout has no exit of its own). */
-const fadeOut = (frame: number, from: number, dur = 6) => interpolate(frame, [from, from + dur], [1, 0], clamp);
-
 /**
- * Board (150 f): the hero order on top of «Запланирована» → press (30): the card lifts out as the
- * app's drag overlay, the source stays as a ghost → carried to «В работе» (its column lights up
- * `over`), callout (60) → drop (75; effects 78): counters 46→45 / 4→5, the card settles into the
- * slot and the neighbours make room → 90–150 the board pans across «Ожидание», «Готова», «Выдана».
+ * Board (180 f): the hero order on top of «Запланирована» → press (30), chapter 04 (30–135): the card
+ * lifts out as the app's drag overlay, the source stays as a ghost → carried to «В работе» (its column
+ * lights up `over`) → drop (75; effects 78): counters 46→45 / 4→5, the card settles into the slot and
+ * the neighbours make room → 90–140 the board pans across «Ожидание», «Готова», «Выдана», held to the
+ * transition (150). The slate covers only the third and fourth card rows (below the moved card).
  */
-export function BoardScene({ theme, brand, callouts, accent }: ShowcaseProps) {
+export function BoardScene({ theme, brand, chapters, accent }: ShowcaseProps) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const social = useLayout() === 'social';
   const state = boardState(frame, fps, social);
-  const calloutOpacity = fadeOut(frame, CALLOUT_OUT);
   return (
     <AbsoluteFill>
       <Background theme={theme} captionBand />
       <Camera keys={social ? CAM.social : CAM.wide}>
         <BoardWindow theme={theme} brandName={brand.name} state={state} />
-        {calloutOpacity > 0 ? (
-          <div style={{ position: 'absolute', left: 0, top: 0, opacity: calloutOpacity, zIndex: 90 }}>
-            {/* Wide: dot just above «В работе»'s counter, pill to its right in the empty band between
-                the page subtitle (ends at x 680) and the column heads (from y 155): it covers no column
-                head, no card, neither the dragged card nor the target slot. Social: the bottom plaque. */}
-            <Callout text={callouts.board} at={CALLOUT_AT} anchor={CALLOUT_ANCHOR} side="right" accent={accent} />
-          </div>
-        ) : null}
         <Cursor path={CURSOR} clicks={SCENE_CLICKS.board} accent={accent} />
       </Camera>
+      <SceneTitles cues={TITLES} chapters={chapters} accent={accent} />
     </AbsoluteFill>
   );
 }

@@ -87,8 +87,8 @@ function cursorBySegment(t: number, path: CursorPoint[]): { x: number; y: number
 export type Layout = 'wide' | 'social';
 export type View = { l: number; t: number; r: number; b: number };
 
-/** The 4:5 frame: a 120-px brand band on top (BrandBand), a 260-px caption plaque at the bottom
- *  (Callout's social form); the CRM is staged between them. */
+/** The 4:5 frame: a 120-px brand band on top (BrandBand), a 260-px chapter band at the bottom
+ *  (the chapter titles' band, kit/ChapterTitle); the CRM is staged between them. */
 export const SOCIAL_FRAME = { width: 1080, height: 1350, brandH: 120, captionH: 260 } as const;
 
 /** Frame point a camera key's (x, y) is drawn at: the frame centre (wide), the stage's centre (social). */
@@ -105,6 +105,16 @@ export function frameToUi(
   centre: { x: number; y: number },
 ): { x: number; y: number } {
   return { x: cam.x + (fx - centre.x) / cam.zoom, y: cam.y + (fy - centre.y) / cam.zoom };
+}
+
+/** UI px → frame px under the camera `cam` drawn at `centre` (frameToUi's inverse). */
+export function uiToFrame(
+  ux: number,
+  uy: number,
+  cam: { x: number; y: number; zoom: number },
+  centre: { x: number; y: number },
+): { x: number; y: number } {
+  return { x: centre.x + (ux - cam.x) * cam.zoom, y: centre.y + (uy - cam.y) * cam.zoom };
 }
 
 /** The social stage (between the bands) in frame px: 1080×970. */
