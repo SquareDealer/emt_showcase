@@ -124,6 +124,8 @@ export type CardProps = {
   rect: (p: number, width: number, height: number) => FrameRect;
   /** The card's corner radius on screen at p. */
   radius: (p: number, width: number, height: number) => number;
+  /** Where the shot ends up: the whole frame, or the social stage between the bands. */
+  target: (width: number, height: number) => FrameRect;
   accent: string;
 };
 
@@ -132,10 +134,14 @@ export type CameraProps = WipeProps | CardProps;
 /** Share of the (eased) card opening over which the page grows from the card's centre to the card. */
 export const CARD_GROW = 0.3;
 
-/** The incoming shot's clip, scale and centre at eased e, opening from `r0` to the whole frame. */
-export function cardOpen(e: number, r0: FrameRect, w: number, h: number) {
+/**
+ * The incoming shot's clip, scale and centre at eased e, opening from `r0` to `target` — the whole
+ * frame (wide) or the social stage between its bands (the bands are the same in both scenes, so the
+ * outgoing ones stay). The shot is scaled about `target`'s centre, drawn at `centre`.
+ */
+export function cardOpen(e: number, r0: FrameRect, target: FrameRect) {
   const lerp = (a: number, b: number) => a + (b - a) * e;
-  const open = { x: lerp(r0.x, 0), y: lerp(r0.y, 0), w: lerp(r0.w, w), h: lerp(r0.h, h) };
+  const open = { x: lerp(r0.x, target.x), y: lerp(r0.y, target.y), w: lerp(r0.w, target.w), h: lerp(r0.h, target.h) };
   // The page first grows out of the card's centre (to the card's own size by e = CARD_GROW), so the
   // card is covered from inside instead of swapping its content in one frame.
   const g = CAM_EASE(Math.min(1, e / CARD_GROW));
@@ -146,7 +152,7 @@ export function cardOpen(e: number, r0: FrameRect, w: number, h: number) {
     h: open.h * g,
   };
   // The shot covers the card from the start (scaled by the card's larger share) and grows with it.
-  const s0 = Math.max(r0.w / w, r0.h / h);
+  const s0 = Math.max(r0.w / target.w, r0.h / target.h);
   const scale = lerp(s0, 1);
   const centre = { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 };
   return { rect, scale, centre };
@@ -164,7 +170,9 @@ function CameraPresentation({
   if (passedProps.kind === 'card') {
     if (presentationDirection === 'exiting') return <AbsoluteFill>{children}</AbsoluteFill>;
     const r0 = passedProps.rect(presentationProgress, width, height);
-    const { rect, scale, centre } = cardOpen(e, r0, width, height);
+    const target = passedProps.target(width, height);
+    const { rect, scale, centre } = cardOpen(e, r0, target);
+    const tc = { x: target.x + target.w / 2, y: target.y + target.h / 2 };
     const radius = passedProps.radius(presentationProgress, width, height) * (1 - e);
     return (
       <AbsoluteFill>
@@ -176,7 +184,7 @@ function CameraPresentation({
           <AbsoluteFill
             style={{
               transformOrigin: '0 0',
-              transform: `translate(${centre.x - (width / 2) * scale}px, ${centre.y - (height / 2) * scale}px) scale(${scale})`,
+              transform: `translate(${centre.x - tc.x * scale}px, ${centre.y - tc.y * scale}px) scale(${scale})`,
             }}
           >
             {children}

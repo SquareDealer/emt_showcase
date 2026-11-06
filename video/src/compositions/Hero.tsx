@@ -13,7 +13,7 @@ import { DashboardScene } from '../scenes/Dashboard';
 import { OutroScene } from '../scenes/Outro';
 import type { ShowcaseProps } from '../schema';
 import { cameraTransition, type CameraProps } from '../kit/CameraWipe';
-import type { Layout } from '../kit/math';
+import { SOCIAL_FRAME, type Layout } from '../kit/math';
 import { TRANSITION, SCENES, totalDuration, type SceneDef, type SceneId } from '../timing';
 import { assemblyPlan, musicPlacement, musicVolume, sfxCues, type TransitionSpec } from './assembly';
 
@@ -42,6 +42,10 @@ function presentation(spec: TransitionSpec, from: SceneDef, to: SceneId, props: 
           kind: 'card',
           rect: (p, w, h) => landedCardRect(fromFrame(p), layout(w, h), w, h),
           radius: (p, w, h) => landedCardRect(fromFrame(p), layout(w, h), w, h).radius,
+          target: (w, h) =>
+            layout(w, h) === 'social'
+              ? { x: 0, y: SOCIAL_FRAME.brandH, w, h: h - SOCIAL_FRAME.brandH - SOCIAL_FRAME.captionH }
+              : { x: 0, y: 0, w, h },
           accent: props.accent,
         }
       : {

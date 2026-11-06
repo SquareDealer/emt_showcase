@@ -52,19 +52,30 @@ describe('wipe geometry', () => {
 describe('card opening', () => {
   const card = { x: 1100, y: 300, w: 470, h: 611 };
   it('grows out of the card\'s centre to the card, then to the whole frame; the shot always covers its clip', () => {
-    const c0 = cardOpen(0, card, W, H);
+    const FRAME = { x: 0, y: 0, w: W, h: H };
+    const c0 = cardOpen(0, card, FRAME);
     expect(c0.rect.w).toBe(0);
     expect(c0.rect.x).toBeCloseTo(card.x + card.w / 2);
-    const atCard = cardOpen(CARD_GROW, card, W, H);
+    const atCard = cardOpen(CARD_GROW, card, FRAME);
     expect(atCard.rect.w).toBeGreaterThan(card.w);
-    expect(cardOpen(1, card, W, H)).toEqual({ rect: { x: 0, y: 0, w: W, h: H }, scale: 1, centre: { x: W / 2, y: H / 2 } });
+    expect(cardOpen(1, card, FRAME)).toEqual({ rect: FRAME, scale: 1, centre: { x: W / 2, y: H / 2 } });
     for (let i = 0; i <= 30; i++) {
-      const { rect, scale, centre } = cardOpen(CAM_EASE(i / 30), card, W, H);
+      const { rect, scale, centre } = cardOpen(CAM_EASE(i / 30), card, FRAME);
       // The scaled shot (W·scale × H·scale around `centre`) contains the clip rect.
       expect(centre.x - (W * scale) / 2).toBeLessThanOrEqual(rect.x + 1e-6);
       expect(centre.x + (W * scale) / 2).toBeGreaterThanOrEqual(rect.x + rect.w - 1e-6);
       expect(centre.y - (H * scale) / 2).toBeLessThanOrEqual(rect.y + 1e-6);
       expect(centre.y + (H * scale) / 2).toBeGreaterThanOrEqual(rect.y + rect.h - 1e-6);
+    }
+  });
+  it('social: opens to the stage between the bands, the stage mapped onto the clip', () => {
+    const STAGE = { x: 0, y: 120, w: 1080, h: 970 };
+    const end = cardOpen(1, { x: 300, y: 400, w: 300, h: 400 }, STAGE);
+    expect(end).toEqual({ rect: STAGE, scale: 1, centre: { x: 540, y: 605 } });
+    for (let i = 0; i <= 30; i++) {
+      const { rect, scale } = cardOpen(CAM_EASE(i / 30), { x: 300, y: 400, w: 300, h: 400 }, STAGE);
+      expect(STAGE.w * scale).toBeGreaterThanOrEqual(rect.w - 1e-6);
+      expect(STAGE.h * scale).toBeGreaterThanOrEqual(rect.h - 1e-6);
     }
   });
 });
